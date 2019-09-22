@@ -57,22 +57,22 @@ const appRoutes: Routes = [
     children: [
       {
         path: stats.path,
-        loadChildren: 'src/app/components/stats/stats.module#StatsModule',
+        loadChildren: () => import('src/app/components/stats/stats.module').then(m => m.StatsModule),
         pathMatch: 'full'
       },
       {
         path: forecastFlex.path,
-        loadChildren: 'src/app/components/forecast-flex/forecast-flex.module#ForecastFlexModule',
+        loadChildren: () => import('src/app/components/forecast-flex/forecast-flex.module').then(m => m.ForecastFlexModule),
         pathMatch: 'full'
       },
       {
         path: forecastGrid.path,
-        loadChildren: 'src/app/components/forecast-grid/forecast-grid.module#ForecastGridModule',
+        loadChildren: () => import('src/app/components/forecast-grid/forecast-grid.module').then(m => m.ForecastGridModule),
         pathMatch: 'full'
       },
       {
         path: forecastGChart.path,
-        loadChildren: 'src/app/components/forecast-gchart/forecast-gchart.module#ForecastGChartModule',
+        loadChildren: () => import('src/app/components/forecast-gchart/forecast-gchart.module').then(m => m.ForecastGChartModule),
         pathMatch: 'full'
       },
       { path: '', redirectTo: 'stats', pathMatch: 'full' },
@@ -80,11 +80,11 @@ const appRoutes: Routes = [
   },
   {
     path: 'forecast-all',
-    loadChildren: 'src/app/components/forecast/forecast.module#ForecastModule'
+    loadChildren: () => import('src/app/components/forecast/forecast.module').then(m => m.ForecastModule)
   },
   {
     path: 'home',
-    loadChildren: 'src/app/components/home/home.module#HomeModule'
+    loadChildren: () => import('src/app/components/home/home.module').then(m => m.HomeModule)
   },
   { path: 'error', component: ErrorPageComponent, data: { errorMessage: ' Error Page', redirectPage: 'home'} },
   { path: '', redirectTo: '/home', pathMatch: 'full' },

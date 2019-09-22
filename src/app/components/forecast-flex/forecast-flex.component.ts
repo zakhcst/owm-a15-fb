@@ -52,8 +52,8 @@ import { IOwmData } from '../../models/owm-data.model';
   ]
 })
 export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('fullHeightColumn') fullHeightColumn: ElementRef;
-  @ViewChild('gridContainer') gridContainer: ElementRef;
+  @ViewChild('fullHeightColumn', { static: true }) fullHeightColumn: ElementRef;
+  @ViewChild('gridContainer', { static: true }) gridContainer: ElementRef;
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
   cardBackground: string;
