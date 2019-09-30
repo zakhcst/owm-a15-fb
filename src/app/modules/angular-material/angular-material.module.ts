@@ -1,22 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  MatSelectModule,
-  MatProgressSpinnerModule,
-  MatCardModule,
-  MatSnackBarModule,
-  // MatTableModule,
-  MatButtonModule,
-  // MatIconModule,
-  // MatProgressBarModule,
-  // MatDividerModule,
-  // MatPaginatorModule,
-  // MatSidenavModule,
-  MatToolbarModule,
-  // MatListModule,
-  // MatSortModule,
-  MatSlideToggleModule,
-} from '@angular/material';
+
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [

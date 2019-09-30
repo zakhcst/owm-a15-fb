@@ -10,7 +10,7 @@ const componentRoutes: Routes = [
   {
     path: '',
     component: ForecastFlexComponent,
-    resolve: { cities: ResolverCitiesService }
+    // resolve: { cities: ResolverCitiesService }
   }
 ];
 

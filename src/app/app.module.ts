@@ -21,7 +21,7 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
     HttpClientModule,
     RequiredModules,
     NgxsReduxDevtoolsPluginModule.forRoot(),
-    // NgxsLoggerPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
     AppRoutingModule
   ],

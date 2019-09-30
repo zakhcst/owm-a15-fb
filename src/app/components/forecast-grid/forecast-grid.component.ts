@@ -25,8 +25,8 @@ import { IOwmData } from '../../models/owm-data.model';
   styleUrls: ['./forecast-grid.component.css']
 })
 export class ForecastGridComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('fullHeightColumn') fullHeightColumn: ElementRef;
-  @ViewChild('gridContainer') gridContainer: ElementRef;
+  @ViewChild('fullHeightColumn', { static: false }) fullHeightColumn: ElementRef;
+  @ViewChild('gridContainer', { static: false }) gridContainer: ElementRef;
   @Select((state: any) => state.activity) activity$: Observable<
     AppHistoryModel
   >;
@@ -56,7 +56,7 @@ export class ForecastGridComponent implements OnInit, OnDestroy, AfterViewInit {
     this.hasScrollbar();
   }
 
-  constructor(private _data: OwmDataService, private _errors: ErrorsService) {}
+  constructor(private _data: OwmDataService, private _errors: ErrorsService) { }
 
   ngOnInit() {
     this.activitySubscription = this.activity$

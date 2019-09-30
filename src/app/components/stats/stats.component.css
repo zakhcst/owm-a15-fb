@@ -4,10 +4,11 @@
   overflow-y: overlay;
   z-index: 0;
   background-color: transparent;
+  color: white;
 }
 
 .odd {
-  background-color: #ccccff80;
+  background-color: #ccccff30;
 }
 .selected {
   background-color: #bbd5c680;

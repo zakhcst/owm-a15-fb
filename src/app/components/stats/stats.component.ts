@@ -40,10 +40,10 @@ export class StatsComponent implements OnInit {
   checkedCities = true;
   showDetails = {};
 
-  constructor(private _route: ActivatedRoute, private _router: Router) {}
+  constructor(private _activatedRoute: ActivatedRoute, private _router: Router) {}
 
   ngOnInit() {
-    this._route.data.subscribe(data => {
+    this._activatedRoute.data.subscribe(data => {
       this.ip = data.ip;
       this.stats = data.stats;
       this.cities = data.cities;

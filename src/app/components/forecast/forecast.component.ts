@@ -77,7 +77,7 @@ export class ForecastComponent implements OnInit {
     this.loadingOwmData = true;
     this.cities$ = this._cities.getData().pipe(take(1));
     this.weatherData$ = this._data.getData(this.selectedCityId).pipe(take(1));
-    const fjSubscription = forkJoin(this.cities$, this.weatherData$).subscribe(
+    const fjSubscription = forkJoin([this.cities$, this.weatherData$]).subscribe(
       responses => {
         const [cities, data] = responses;
         this.cities = cities;

@@ -12,12 +12,12 @@ import {
   ActivatedRoute,
   Router,
   ChildActivationEnd,
-  NavigationEnd
+  NavigationEnd,
+  Event
 } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
-import { filter, switchMap, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { Subscription, of, Observable } from 'rxjs';
-import { CitiesService } from '../../services/cities.service';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { HistoryService } from '../../services/history.service';
@@ -34,8 +34,9 @@ import { IOwmData } from 'src/app/models/owm-data.model';
 })
 export class HeaderToolbarComponent
   implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatToolbar) matToolbar: MatToolbar;
-  @ViewChild('containertoolbaroutlet', { static: true }) containerToolbarOutlet: ElementRef;
+  @ViewChild(MatToolbar, { static: false }) matToolbar: MatToolbar;
+  @ViewChild('containertoolbaroutlet', { static: true })
+  containerToolbarOutlet: ElementRef;
 
   @HostBinding('attr.style')
   public get valueAsStyle(): any {
@@ -62,97 +63,59 @@ export class HeaderToolbarComponent
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _cities: CitiesService,
     private _history: HistoryService,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
     public mediaObserver: MediaObserver
   ) {
-    // const eventNavigationEnd = this._router.events.pipe(
-    //   filter(event => event instanceof NavigationEnd),
-    //   map(
-    //     (event: ChildActivationEnd) =>
-    //       event['urlAfterRedirects'].split('/').pop() ||
-    //       event['url'].split('/').pop()
-    //   ),
-    //   filter(eventPathEndSegment => !!eventPathEndSegment)
-    // );
-    // this.subscriptions = combineLatest([
-    //   this._activatedRoute.data,
-    //   eventNavigationEnd
-    // ])
-    //   .pipe(
-    //     switchMap(([activatedRouteData, eventPathEndSegment]) => {
-    //       if (
-    //         eventPathEndSegment in activatedRouteData.toolbarActions &&
-    //         this.toolbarActions !== activatedRouteData.toolbarActions[eventPathEndSegment]
-    //       ) {
-    //         this.toolbarActions = activatedRouteData.toolbarActions[eventPathEndSegment];
-    //         this.toolbarShow = true;
-    //         const hasSelectCities = this.toolbarActions.some(
-    //           action => action['type'] === 'selectCities'
-    //         );
-    //         return (
-    //           (hasSelectCities && !this.cities && this._cities.getData()) ||
-    //           of(null)
-    //         );
-    //       }
-    //       this.toolbarShow = false;
-    //       return of(null);
-    //     })
-    //   )
-    //   .subscribe(
-    //     cities => {
-    //       if (cities) {
-    //         this.cities = cities;
-    //         this.selectionChange(null);
-    //       }
-    //     },
-    //     err => {
-    //       this.addError('ngOnInit: onChange: subscribe', err.message);
-    //     }
-    //   );
-  }
-
-  ngOnInit() {
-    this.subscriptions = this._activatedRoute.data
+    this.subscriptions = this._router.events
       .pipe(
-        switchMap(activatedRouteData => {
-          const eventPathEndSegment = this._router.routerState.snapshot.url
-            .split('/')
-            .pop();
-          if (
-            eventPathEndSegment in activatedRouteData.toolbarActions &&
-            this.toolbarActions !==
-              activatedRouteData.toolbarActions[eventPathEndSegment]
-          ) {
-            this.toolbarActions =
-              activatedRouteData.toolbarActions[eventPathEndSegment];
-            this.toolbarShow = true;
-            const hasSelectCities = this.toolbarActions.some(
-              action => action['type'] === 'selectCities'
-            );
-            return (
-              (hasSelectCities && !this.cities && this._cities.getData()) ||
-              of(null)
-            );
-          }
-          this.toolbarShow = false;
-          return of(null);
-        })
+        filter((event: Event) => event instanceof NavigationEnd),
+        map(
+          (event: ChildActivationEnd) =>
+            event['urlAfterRedirects'].split('/').pop() ||
+            event['url'].split('/').pop()
+        )
       )
       .subscribe(
-        cities => {
-          if (cities) {
-            this.cities = cities;
-            this.selectionChange(null);
+        eventPathEndSegment => {
+          if (eventPathEndSegment in ConstantsService.toolbarActions) {
+            if (
+              this.toolbarActions !==
+              ConstantsService.toolbarActions[eventPathEndSegment]
+            ) {
+              this.toolbarActions =
+                ConstantsService.toolbarActions[eventPathEndSegment];
+                this.toolbarShow = true;
+            }
+          } else {
+            this.toolbarShow = false;
           }
         },
         err => {
-          this.addError('ngOnInit: onChange: subscribe', err.message);
+          this.addError(
+            'header-toolbar: router.events',
+            err.message
+          );
         }
       );
+    const subscriptionCities: Subscription = this._activatedRoute.data.subscribe(
+      data => {
+        this.cities = data.cities;
+        this.selectionChange(null);
+      },
+      err => {
+        this.addError(
+          'header-toolbar: subscriptionCities',
+          err.message
+        );
+      }
+    );
 
+    this.subscriptions.add(subscriptionCities);
+  }
+
+  ngOnInit() {
     const subscriptionBgImg: Subscription = this.data$
       .pipe(
         map((data: IOwmData) => ConstantsService.getWeatherBgImg(data)),
@@ -161,10 +124,18 @@ export class HeaderToolbarComponent
             'background-image'
           ];
           return currentBg !== `url("${imgPath}")`;
-        }),
+        })
       )
       .subscribe((imgPath: string) => {
-        this.containerToolbarOutlet.nativeElement.style['background-image'] = `url(${imgPath})`;
+        this.containerToolbarOutlet.nativeElement.style[
+          'background-image'
+        ] = `url(${imgPath})`;
+      },
+      err => {
+        this.addError(
+          'header-toolbar: ngOnInit: onChange: subscribe',
+          err.message
+        );
       });
 
     this.subscriptions.add(subscriptionBgImg);
@@ -192,7 +163,10 @@ export class HeaderToolbarComponent
   }
 
   selectionChange(eventSelectedCityId) {
-    this.selectedCityId = eventSelectedCityId || this.selectedCityId;
+    this.selectedCityId =
+      eventSelectedCityId ||
+      this.selectedCityId ||
+      ConstantsService.defaultCityId;
     const historyLog = {
       cityId: this.selectedCityId,
       cityName: this.cities[this.selectedCityId].name,

@@ -8,6 +8,49 @@ import { IOwmData } from '../models/owm-data.model';
 export class ConstantsService {
   constructor() {}
 
+  public static readonly views = {
+    stats: { path: 'stats', title: 'Stats', type: 'button' },
+    forecastGChart: { path: 'forecast-gchart', title: 'GChart', type: 'button' },
+    forecastFlex: { path: 'forecast-flex', title: 'Flex', type: 'button' },
+    forecastGrid: { path: 'forecast-grid', title: 'Grid', type: 'button' },
+    forecastAll: { path: '/forecast-all', title: 'All', type: 'button' },
+    selectCities: { path: '', title: 'selectCities', type: 'selectCities' }
+  };
+
+  public static readonly toolbarActions = {
+    stats: [
+      ConstantsService.views.forecastFlex,
+      ConstantsService.views.forecastGrid,
+      ConstantsService.views.forecastGChart,
+      ConstantsService.views.stats,
+      ConstantsService.views.forecastAll
+    ],
+    'forecast-flex': [
+      ConstantsService.views.selectCities,
+      ConstantsService.views.forecastFlex,
+      ConstantsService.views.forecastGrid,
+      ConstantsService.views.forecastGChart,
+      ConstantsService.views.stats,
+      ConstantsService.views.forecastAll
+    ],
+    'forecast-grid': [
+      ConstantsService.views.selectCities,
+      ConstantsService.views.forecastFlex,
+      ConstantsService.views.forecastGrid,
+      ConstantsService.views.forecastGChart,
+      ConstantsService.views.stats,
+      ConstantsService.views.forecastAll
+    ],
+    'forecast-gchart': [
+      ConstantsService.views.selectCities,
+      ConstantsService.views.forecastFlex,
+      ConstantsService.views.forecastGrid,
+      ConstantsService.views.forecastGChart,
+      ConstantsService.views.stats,
+      ConstantsService.views.forecastAll
+    ]
+  };
+
   public static readonly owmData = 'owm';
   public static readonly historyLog = 'history-log';
   public static readonly errorsLog = 'errors-log';
@@ -85,9 +128,10 @@ export class ConstantsService {
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
   public static readonly getWeatherDefaultBgImg = () =>
     ConstantsService.weatherBgImgPath +
-    ConstantsService.weatherDefaultBgImgFileName;
+    ConstantsService.weatherDefaultBgImgFileName
   public static readonly getWeatherBgImg = (data: IOwmData) => {
-    const main = data && data.list && data.list[0] && data.list[0].weather[0].main;
+    const main =
+      data && data.list && data.list[0] && data.list[0].weather[0].main;
     const syspod = data && data.list && data.list[0] && data.list[0].sys.pod;
     if (
       main &&
@@ -105,5 +149,5 @@ export class ConstantsService {
     } else {
       return ConstantsService.getWeatherDefaultBgImg();
     }
-  };
+  }
 }

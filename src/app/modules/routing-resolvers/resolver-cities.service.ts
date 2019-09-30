@@ -7,7 +7,7 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take, shareReplay } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 import { CitiesService } from '../../services/cities.service';
 import { ICities } from '../../models/cities.model';

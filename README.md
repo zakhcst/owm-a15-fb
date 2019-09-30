@@ -1,6 +1,6 @@
 ## Open Weather Maps(OWM) 5 Day Forecast
 
-### Angular 7, Angular Material and Firebase based project.
+### Angular 8, Angular Material and Firebase based project.
 
 Libraries
 
@@ -22,7 +22,7 @@ Featured
 
   - realtime database
   - cloud functions (NodeJS v8)
-  - docker facility for testing cloud functions locally (NodeJS v8 )
+  - docker facility for testing cloud functions locally (NodeJS v8)
   - hosting
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
@@ -37,14 +37,19 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ### Link
 
-Development build is depolyed at: https://owm-a7-fb.firebaseapp.com/
+Development build is depolyed at: https://owm-a8-fb.firebaseapp.com/
 
 ### Preview
 
-![alt text](https://raw.githubusercontent.com/zakhcst/owm-a7-fb/master/misc/preview1.png)
+![preview1](/misc/preview1.png)
+
+![preview2](/misc/preview2.png)
+
+![preview3](/misc/preview3.png)
+
 
 ### Coverage
 
-![alt text](https://raw.githubusercontent.com/zakhcst/owm-a7-fb/master/misc/owm-a7-fb-coverage-all.png)
+![coverage-all](/misc/owm-a7-fb-coverage-all.png)
 
-![alt text](https://raw.githubusercontent.com/zakhcst/owm-a7-fb/master/misc/owm-a7-fb-coverage-services.png)
+![coverage-services](/misc/owm-a7-fb-coverage-services.png)

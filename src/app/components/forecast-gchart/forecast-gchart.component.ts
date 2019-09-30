@@ -24,7 +24,7 @@ import { ErrorsService } from '../../services/errors.service';
   styleUrls: ['./forecast-gchart.component.css']
 })
 export class ForecastGChartComponent implements OnInit, OnDestroy {
-  @ViewChild('chartElement')
+  @ViewChild('chartElement', { static: false })
   chartElement: GoogleChartComponent;
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
