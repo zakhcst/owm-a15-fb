@@ -7,17 +7,9 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome",
+      "name": "Launch Chrome 8080",
       "runtimeExecutable": "/usr/bin/google-chrome-stable",
       "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}"
-    },
-    {
-      "type": "chrome",
-      "request": "launch",
-      "runtimeExecutable": "/usr/bin/google-chrome-stable",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}"
     },
     {
@@ -26,6 +18,22 @@
       "name": "Attach to Chrome",
       "port": 9222,
       "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "ng serve",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeExecutable": "/usr/bin/google-chrome-stable",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+      // "preLaunchTask": "npm start"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Node",
+      "port": 9222,
+      // "preLaunchTask": "node ...node server"
     },
     {
       "name": "ng test",
@@ -49,6 +57,12 @@
       "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
       "protocol": "inspector",
       "args": ["${workspaceFolder}/e2e/protractor.conf.js"]
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Compound",
+      "configurations": ["ng serve", "Attach to Node"]
     }
   ]
 }
