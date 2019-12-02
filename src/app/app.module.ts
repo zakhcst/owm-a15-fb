@@ -13,7 +13,6 @@ import { AppErrorHandlerService } from './services/app-error-handler.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 
-
 @NgModule({
   declarations: [AppComponent, AppSnackBarInnerComponent],
 
@@ -32,7 +31,7 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
       multi: true
-    }
+    },
   ],
   entryComponents: [AppSnackBarInnerComponent],
   bootstrap: [AppComponent]
