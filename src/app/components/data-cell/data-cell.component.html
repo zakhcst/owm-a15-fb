@@ -15,7 +15,7 @@
   fxLayoutAlign="center center"
   >
   <!-- border: (isCurrentTimeSlot ? '1' : '0') + 'px solid black' -->
-  <div fxFlex="25%" fxLayout="row" fxLayoutAlign="center center" class="description">
+  <div fxFlex fxFlex.gt-xs="25%" fxLayout="row" fxLayoutAlign="center center" class="description">
     <img [src]="iconsOwm + dataDaily[timeSlot.hour].weather[0].icon + '.png'" />
     <span>
       {{ dataDaily[timeSlot.hour].weather[0].main }}
@@ -23,9 +23,9 @@
     </span>
   </div>
 
-  <div fxFlex fxLayout="column">
+  <div fxFlex.gt-xs fxLayout="column" class="table-secondary_data">
     <span
-      fxFlex="25%"
+      fxFlex fxFlex.gt-xs="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
       class="table-secondary_data_line"

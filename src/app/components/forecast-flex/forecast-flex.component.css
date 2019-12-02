@@ -10,6 +10,7 @@
 
 .table-header-background {
   min-width: 120px;
+  min-height: 15px;
   margin: 2px;
   background-color: #778bff93;
   box-sizing: border-box;
@@ -22,6 +23,7 @@
 
 .table-cell_00 {
   padding: 5px 2px;
+  min-height: 15px;
 }
 
 .table-cell_date {
@@ -31,3 +33,8 @@
   justify-content: center;
 }
 
+@media only screen and (max-height: 420px) {
+  .content {
+    font-size: 6px;
+  }
+}
