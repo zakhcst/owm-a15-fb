@@ -57,8 +57,10 @@ export class ConstantsService {
   public static readonly default5DayForecastUrl =
     'https://api.openweathermap.org/data/2.5/forecast';
   public static readonly defaultUnits = 'metric';
-  public static readonly defaultCityId =
-    localStorage.getItem('lastCityId') || '2643743'; // Defaults to London, UK
+  public static get defaultCityId() {
+    return localStorage.getItem('lastCityId') || '2643743'; // Defaults to London, UK
+  }
+
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
   public static readonly getIpUrl =
