@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ConstantsService } from '../../services/constants.service';
 
 @Component({
@@ -8,10 +8,11 @@ import { ConstantsService } from '../../services/constants.service';
 })
 export class HomeComponent implements OnInit {
   constants = ConstantsService;
+  loaded = false;
 
   constructor() { }
 
   ngOnInit() {
+    this.loaded = true;
   }
-
 }

@@ -17,7 +17,7 @@ import {
 } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
 import { filter, map } from 'rxjs/operators';
-import { Subscription, of, Observable } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { HistoryService } from '../../services/history.service';
@@ -86,17 +86,14 @@ export class HeaderToolbarComponent
             ) {
               this.toolbarActions =
                 ConstantsService.toolbarActions[eventPathEndSegment];
-                this.toolbarShow = true;
+              this.toolbarShow = true;
             }
           } else {
             this.toolbarShow = false;
           }
         },
         err => {
-          this.addError(
-            'header-toolbar: router.events',
-            err.message
-          );
+          this.addError('header-toolbar: router.events', err.message);
         }
       );
     const subscriptionCities: Subscription = this._activatedRoute.data.subscribe(
@@ -105,10 +102,7 @@ export class HeaderToolbarComponent
         this.selectionChange(null);
       },
       err => {
-        this.addError(
-          'header-toolbar: subscriptionCities',
-          err.message
-        );
+        this.addError('header-toolbar: subscriptionCities', err.message);
       }
     );
 
@@ -119,24 +113,24 @@ export class HeaderToolbarComponent
     const subscriptionBgImg: Subscription = this.data$
       .pipe(
         map((data: IOwmData) => ConstantsService.getWeatherBgImg(data)),
-        filter((imgPath: string) => {
-          const currentBg = this.containerToolbarOutlet.nativeElement.style[
-            'background-image'
-          ];
-          return currentBg !== `url("${imgPath}")`;
+        filter((newDataImgPath: string) => {
+          const currentBgImgPath = this.containerToolbarOutlet.nativeElement.style['background-image'].split('"')[1];
+          return currentBgImgPath !== newDataImgPath;
         })
       )
-      .subscribe((imgPath: string) => {
-        this.containerToolbarOutlet.nativeElement.style[
-          'background-image'
-        ] = `url(${imgPath})`;
-      },
-      err => {
-        this.addError(
-          'header-toolbar: ngOnInit: onChange: subscribe',
-          err.message
-        );
-      });
+      .subscribe(
+        (imgPath: string) => {
+          this.containerToolbarOutlet.nativeElement.style[
+            'background-image'
+          ] = `url(${imgPath})`;
+        },
+        err => {
+          this.addError(
+            'header-toolbar: ngOnInit: onChange: subscribe',
+            err.message
+          );
+        }
+      );
 
     this.subscriptions.add(subscriptionBgImg);
   }

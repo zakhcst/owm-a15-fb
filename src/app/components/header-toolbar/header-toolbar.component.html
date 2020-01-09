@@ -1,81 +1,82 @@
-<mat-toolbar class="toolbar" color="primary" *ngIf="toolbarShow">
-  <!-- ===          X -->
-  <!-- &#9776;&nbsp;&#x2715; -->
-  <span
-    class="toolbar-menu-toggle-xs"
-    (click)="toggleActionButtonsXS($event)"
-    *ngIf="isXs()"
-  >
+<section class="container" #containertoolbaroutlet>
+  <mat-toolbar class="toolbar" color="primary" *ngIf="toolbarShow">
     <span
-      class="icon-bar top-bar"
-      [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
-    ></span>
-    <span
-      class="icon-bar middle-bar"
-      [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
-    ></span>
-    <span
-      class="icon-bar bottom-bar"
-      [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
-    ></span>
-  </span>
-  <a class="home-button" [routerLink]="['/home']">
-    OWM Forecast
-  </a>
-  <span class="header-actions-container">
-    <ng-container *ngFor="let action of toolbarActions">
-      <mat-form-field
-        *ngIf="action['type'] === 'selectCities'"
-        class="header-action"
-        style="width: 120px;"
-      >
-        <mat-select
-          fxFlex
-          placeholder="City"
-          [(value)]="selectedCityId"
-          (selectionChange)="selectionChange()"
+      class="toolbar-menu-toggle-xs"
+      (click)="toggleActionButtonsXS($event)"
+      *ngIf="isXs()"
+    >
+      <span
+        class="icon-bar top-bar"
+        [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
+      ></span>
+      <span
+        class="icon-bar middle-bar"
+        [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
+      ></span>
+      <span
+        class="icon-bar bottom-bar"
+        [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
+      ></span>
+    </span>
+    <a class="home-button" [routerLink]="['/home']">
+      <<
+    </a>
+    <span>OWM Forecast</span>
+    <span class="header-actions-container">
+      <ng-container *ngFor="let action of toolbarActions">
+        <mat-form-field
+          *ngIf="action['type'] === 'selectCities'"
+          class="header-action"
+          style="width: 120px;"
         >
-          <mat-option
+          <mat-select
             fxFlex
-            *ngFor="let city of cities | keyvalue | sortCities"
-            [value]="city.key"
+            placeholder="City"
+            [(value)]="selectedCityId"
+            (selectionChange)="selectionChange()"
           >
-            <span fxFlex fxFill fxLayoutAlign="space-between" fxLayout="row">
-              <span>{{ city.value.name }}&nbsp;</span>
-              <span fxFlex fxLayoutAlign="end center">{{
-                city.value.iso2
-              }}</span>
-            </span>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+            <mat-option
+              fxFlex
+              *ngFor="let city of cities | keyvalue | sortCities"
+              [value]="city.key"
+            >
+              <span fxFlex fxFill fxLayoutAlign="space-between" fxLayout="row">
+                <span>{{ city.value.name }}&nbsp;</span>
+                <span fxFlex fxLayoutAlign="end center">{{
+                  city.value.iso2
+                }}</span>
+              </span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <a
+          *ngIf="isXs() === false && action['type'] === 'button'"
+          mat-button
+          mat-mini-fab
+          class="button-action"
+          [routerLink]="action['path']"
+          routerLinkActive="active"
+          >{{ action['title'] }}</a
+        >
+      </ng-container>
+    </span>
+  </mat-toolbar>
+
+  <div class="header-actions-container-xs" *ngIf="showActionButtonsXS === true">
+    <ng-container *ngFor="let action of toolbarActions">
       <a
-        *ngIf="isXs() === false && action['type'] === 'button'"
+        *ngIf="isXs() === true && action['type'] === 'button'"
         mat-button
         mat-mini-fab
-        class="button-action"
+        class="button-action-xs"
         [routerLink]="action['path']"
         routerLinkActive="active"
         >{{ action['title'] }}</a
       >
     </ng-container>
-  </span>
-</mat-toolbar>
+  </div>
 
-<div class="header-actions-container-xs" *ngIf="showActionButtonsXS === true">
-  <ng-container *ngFor="let action of toolbarActions">
-    <a
-      *ngIf="isXs() === true && action['type'] === 'button'"
-      mat-button
-      mat-mini-fab
-      class="button-action-xs"
-      [routerLink]="action['path']"
-      routerLinkActive="active"
-      >{{ action['title'] }}</a
-    >
-  </ng-container>
-</div>
-
-<div class="container-toolbar-outlet" (click)="hideActionButtonsXS($event)" #containertoolbaroutlet>
-  <router-outlet></router-outlet>
-</div>
+  <div class="container-toolbar-outlet" (click)="hideActionButtonsXS($event)">
+    <router-outlet></router-outlet>
+  </div>
+</section>

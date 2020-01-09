@@ -1,9 +1,12 @@
 .container {
   height: 100vh;
   width: 100vw;
+  background-color: rgb(91, 134, 174);
   background-image: url('../../../assets/backgrounds/default.jpg');
   background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
+  transition: background-image 1s 0.5s;
   display: grid;
   place-items: center;
   padding: 10px;

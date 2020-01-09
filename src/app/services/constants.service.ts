@@ -119,13 +119,7 @@ export class ConstantsService {
     { hour: 21, bgColor: '#5080dd', textColor: 'white' }
   ];
 
-  public static readonly bgImgTypes: string[] = [
-    'clear',
-    'clouds',
-    'fog',
-    'rain',
-    'snow'
-  ];
+  public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');
   public static readonly weatherDefaultBgImgFileName = 'default.jpg';
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
   public static readonly getWeatherDefaultBgImg = () =>
