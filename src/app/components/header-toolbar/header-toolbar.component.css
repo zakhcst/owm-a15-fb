@@ -1,5 +1,6 @@
 .container {
   height: 100vh;
+  width: 100vw;
   background-color: rgb(91, 134, 174);
   background-image: url('../../../assets/backgrounds/default.jpg');
   background-size: cover;
@@ -50,8 +51,8 @@
 .home-button:hover {
   box-sizing: border-box;
   font-weight: normal;
-
-  --blink-color: transparent;
+  color: yellow;
+  --blink-bgcolor: transparent;
   animation-name: blink-animation;
   animation-iteration-count: infinite;
   animation-duration: 1s;
@@ -96,7 +97,7 @@
 
 .button-action:hover:not(.active),
 .button-action-xs:hover:not(.active) {
-  --blink-color: orange;
+  --blink-bgcolor: orange;
   animation-name: blink-animation;
   animation-iteration-count: infinite;
   animation-duration: 1s;
@@ -104,7 +105,7 @@
 
 @keyframes blink-animation {
   50% {
-    background-color: var(--blink-color);
+    background-color: var(--blink-bgcolor);
   }
 }
 .toolbar-menu-toggle-xs {

@@ -20,99 +20,33 @@
       <img src="{{ constants.iconGithub }}" />
     </div>
 
-    <span class="flex-justify-center">8</span>
-    <span class="fb-text-color">Firebase RTDB</span>
-    <a
-      class="link-action fb-text-color"
-      [routerLink]="['/toolbar/forecast-flex']"
-      routerLinkActive="active"
-      >Firebase
-      <img src="{{ constants.iconExtLink }}" />
-    </a>
-    <div class="flex-justify-center">
+    <ng-container *ngFor="let version of data">
+      <span class="flex-justify-center">{{ version.version }}</span>
+      <span>{{ version.db }}</span>
       <a
-        class="link-action"
-        href="https://github.com/zakhcst/owm-a8-fb"
+        *ngIf="version.routedLink"
+        class="link-action fb-text-color"
+        [routerLink]="[version.routedLink]"
         routerLinkActive="active"
-      >
+        >{{ version.hosted }}
         <img src="{{ constants.iconExtLink }}" />
       </a>
-    </div>
+      <a
+        *ngIf="!version.routedLink"
+        class="link-action fb-text-color"
+        href="{{ version.hostedLink }}"
+        routerLinkActive="active"
+        >{{ version.hosted }}
+        <img src="{{ constants.iconExtLink }}" />
+      </a>
 
-    <span class="flex-justify-center">7</span>
-    <span class="fb-text-color">Firebase RTDB</span>
-    <a
-      class="link-action fb-text-color"
-      href="https://owm-a7-fb.firebaseapp.com/"
-      routerLinkActive="active"
-      >Firebase
-      <img src="{{ constants.iconExtLink }}" />
-    </a>
-    <div class="flex-justify-center">
       <a
-        class="link-action"
-        href="https://github.com/zakhcst/owm-a7-fb"
+        class="flex-justify-center link-action"
+        href="{{ version.sourceLink }}"
         routerLinkActive="active"
       >
         <img src="{{ constants.iconExtLink }}" />
       </a>
-    </div>
-
-    <span class="flex-justify-center">7</span>
-    <span class="fb-text-color">Firebase RTDB</span>
-    <a
-      class="link-action gae-text-color"
-      href="https://owm-a7-fb.appspot.com/"
-      routerLinkActive="active"
-      >GCP AE(f1)
-      <img src="{{ constants.iconExtLink }}" />
-    </a>
-    <div class="flex-justify-center">
-      <a
-        class="link-action"
-        href="https://github.com/zakhcst/owm-a7-fb/tree/gcp"
-        routerLinkActive="active"
-      >
-        <img src="{{ constants.iconExtLink }}" />
-      </a>
-    </div>
-
-    <span class="flex-justify-center">6</span>
-    <span class="fb-text-color">Firebase RTDB</span>
-    <a
-      class="link-action fb-text-color"
-      href="https://owm-a6-fb.firebaseapp.com/"
-      routerLinkActive="active"
-      >Firebase
-      <img src="{{ constants.iconExtLink }}" />
-    </a>
-    <div class="flex-justify-center">
-      <a
-        class="link-action"
-        href="https://github.com/zakhcst/owm-a6-fb"
-        routerLinkActive="active"
-      >
-        <img src="{{ constants.iconExtLink }}" />
-      </a>
-    </div>
-
-    <span class="flex-justify-center">1.6</span>
-    <span>OWM Requests</span>
-    <a
-      class="link-action fb-text-color"
-      href="https://owm-weather-forecast.firebaseapp.com/"
-      routerLinkActive="active"
-      >Firebase
-      <img src="{{ constants.iconExtLink }}" />
-    </a>
-    <div class="flex-justify-center">
-      <a
-        class="link-action"
-        href="https://github.com/zakhcst/owm-weather-forecast"
-        routerLinkActive="active"
-      >
-        <img src="{{ constants.iconExtLink }}" />
-      </a>
-    </div>
+    </ng-container>
   </div>
 </div>

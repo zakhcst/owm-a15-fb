@@ -6,26 +6,35 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: background-image 1s 0.5s;
+  transition: background-image ease-in-out 1s 0.5s;
+
   display: grid;
+  grid-template-rows: 1fr 3fr;
   place-items: center;
   padding: 10px;
+  margin: 0;
 }
 
 header {
   display: grid;
   place-items: center;
+  color: black;
 }
 
 .grid-container {
-  height: 50vh;
-  width: -50vw;
+  height: 100%;
+  width: 100%;
   display: grid;
-  justify-items: start;
-  align-items: center;
+  place-items: center;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 30px;
   color: white;
+}
+
+@media only screen and (min-width: 900px) {
+  .grid-container {
+    width: 60%;
+    height: 80%;
+  }
 }
 
 .link-action {
