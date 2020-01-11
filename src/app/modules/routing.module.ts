@@ -34,14 +34,6 @@ const appRoutes: Routes = [
         pathMatch: 'full'
       },
       {
-        path: ConstantsService.views.forecastGrid.path,
-        loadChildren: () =>
-          import('src/app/components/forecast-grid/forecast-grid.module').then(
-            m => m.ForecastGridModule
-          ),
-        pathMatch: 'full'
-      },
-      {
         path: ConstantsService.views.forecastGChart.path,
         loadChildren: () =>
           import(
@@ -51,13 +43,6 @@ const appRoutes: Routes = [
       },
       { path: '', redirectTo: '/home', pathMatch: 'full' }
     ]
-  },
-  {
-    path: 'forecast-all',
-    loadChildren: () =>
-      import('src/app/components/forecast/forecast.module').then(
-        m => m.ForecastModule
-      )
   },
   {
     path: 'home',

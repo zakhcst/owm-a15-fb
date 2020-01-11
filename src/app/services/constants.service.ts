@@ -12,42 +12,26 @@ export class ConstantsService {
     stats: { path: 'stats', title: 'Stats', type: 'button' },
     forecastGChart: { path: 'forecast-gchart', title: 'GChart', type: 'button' },
     forecastFlex: { path: 'forecast-flex', title: 'Flex', type: 'button' },
-    forecastGrid: { path: 'forecast-grid', title: 'Grid', type: 'button' },
-    forecastAll: { path: '/forecast-all', title: 'All', type: 'button' },
     selectCities: { path: '', title: 'selectCities', type: 'selectCities' }
   };
 
   public static readonly toolbarActions = {
     stats: [
       ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGrid,
       ConstantsService.views.forecastGChart,
       ConstantsService.views.stats,
-      ConstantsService.views.forecastAll
     ],
     'forecast-flex': [
       ConstantsService.views.selectCities,
       ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGrid,
       ConstantsService.views.forecastGChart,
       ConstantsService.views.stats,
-      ConstantsService.views.forecastAll
-    ],
-    'forecast-grid': [
-      ConstantsService.views.selectCities,
-      ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGrid,
-      ConstantsService.views.forecastGChart,
-      ConstantsService.views.stats,
-      ConstantsService.views.forecastAll
     ],
     'forecast-gchart': [
       ConstantsService.views.selectCities,
       ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGrid,
       ConstantsService.views.forecastGChart,
       ConstantsService.views.stats,
-      ConstantsService.views.forecastAll
     ]
   };
 
