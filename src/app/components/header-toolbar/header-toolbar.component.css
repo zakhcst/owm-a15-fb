@@ -65,8 +65,11 @@
 }
 
 ::ng-deep .mat-select-panel {
-  background: #999;
+  background: #5981b2;
+  background-image: url('../../../assets/backgrounds/default.jpg');
+  background-size: cover;
 }
+
 ::ng-deep .mat-option-text {
   color: white;
 }
