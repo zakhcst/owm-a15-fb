@@ -51,7 +51,8 @@
 .home-button:hover {
   box-sizing: border-box;
   font-weight: normal;
-  color: yellow;
+  color: black;
+  --blink-color: yellow;
   --blink-bgcolor: transparent;
   animation-name: blink-animation;
   animation-iteration-count: infinite;
@@ -61,6 +62,13 @@
 .header-action {
   margin-left: 10px !important;
   font-size: 60%;
+}
+
+::ng-deep .mat-select-panel {
+  background: #999;
+}
+::ng-deep .mat-option-text {
+  color: white;
 }
 
 .header-action-xs {
@@ -106,6 +114,7 @@
 @keyframes blink-animation {
   50% {
     background-color: var(--blink-bgcolor);
+    color: var(--blink-color);
   }
 }
 .toolbar-menu-toggle-xs {
