@@ -41,11 +41,11 @@ Development build is depolyed at: https://owm-a8-fb.firebaseapp.com/
 
 ### Preview
 
-![preview1](/misc/preview1.png)
+![preview1](/misc/Screenshot_1.png)
 
-![preview2](/misc/preview2.png)
+![preview2](/misc/Screenshot_2.png)
 
-![preview3](/misc/preview3.png)
+![preview3](/misc/Screenshot_3.png)
 
 
 ### Coverage
