@@ -11,7 +11,7 @@ import { ResolverCitiesService } from './routing-resolvers/resolver-cities.servi
 
 const appRoutes: Routes = [
   {
-    path: 'toolbar',
+    path: 'v1',
     component: HeaderToolbarComponent,
     resolve: {
       cities: ResolverCitiesService,
