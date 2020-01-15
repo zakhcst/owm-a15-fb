@@ -3,7 +3,7 @@
     <span
       class="toolbar-menu-toggle-xs"
       (click)="toggleActionButtonsXS($event)"
-      *ngIf="isXs()"
+      *ngIf="isXs() === true"
     >
       <span
         class="icon-bar top-bar"
@@ -18,8 +18,8 @@
         [ngClass]="{ 'show-action-buttons-xs': showActionButtonsXS }"
       ></span>
     </span>
-    <a class="home-button" [routerLink]="['/home']">
-      <<
+    <a *ngIf="isXs() === false" class="home-button" [routerLink]="['/home']">
+      &lt;&lt;
     </a>
     <span>OWM Forecast</span>
     <span class="header-actions-container">
@@ -63,6 +63,14 @@
   </mat-toolbar>
 
   <div class="header-actions-container-xs" *ngIf="showActionButtonsXS === true">
+    <a
+      mat-button
+      mat-mini-fab
+      class="button-action-xs"
+      [ngStyle]="{'background-color': 'black'}"
+      [routerLink]="['/home']">
+      Back
+    </a>
     <ng-container *ngFor="let action of toolbarActions">
       <a
         *ngIf="isXs() === true && action['type'] === 'button'"
