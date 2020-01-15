@@ -35,8 +35,8 @@ import { IOwmData } from 'src/app/models/owm-data.model';
 export class HeaderToolbarComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatToolbar, { static: false }) matToolbar: MatToolbar;
-  @ViewChild('containertoolbaroutlet', { static: true })
-  containerToolbarOutlet: ElementRef;
+  @ViewChild('container', { static: true })
+  container: ElementRef;
 
   @HostBinding('attr.style')
   public get valueAsStyle(): any {
@@ -114,13 +114,13 @@ export class HeaderToolbarComponent
       .pipe(
         map((data: IOwmData) => ConstantsService.getWeatherBgImg(data)),
         filter((newDataImgPath: string) => {
-          const currentBgImgPath = this.containerToolbarOutlet.nativeElement.style['background-image'].split('"')[1];
+          const currentBgImgPath = this.container.nativeElement.style['background-image'].split('"')[1];
           return currentBgImgPath !== newDataImgPath;
         })
       )
       .subscribe(
         (imgPath: string) => {
-          this.containerToolbarOutlet.nativeElement.style[
+          this.container.nativeElement.style[
             'background-image'
           ] = `url(${imgPath})`;
         },

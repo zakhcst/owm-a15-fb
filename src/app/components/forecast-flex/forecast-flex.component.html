@@ -1,13 +1,5 @@
-<mat-card
-  class="forecast-card"
-  >
-  <!-- [ngSwitch]="loadingError" -->
+<mat-card class="forecast-card">
 
-  <!-- <div fxLayout="column" fxFill class="content" *ngSwitchCase="true">
-    <h3>Connection or service problem. Please reload or try later.</h3>
-  </div> -->
-
-  <!-- <div fxLayout="column" fxFill class="content" *ngSwitchCase="false"> -->
   <div fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
     <div fxFlex fxLayout="row" [fxHide]="loadingOwmData">
@@ -29,16 +21,19 @@
           <div
             fxFlex
             fxLayoutAlign="start center"
-            class="table-cell_date"
             *ngFor="
               let dataDaily of weatherData?.listByDate | keyvalue;
               index as $index
             "
           >
-            <span fxLayout.xxsv="row" fxLayout="column" fxLayoutAlign="end center">
-              <span>{{ dataDaily.key | date: 'EEE' }}&nbsp;</span>
-              <span>{{ dataDaily.key | date: 'dd' }}&nbsp;</span>
-              <span>{{ dataDaily.key | date: 'MMM' }}&nbsp;</span>
+            <span
+              fxLayout.xxsv="row"
+              fxLayout="column"
+              fxLayoutAlign="end center"
+            >
+              <span>{{ dataDaily.key | date: "EEE" }}&nbsp;</span>
+              <span>{{ dataDaily.key | date: "dd" }}&nbsp;</span>
+              <span>{{ dataDaily.key | date: "MMM" }}&nbsp;</span>
             </span>
           </div>
         </div>
@@ -64,18 +59,18 @@
               'background-color': timeTemplate[ind].bgColor + '50',
               color: timeTemplate[ind].textColor
             }"
-            >
-            <!-- border:(isCurrentTimeSlot(timeSlot) ? '1' : '0') + 'px solid black' -->
-            {{ (timeSlot.hour > 9 ? '' : '0') + timeSlot.hour + ':00' }}
+          >
+            {{ (timeSlot.hour > 9 ? "" : "0") + timeSlot.hour + ":00" }}
           </span>
         </div>
         <!-- show a row for each day -->
         <div
           fxFlex
+          fxFill
           fxLayout="row"
           *ngFor="let dataDaily of weatherData?.listByDate | keyvalue"
           [@showTimeSlot]="listByDateLength * timeTemplate.length"
-          >
+        >
           <!-- show each timeslot in the day's row -->
           <ng-container *ngFor="let timeSlot of timeTemplate; index as ind">
             <app-data-cell
@@ -83,7 +78,6 @@
               [dataDaily]="dataDaily.value"
               [timeSlot]="timeSlot"
               ></app-data-cell>
-              <!-- [isCurrentTimeSlot]="isCurrentTimeSlot(timeSlot)" -->
           </ng-container>
         </div>
       </div>

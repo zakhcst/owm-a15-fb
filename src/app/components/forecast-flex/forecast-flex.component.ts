@@ -61,7 +61,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadingOwmData = true;
   loadingStats = true;
-  // loadingError = false;
 
   weatherData: IOwmData;
   listByDateLength = 0;
@@ -125,7 +124,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       err => {
         this.loadingOwmData = false;
-        // this.loadingError = true;
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );
