@@ -1,12 +1,12 @@
 <span
   fxFlex
-  class="table-cell_data_empty-background"
   *ngIf="!dataDaily[timeSlot.hour]"
+  [ngClass]="'table-cell_data_empty-background'"
 ></span>
 <span
   fxFlex
   *ngIf="dataDaily[timeSlot.hour]"
-  class="table-cell_data-background"
+  [ngClass]="'table-cell_data-background'"
   [ngStyle]="{
     'background-color': timeSlot.bgColor + '70',
     color: timeSlot.textColor
@@ -27,14 +27,14 @@
       fxFlex="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
-      class="table-secondary_data_line"
+      [ngClass]="'table-secondary_data_line'"
     >
       <img [src]="iconPressure" />
-      <span fxFill class="table-secondary_data-opacity">
+      <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
           &nbsp;{{ dataDaily[timeSlot.hour].main.pressure | number: '1.0-0' }}
         </span>
-        <span fxFlex fxLayoutAlign="start end"> &nbsp;<small>hPa</small> </span>
+        <span fxFlex fxLayoutAlign="start end">&nbsp;hPa</span>
       </span>
     </span>
 
@@ -42,10 +42,10 @@
       fxFlex="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
-      class="table-secondary_data_line"
+      [ngClass]="'table-secondary_data_line'"
     >
       <img [src]="iconWind" />
-      <span fxFill class="table-secondary_data-opacity">
+      <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
           <span
             fxFlex
@@ -64,7 +64,7 @@
           </span>
           {{ dataDaily[timeSlot.hour].wind.speed | number: '1.0-0' }}
         </span>
-        <span fxFlex fxLayoutAlign="start end"> &nbsp;<small>m/s</small> </span>
+        <span fxFlex fxLayoutAlign="start end">&nbsp;m/s</span>
       </span>
     </span>
 
@@ -72,16 +72,14 @@
       fxFlex="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
-      class="table-secondary_data_line"
+      [ngClass]="'table-secondary_data_line'"
     >
       <img [src]="iconHumidity" />
-      <span fxFill class="table-secondary_data-opacity">
+      <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
           &nbsp;{{ dataDaily[timeSlot.hour].main.humidity | number: '1.0-0' }}
         </span>
-        <span fxFlex fxLayoutAlign="start end">
-          &nbsp;<small>%</small>&nbsp;
-        </span>
+        <span fxFlex fxLayoutAlign="start end">&nbsp;%&nbsp;</span>
       </span>
     </span>
   </div>

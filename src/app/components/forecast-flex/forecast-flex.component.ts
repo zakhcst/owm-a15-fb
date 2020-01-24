@@ -150,6 +150,10 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  trackByIdFn(index: any, item: any) {
+    return index;
+  }
+
   addError(custom: string, errorMessage: string) {
     const errorLog: AppErrorPayloadModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
