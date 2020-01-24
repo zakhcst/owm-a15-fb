@@ -62,7 +62,7 @@
     </span>
   </mat-toolbar>
 
-  <div class="header-actions-container-xs" *ngIf="showActionButtonsXS === true">
+  <div class="header-actions-container-xs" *ngIf="showActionButtonsXS === true && isXs() === true">
     <a
       mat-button
       mat-mini-fab
@@ -73,7 +73,7 @@
     </a>
     <ng-container *ngFor="let action of toolbarActions">
       <a
-        *ngIf="isXs() === true && action['type'] === 'button'"
+        *ngIf="action['type'] === 'button'"
         mat-button
         mat-mini-fab
         class="button-action-xs"
