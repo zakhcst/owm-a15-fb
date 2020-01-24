@@ -6,7 +6,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: background-image ease-in-out 1s 0.5s;
+  transition: background-image 1s ease-in-out 0.3s;
 
   display: grid;
   grid-template-rows: 1fr 3fr;
