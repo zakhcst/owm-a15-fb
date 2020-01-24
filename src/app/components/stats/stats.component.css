@@ -11,10 +11,10 @@
   background-color: #ccccff30;
 }
 .selected {
-  background-color: #bbd5c680;
+  background-color: #bbd5c640;
 }
 .selected-even {
-  background-color: #d5be9580;
+  background-color: #d5be9540;
 }
 .hovered:hover {
   background-color: #cf9e9e;
