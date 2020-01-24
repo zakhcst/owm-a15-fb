@@ -35,15 +35,15 @@ export class HomeComponent implements OnInit {
       version : 6,
       db: 'Firebase RTDB',
       hosted: 'Firebase',
-      hostedLink: 'https://owm-a7-fb.firebaseapp.com/',
-      sourceLink:'https://github.com/zakhcst/owm-a7-fb'
+      hostedLink: 'https://owm-a6-fb.firebaseapp.com/',
+      sourceLink:'https://github.com/zakhcst/owm-a6-fb'
     },
     {
       version : 1.6,
       db: 'OWM Requests',
       hosted: 'Firebase',
-      hostedLink: 'https://owm-a7-fb.firebaseapp.com/',
-      sourceLink:'https://github.com/zakhcst/owm-a7-fb'
+      hostedLink: 'https://owm-weather-forecast.firebaseapp.com/',
+      sourceLink:'https://github.com/zakhcst/owm-weather-forecast'
     }
   ]
 
