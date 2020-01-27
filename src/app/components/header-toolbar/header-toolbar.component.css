@@ -45,6 +45,7 @@
 	display: inline-block;
   cursor: pointer;
   font-weight: lighter;
+  border: solid 1px #4a5e77;
 
   transition: background-color 0.5s color 0.5s;
   position: relative;
