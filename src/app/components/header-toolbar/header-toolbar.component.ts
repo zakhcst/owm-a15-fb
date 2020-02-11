@@ -34,7 +34,7 @@ import { IOwmData } from 'src/app/models/owm-data.model';
 })
 export class HeaderToolbarComponent
   implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatToolbar, { static: false }) matToolbar: MatToolbar;
+  @ViewChild(MatToolbar) matToolbar: MatToolbar;
   @ViewChild('container', { static: true })
   container: ElementRef;
 
