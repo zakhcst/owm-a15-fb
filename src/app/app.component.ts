@@ -14,6 +14,7 @@ import {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  title = 'owm-a8-fb';
   loading = false;
   constructor(private _router: Router) {
     _router.events.subscribe((routerEvent: Event) => {

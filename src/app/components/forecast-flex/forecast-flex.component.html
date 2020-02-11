@@ -48,10 +48,10 @@
       <div fxFlex fxFill fxLayout="column" class="scroll-this" #gridContainer>
         <div fxFlex="5%" fxLayout="row">
           <span
-            fxFlex
-            fxLayoutAlign="center center"
-            class="table-header-background"
-            *ngFor="let timeSlot of timeTemplate; index as ind; trackBy: trackByIdFn"
+          fxFlex
+          fxLayoutAlign="center center"
+          class="table-header-background"
+          *ngFor="let timeSlot of timeTemplate; index as ind; trackBy: trackByIdFn"
             [ngStyle]="{
               'background-color': timeTemplate[ind].bgColor + '50',
               color: timeTemplate[ind].textColor
@@ -65,7 +65,7 @@
           fxFlex
           fxFill
           fxLayout="row"
-          *ngFor="let dataDaily of weatherData?.listByDate | keyvalue; trackBy: trackByIdFn"
+          *ngFor="let dataDaily of weatherData?.listByDate | keyvalue"
           [@showTimeSlot]="listByDateLength * timeTemplate.length"
         >
           <!-- show each timeslot in the day's row -->

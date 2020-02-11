@@ -106,13 +106,12 @@ export class ConstantsService {
   public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');
   public static readonly weatherDefaultBgImgFileName = 'default.jpg';
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
-  public static readonly getWeatherDefaultBgImg = () =>
-    ConstantsService.weatherBgImgPath +
-    ConstantsService.weatherDefaultBgImgFileName
+  public static readonly getWeatherDefaultBgImg = () => ConstantsService.weatherBgImgPath +  ConstantsService.weatherDefaultBgImgFileName;
+
   public static readonly getWeatherBgImg = (data: IOwmData) => {
-    const main =
-      data && data.list && data.list[0] && data.list[0].weather[0].main;
+    const main = data && data.list && data.list[0] && data.list[0].weather[0].main;
     const syspod = data && data.list && data.list[0] && data.list[0].sys.pod;
+    
     if (
       main &&
       main !== '' &&
