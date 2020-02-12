@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RequiredModules } from '../../modules/required-modules';
+import { RequiredModules } from '../../modules/required.module';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 import { ForecastGChartComponent } from './forecast-gchart.component';

@@ -1,7 +1,7 @@
 import { TestBed, tick, fakeAsync, async } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { SnackbarService } from './snackbar.service';
-import { RequiredModules } from '../modules/required-modules';
+import { RequiredModules } from '../modules/required.module';
 import { AngularMaterialModule } from '../modules/angular-material/angular-material.module';
 
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';

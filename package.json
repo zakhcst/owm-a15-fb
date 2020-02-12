@@ -1,5 +1,5 @@
 {
-  "name": "owm-a8-fb",
+  "name": "owm-a9-fb",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -30,9 +30,9 @@
     "@ngxs/store": "^3.6.2",
     "ajv": "^6.11.0",
     "angular-google-charts": "^0.1.6",
-    "core-js": "^2.6.11",
+    "core-js": "^3.6.4",
     "firebase": "^7.8.1",
-    "firebase-admin": "^7.4.0",
+    "firebase-admin": "^8.9.2",
     "firebase-tools": "^7.12.1",
     "rxjs": "6.5.4",
     "tslib": "^1.10.0",
@@ -45,7 +45,7 @@
     "@angular/language-service": "^9.0.0",
     "@types/jasmine": "^3.5.3",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^12.11.1",
+    "@types/node": "^13.7.0",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -56,7 +56,7 @@
     "karma-jasmine-html-reporter": "^1.5.2",
     "protractor": "^5.4.3",
     "ts-node": "^8.6.2",
-    "tslint": "~5.12.1",
+    "tslint": "^6.0.0",
     "typescript": "~3.7.5"
   }
 }

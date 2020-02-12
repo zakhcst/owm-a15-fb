@@ -31,7 +31,7 @@ import { AppHistoryState, AppErrorsState, AppDataState } from '../states/app.sta
     AngularFireDatabaseModule,
     AngularMaterialModule,
     LayoutsModules,
-    NgxsModule
+    NgxsModule,
   ]
 })
 

@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { OwmStatsService } from './owm-stats.service';
-import { RequiredModules } from '../modules/required-modules';
+import { RequiredModules } from '../modules/required.module';
 import {
   AngularFireDatabase,
   AngularFireDatabaseModule

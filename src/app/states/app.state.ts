@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
 import { SetHistoryState, SetErrorsState, SetDataState } from './app.actions';
 import {
@@ -27,6 +28,7 @@ const defaultActivity = {
   name: 'activity',
   defaults: defaultActivity
 })
+@Injectable()
 export class AppHistoryState {
   constructor(
     private _ip: GetBrowserIpService,
@@ -78,6 +80,7 @@ const defaultErrorsRecord = {
   name: 'errors',
   defaults: defaultErrorsRecord
 })
+@Injectable()
 export class AppErrorsState {
   constructor(
     private _ip: GetBrowserIpService,
@@ -115,6 +118,7 @@ export class AppErrorsState {
   name: 'data',
   defaults: null
 })
+@Injectable()
 export class AppDataState {
   constructor() {}
 

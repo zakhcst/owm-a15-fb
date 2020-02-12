@@ -6,9 +6,13 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
     "main.ts",
     "polyfills.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "enableIvy": true
+  }
 }

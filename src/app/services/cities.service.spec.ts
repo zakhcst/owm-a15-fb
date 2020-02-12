@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { RequiredModules } from '../modules/required-modules';
+import { RequiredModules } from '../modules/required.module';
 import { MockAngularFireService } from './testing.services.mocks';
 import { CitiesService } from './cities.service';
 import {

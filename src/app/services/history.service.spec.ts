@@ -7,7 +7,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../../environments/environment.prod';
 
 import { TestBed, async } from '@angular/core/testing';
-import { RequiredModules } from '../modules/required-modules';
+import { RequiredModules } from '../modules/required.module';
 
 import { HistoryService } from './history.service';
 import { AppHistoryState } from '../states/app.state';

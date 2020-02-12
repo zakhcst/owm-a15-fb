@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { RequiredModules } from '../modules/required-modules';
+import { RequiredModules } from '../modules/required.module';
 import { GetBrowserIpService } from './get-browser-ip.service';
 import { of, asyncScheduler } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
