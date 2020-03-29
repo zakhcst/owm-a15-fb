@@ -1,6 +1,7 @@
 .table-cell_data_empty-background {
   min-width: 120px;
   margin: 2px;
+  --animation-duration-description: 4s;
 }
 
 .table-cell_data-background {
@@ -8,7 +9,6 @@
   margin: 2px;
   padding: 2px 0 2px 0;
   transition: 0.1s;
-  --animation-duration-description: 4s;
   box-sizing: border-box;
   overflow: hidden;
 }

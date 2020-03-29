@@ -9,6 +9,8 @@ import { ErrorsService } from './errors.service';
 import { IOwmData, IOwmDataObjectByCityId } from '../models/owm-data.model';
 import { Store } from '@ngxs/store';
 import { SetDataState } from '../states/app.actions';
+import { SnackbarService } from './snackbar.service';
+import { ISnackbarData } from '../models/snackbar.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,8 @@ export class OwmDataService {
     private _cities: CitiesService,
     private _owmFallback: OwmFallbackDataService,
     private _errors: ErrorsService,
-    private _store: Store
+    private _store: Store,
+    private _snackbar: SnackbarService
   ) {}
 
   // Caching the data for 3h
@@ -31,11 +34,26 @@ export class OwmDataService {
   // is required in the front end in order to avoid
   // Firebase Cloud Functions outbound http requests
   getData(cityId: string): Observable<IOwmData> {
+    const optionsMemory: ISnackbarData = {
+      message: 'Query memory',
+      class: 'snackbar__warn',
+      delay: 200
+    };
+    this._snackbar.show(optionsMemory);
     if (this.cachedData[cityId] && this.isNotExpired(this.cachedData[cityId])) {
-      return of(this.cachedData[cityId]).pipe(tap((data: IOwmData) => {
-        this._store.dispatch(new SetDataState(data));
-      }));
+      return of(this.cachedData[cityId]).pipe(
+        tap((data: IOwmData) => {
+          this._store.dispatch(new SetDataState(data));
+        })
+      );
     }
+
+    const optionsDB: ISnackbarData = {
+      message: 'Query DB',
+      class: 'snackbar__warn',
+      delay: 200
+    };
+    this._snackbar.show(optionsDB);
 
     return this._cities.updateReads(cityId).pipe(
       switchMap(() => from(this._fb.getData(cityId))),
@@ -44,6 +62,14 @@ export class OwmDataService {
           this.cachedData[cityId] = fbdata;
           return of(fbdata);
         }
+
+        const optionsOWM: ISnackbarData = {
+          message: 'Query OWM',
+          class: 'snackbar__warn',
+          delay: 200
+        };
+        this._snackbar.show(optionsOWM);
+
         return this.requestNewOwmData(cityId).pipe(
           switchMap(() => {
             return of(fbdata);
@@ -56,7 +82,9 @@ export class OwmDataService {
           logMessage:
             'OwmDataService:getData:_fb.getData: ' + (err.message || err)
         });
-        return this.cachedData[cityId] ? of(this.cachedData[cityId]) : this._owmFallback.getData();
+        return this.cachedData[cityId]
+          ? of(this.cachedData[cityId])
+          : this._owmFallback.getData();
       }),
       tap((data: IOwmData) => {
         this._store.dispatch(new SetDataState(data));
@@ -75,7 +103,8 @@ export class OwmDataService {
         this._errors.add({
           userMessage: 'Connection or service problem',
           logMessage:
-            'OwmDataService:getData:_fb.getData: requestNewOwmData: ' + (err.message || err)
+            'OwmDataService:getData:_fb.getData: requestNewOwmData: ' +
+            (err.message || err)
         });
         return throwError('CitiesService: updateReads: ' + err);
       })

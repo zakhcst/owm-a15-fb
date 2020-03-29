@@ -4,7 +4,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
-  AfterViewInit,
+  // AfterViewInit,
   HostListener
 } from '@angular/core';
 import {
@@ -16,12 +16,7 @@ import {
   stagger
 } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
-import {
-  take,
-  filter,
-  map,
-  distinctUntilKeyChanged,
-} from 'rxjs/operators';
+import { take, filter, map, distinctUntilKeyChanged } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
 import { AppErrorPayloadModel, AppHistoryModel } from '../../states/app.models';
@@ -51,7 +46,8 @@ import { IOwmData } from '../../models/owm-data.model';
     ])
   ]
 })
-export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ForecastFlexComponent
+  implements OnInit, OnDestroy /*, AfterViewInit*/ {
   @ViewChild('fullHeightColumn', { static: true }) fullHeightColumn: ElementRef;
   @ViewChild('gridContainer', { static: true }) gridContainer: ElementRef;
 
@@ -103,15 +99,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.hasScrollbar();
-  }
+  // ngAfterViewInit() {
+  //   setTimeout(() => this.hasScrollbar(), 0);
+  // }
 
   onChange(eventSelectedCityId: string) {
     this.loadingOwmData = true;
-    this.weatherData$ = this._data.getData(eventSelectedCityId).pipe(
-      take(1),
-    );
+    this.weatherData$ = this._data.getData(eventSelectedCityId).pipe(take(1));
 
     this.weatherDataSubscription = this.weatherData$.subscribe(
       data => {

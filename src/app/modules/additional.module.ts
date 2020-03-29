@@ -6,12 +6,12 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 @NgModule({
   imports: [
     NgxsReduxDevtoolsPluginModule.forRoot(),
-    NgxsLoggerPluginModule.forRoot(),
+    // NgxsLoggerPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
   ],
   exports: [
     NgxsReduxDevtoolsPluginModule,
-    NgxsLoggerPluginModule,
+    // NgxsLoggerPluginModule,
     NgxsRouterPluginModule,
   ]
 })

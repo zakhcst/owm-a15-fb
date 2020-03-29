@@ -11,7 +11,7 @@ import { ConstantsService } from 'src/app/services/constants.service';
 export class DataCellComponent {
   @Input() dataDaily: IOwmDataTimeSlotUnit;
   @Input() timeSlot: ITimeTemplate;
-  @Input() isCurrentTimeSlot: boolean;
+  // @Input() isCurrentTimeSlot: boolean;
 
   iconsUrl: string = ConstantsService.owmIconsUrl;
   iconsOwm: string = ConstantsService.iconsOwm;

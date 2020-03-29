@@ -1,5 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarConfig
+} from '@angular/material/snack-bar';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { ISnackbarData } from '../models/snackbar.model';
@@ -23,6 +28,7 @@ export class SnackbarService {
   show(data: ISnackbarData) {
     if (this.q[0] !== data) {
       this.q.push(data);
+      console.log('push', data.message)
     }
     if (this.q[0] === data) {
       this.zone.run(() => {
@@ -38,14 +44,13 @@ export class SnackbarService {
   }
 
   ref(data: ISnackbarData): MatSnackBarRef<AppSnackBarInnerComponent> {
-    return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, {
-      duration:
-        ConstantsService.snackbarDuration *
-        (data.class === 'snackbar__error' ? 2 : 1),
+    const options: MatSnackBarConfig = {
       data,
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
-      panelClass: data.class
-    });
+      panelClass: data.class,
+      duration: data.delay || ConstantsService.snackbarDuration * (data.class === 'snackbar__error' ? 2 : 1)
+    };
+    return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, options);
   }
 }
