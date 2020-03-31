@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HistoryLogService } from './resolver-history-log.service';
+import { ResolverHistoryLogService } from './resolver-history-log.service';
 
-describe('HistoryLogService', () => {
+describe('ResolverHistoryLogService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: HistoryLogService = TestBed.get(HistoryLogService);
+    const service: ResolverHistoryLogService = TestBed.get(ResolverHistoryLogService);
     expect(service).toBeTruthy();
   });
 });

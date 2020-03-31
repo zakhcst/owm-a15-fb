@@ -11,13 +11,18 @@ import { Store } from '@ngxs/store';
 import { SetDataState } from '../states/app.actions';
 import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
+import { ConstantsService } from './constants.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OwmDataService {
   private cachedData: IOwmDataObjectByCityId = {};
-
+  snackbarOptions: ISnackbarData = {
+    message: '',
+    class: 'snackbar__warn',
+    delay: 200
+  };
   constructor(
     private _owm: OwmService,
     private _fb: DataService,
@@ -28,51 +33,65 @@ export class OwmDataService {
     private _snackbar: SnackbarService
   ) {}
 
+  dataRefreshTrigger(cityId?: string) {
+    cityId = cityId || ConstantsService.defaultCityId;
+    return this.getData(cityId);
+  }
+
   // Caching the data for 3h
   // in order to prevent exceeding OWM requests dev quota.
   // The additional logic for processing/reformating the data
   // is required in the front end in order to avoid
   // Firebase Cloud Functions outbound http requests
   getData(cityId: string): Observable<IOwmData> {
-    const optionsMemory: ISnackbarData = {
-      message: 'Query memory',
-      class: 'snackbar__warn',
-      delay: 200
-    };
-    this._snackbar.show(optionsMemory);
+    // const optionsMemory: ISnackbarData = {
+    //   message: 'Query memory',
+    //   class: 'snackbar__warn',
+    //   delay: 200
+    // };
+    // this._snackbar.show(optionsMemory);
+    this._snackbar.show({...this.snackbarOptions, message: 'Query memory'});
     if (this.cachedData[cityId] && this.isNotExpired(this.cachedData[cityId])) {
-      return of(this.cachedData[cityId]).pipe(
+      return of(this.cachedData[cityId])
+      .pipe(
         tap((data: IOwmData) => {
           this._store.dispatch(new SetDataState(data));
         })
       );
     }
 
-    const optionsDB: ISnackbarData = {
-      message: 'Query DB',
-      class: 'snackbar__warn',
-      delay: 200
-    };
-    this._snackbar.show(optionsDB);
-
+    // const optionsDB: ISnackbarData = {
+    //   message: 'Query DB',
+    //   class: 'snackbar__warn',
+    //   delay: 200
+    // };
+    // this._snackbar.show(optionsDB);
+    this._snackbar.show({...this.snackbarOptions, message: 'Query DB'});
     return this._cities.updateReads(cityId).pipe(
       switchMap(() => from(this._fb.getData(cityId))),
       switchMap((fbdata: IOwmData) => {
         if (fbdata !== null && this.isNotExpired(fbdata)) {
           this.cachedData[cityId] = fbdata;
-          return of(fbdata);
+          return of(fbdata).pipe(
+            tap(() => {
+              this._store.dispatch(new SetDataState(fbdata));
+            })
+          );
         }
 
-        const optionsOWM: ISnackbarData = {
-          message: 'Query OWM',
-          class: 'snackbar__warn',
-          delay: 200
-        };
-        this._snackbar.show(optionsOWM);
-
+        // const optionsOWM: ISnackbarData = {
+        //   message: 'Query OWM',
+        //   class: 'snackbar__warn',
+        //   delay: 200
+        // };
+        // this._snackbar.show(optionsOWM);
+        this._snackbar.show({...this.snackbarOptions, message: 'Query OWM'});
         return this.requestNewOwmData(cityId).pipe(
           switchMap(() => {
             return of(fbdata);
+          })
+          , tap((data: IOwmData) => {
+            this._store.dispatch(new SetDataState(data));
           })
         );
       }),
@@ -82,12 +101,11 @@ export class OwmDataService {
           logMessage:
             'OwmDataService:getData:_fb.getData: ' + (err.message || err)
         });
-        return this.cachedData[cityId]
-          ? of(this.cachedData[cityId])
-          : this._owmFallback.getData();
-      }),
-      tap((data: IOwmData) => {
-        this._store.dispatch(new SetDataState(data));
+        return (this.cachedData[cityId] ? of(this.cachedData[cityId]) : this._owmFallback.getData()).pipe(
+          tap((data: IOwmData) => {
+            this._store.dispatch(new SetDataState(data));
+          })
+        );
       })
     );
   }

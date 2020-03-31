@@ -1,31 +1,15 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  // AfterViewInit,
-  HostListener
-} from '@angular/core';
-import {
-  trigger,
-  style,
-  animate,
-  transition,
-  query,
-  stagger
-} from '@angular/animations';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, /* AfterViewInit,*/HostListener } from '@angular/core';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
-import { take, filter, map, distinctUntilKeyChanged } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
-import { AppErrorPayloadModel, AppHistoryModel } from '../../states/app.models';
+import { AppErrorPayloadModel } from '../../states/app.models';
 import { ITimeTemplate } from '../../models/hours.model';
 
 import { ConstantsService } from '../../services/constants.service';
-import { OwmDataService } from '../../services/owm-data.service';
 import { ErrorsService } from '../../services/errors.service';
 import { IOwmData } from '../../models/owm-data.model';
+import { AppDataState } from 'src/app/states/app.state';
 
 @Component({
   selector: 'app-forecast-flex',
@@ -46,8 +30,7 @@ import { IOwmData } from '../../models/owm-data.model';
     ])
   ]
 })
-export class ForecastFlexComponent
-  implements OnInit, OnDestroy /*, AfterViewInit*/ {
+export class ForecastFlexComponent implements OnInit, OnDestroy {
   @ViewChild('fullHeightColumn', { static: true }) fullHeightColumn: ElementRef;
   @ViewChild('gridContainer', { static: true }) gridContainer: ElementRef;
 
@@ -62,40 +45,24 @@ export class ForecastFlexComponent
   listByDateLength = 0;
   weatherData$: Observable<IOwmData>;
   weatherDataSubscription: Subscription;
-  activitySubscription: Subscription;
   scrollbarHeight = 0;
 
-  @Select((state: any) => state.activity) activity$: Observable<
-    AppHistoryModel
-  >;
+  @Select(AppDataState.last) data$: Observable<IOwmData>;
+  
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.hasScrollbar();
   }
 
-  constructor(private _data: OwmDataService, private _errors: ErrorsService) {}
+  constructor(private _errors: ErrorsService) {}
 
   ngOnInit() {
-    this.activitySubscription = this.activity$
-      .pipe(
-        map(
-          activity =>
-            activity.sessionHistory[activity.sessionHistory.length - 1]
-        ),
-        distinctUntilKeyChanged('cityId'),
-        filter(activity => activity['cityId'] !== 'Init')
-      )
-      .subscribe(activity => {
-        this.onChange(activity.cityId);
-      });
+    this.onInit();
   }
 
   ngOnDestroy() {
     if (this.weatherDataSubscription) {
       this.weatherDataSubscription.unsubscribe();
-    }
-    if (this.activitySubscription) {
-      this.activitySubscription.unsubscribe();
     }
   }
 
@@ -103,11 +70,9 @@ export class ForecastFlexComponent
   //   setTimeout(() => this.hasScrollbar(), 0);
   // }
 
-  onChange(eventSelectedCityId: string) {
+  onInit() {
     this.loadingOwmData = true;
-    this.weatherData$ = this._data.getData(eventSelectedCityId).pipe(take(1));
-
-    this.weatherDataSubscription = this.weatherData$.subscribe(
+    this.weatherDataSubscription = this.data$.subscribe(
       data => {
         this.weatherData = data;
         this.listByDateLength = Object.keys(data.listByDate).length;

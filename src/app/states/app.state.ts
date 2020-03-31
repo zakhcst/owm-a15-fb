@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { State, Action, StateContext } from '@ngxs/store';
+import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
 import { SetHistoryState, SetErrorsState, SetDataState } from './app.actions';
 import {
   AppHistoryModel,
@@ -37,10 +37,7 @@ export class AppHistoryState {
   ) {}
 
   @Action(SetHistoryState)
-  setHistoryState(
-    context: StateContext<AppHistoryModel>,
-    action: SetHistoryState
-  ) {
+  setHistoryState(context: StateContext<AppHistoryModel>, action: SetHistoryState) {
     const { cityId, cityName, countryISO2 } = action.payload;
     return this._ip.getIP().pipe(
       switchMap(ip => {
@@ -53,7 +50,7 @@ export class AppHistoryState {
           sessionHistory: [...context.getState().sessionHistory, newEntry]
         };
 
-        context.patchState(update);
+        context.setState(update);
         localStorage.setItem('lastCityId', cityId);
 
         this._snackbar.show({
@@ -89,10 +86,7 @@ export class AppErrorsState {
   ) {}
 
   @Action(SetErrorsState)
-  setErrorsState(
-    context: StateContext<AppErrorsStateModel>,
-    action: SetErrorsState
-  ) {
+  setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
     return this._ip.getIP().pipe(
       switchMap(ip => {
         const newEntry: ErrorRecordModel = {
@@ -114,16 +108,29 @@ export class AppErrorsState {
   }
 }
 
-@State<IOwmData>({
+@State<IOwmData[]>({
   name: 'data',
-  defaults: null
+  defaults: []
 })
 @Injectable()
 export class AppDataState {
-  constructor() {}
+  constructor(private _store: Store) {}
 
   @Action(SetDataState)
-  setDataState(context: StateContext<IOwmData>, action: SetDataState) {
-    context.setState(action.payload);
+  setDataState(context: StateContext<IOwmData[]>, action: SetDataState) {
+    const data = action.payload;
+    context.setState([...context.getState(), data]);
+
+    const historyLogItem = {
+      cityId: data.city.id.toString(),
+      cityName: data.city.name,
+      countryISO2: data.city.country
+    };
+    this._store.dispatch(new SetHistoryState(historyLogItem));
+  }
+
+  @Selector()
+  static last(state: IOwmData[]) {
+    return state.length > 0 ? state[state.length - 1] : null;
   }
 }

@@ -5,7 +5,8 @@ import {
   switchMap,
   take,
   shareReplay,
-  catchError
+  catchError,
+  takeLast
 } from 'rxjs/operators';
 import { ICities } from '../models/cities.model';
 

@@ -31,10 +31,11 @@ export class HistoryService {
       '/' +
       data.time;
     const ref = this._db.object(refKey);
+    console.log('setDataToFB(ip: string, data: HistoryRecordModel) {')
     return ref.set(data.cityId);
   }
 
-  add(historyLogItem: AppHistoryPayloadModel) {
-    this._store.dispatch(new SetHistoryState(historyLogItem));
-  }
+  // add(historyLogItem: AppHistoryPayloadModel) {
+    // this._store.dispatch(new SetHistoryState(historyLogItem));
+  // }
 }

@@ -7,6 +7,7 @@ import { ErrorPageComponent } from '../components/error-page/error-page.componen
 import { HomeModule } from '../components/home/home.module';
 import { ConstantsService } from '../services/constants.service';
 import { ResolverCitiesService } from './routing-resolvers/resolver-cities.service';
+import { ResolverInitialDataService } from './routing-resolvers/resolver-initial-data.service';
 
 
 const appRoutes: Routes = [
@@ -15,6 +16,7 @@ const appRoutes: Routes = [
     component: HeaderToolbarComponent,
     resolve: {
       cities: ResolverCitiesService,
+      initialData: ResolverInitialDataService
     },
     children: [
       {

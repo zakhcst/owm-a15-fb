@@ -1,31 +1,18 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ElementRef,
-  ViewChild,
-  AfterViewInit,
-  HostBinding
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostBinding } from '@angular/core';
 import { ICities } from '../../models/cities.model';
-import {
-  ActivatedRoute,
-  Router,
-  ChildActivationEnd,
-  NavigationEnd,
-  Event
-} from '@angular/router';
+import { ActivatedRoute, Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
 import { filter, map } from 'rxjs/operators';
 import { Subscription, Observable } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
-import { HistoryService } from '../../services/history.service';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select } from '@ngxs/store';
 import { IOwmData } from 'src/app/models/owm-data.model';
+import { OwmDataService } from 'src/app/services/owm-data.service';
+import { AppDataState } from 'src/app/states/app.state';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -58,12 +45,12 @@ export class HeaderToolbarComponent
   toolbarHeight: number;
   weatherBackgroundImg: string;
 
-  @Select((state: any) => state.data) data$: Observable<IOwmData>;
+  @Select(AppDataState.last) data$: Observable<IOwmData>;
 
   constructor(
     private _router: Router,
+    private _data: OwmDataService,
     private _activatedRoute: ActivatedRoute,
-    private _history: HistoryService,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
     public mediaObserver: MediaObserver
@@ -99,13 +86,11 @@ export class HeaderToolbarComponent
     const subscriptionCities: Subscription = this._activatedRoute.data.subscribe(
       data => {
         this.cities = data.cities;
-        this.selectionChange(null);
       },
       err => {
         this.addError('header-toolbar: subscriptionCities', err.message);
       }
     );
-
     this.subscriptions.add(subscriptionCities);
   }
 
@@ -120,9 +105,7 @@ export class HeaderToolbarComponent
       )
       .subscribe(
         (imgPath: string) => {
-          this.container.nativeElement.style[
-            'background-image'
-          ] = `url(${imgPath})`;
+          this.container.nativeElement.style['background-image'] = `url(${imgPath})`;
         },
         err => {
           this.addError(
@@ -156,17 +139,8 @@ export class HeaderToolbarComponent
     this.showActionButtonsXS = false;
   }
 
-  selectionChange(eventSelectedCityId) {
-    this.selectedCityId =
-      eventSelectedCityId ||
-      this.selectedCityId ||
-      ConstantsService.defaultCityId;
-    const historyLog = {
-      cityId: this.selectedCityId,
-      cityName: this.cities[this.selectedCityId].name,
-      countryISO2: this.cities[this.selectedCityId].iso2
-    };
-    this._history.add(historyLog);
+  selectionChange() {
+    return this._data.dataRefreshTrigger(this.selectedCityId).subscribe();
   }
 
   addError(custom: string, errorMessage: string) {
