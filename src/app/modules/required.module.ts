@@ -17,6 +17,7 @@ import { AppHistoryState, AppErrorsState, AppDataState } from '../states/app.sta
     BrowserAnimationsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
+    // AngularFireModule.initializeApp(environment.emulator),
     AngularFireDatabaseModule,
     AngularMaterialModule,
     LayoutsModules,

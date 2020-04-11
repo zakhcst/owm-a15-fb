@@ -11,7 +11,11 @@ export const environment = {
     projectId: 'owm-a7-fb',
     storageBucket: 'owm-a7-fb.appspot.com',
     messagingSenderId: '1062734348256'
-  }
+  },
+  // emulator: {
+  //   databaseURL: 'http://localhost:9000?ns=emulator',
+  //   ssl: false
+  // }
 };
 
 /*

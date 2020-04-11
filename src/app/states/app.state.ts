@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
+import {
+  State,
+  Action,
+  StateContext,
+  Selector,
+} from '@ngxs/store';
 import { SetHistoryState, SetErrorsState, SetDataState } from './app.actions';
 import {
   AppHistoryModel,
@@ -16,12 +21,9 @@ import { IOwmData } from '../models/owm-data.model';
 
 const defaultActivity = {
   ip: '',
-  sessionHistory: [
-    {
-      cityId: 'Init',
-      time: new Date().valueOf()
-    }
-  ]
+  initTime: new Date().valueOf(),
+  selectedCityId: '',
+  sessionHistory: []
 };
 
 @State<AppHistoryModel>({
@@ -37,7 +39,10 @@ export class AppHistoryState {
   ) {}
 
   @Action(SetHistoryState)
-  setHistoryState(context: StateContext<AppHistoryModel>, action: SetHistoryState) {
+  setHistoryState(
+    context: StateContext<AppHistoryModel>,
+    action: SetHistoryState
+  ) {
     const { cityId, cityName, countryISO2 } = action.payload;
     return this._ip.getIP().pipe(
       switchMap(ip => {
@@ -46,11 +51,10 @@ export class AppHistoryState {
           time: new Date().valueOf()
         };
         const update = {
-          ip,
           sessionHistory: [...context.getState().sessionHistory, newEntry]
         };
 
-        context.setState(update);
+        context.patchState(update);
         localStorage.setItem('lastCityId', cityId);
 
         this._snackbar.show({
@@ -86,7 +90,10 @@ export class AppErrorsState {
   ) {}
 
   @Action(SetErrorsState)
-  setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
+  setErrorsState(
+    context: StateContext<AppErrorsStateModel>,
+    action: SetErrorsState
+  ) {
     return this._ip.getIP().pipe(
       switchMap(ip => {
         const newEntry: ErrorRecordModel = {
@@ -114,23 +121,27 @@ export class AppErrorsState {
 })
 @Injectable()
 export class AppDataState {
-  constructor(private _store: Store) {}
-
   @Action(SetDataState)
   setDataState(context: StateContext<IOwmData[]>, action: SetDataState) {
-    const data = action.payload;
-    context.setState([...context.getState(), data]);
+    const owmData = action.payload;
+    context.setState([...context.getState(), owmData]);
 
     const historyLogItem = {
-      cityId: data.city.id.toString(),
-      cityName: data.city.name,
-      countryISO2: data.city.country
+      cityId: owmData.city.id.toString(),
+      cityName: owmData.city.name,
+      countryISO2: owmData.city.country,
+      owmData
     };
-    this._store.dispatch(new SetHistoryState(historyLogItem));
+    return context.dispatch(new SetHistoryState(historyLogItem));
   }
 
   @Selector()
   static last(state: IOwmData[]) {
     return state.length > 0 ? state[state.length - 1] : null;
   }
+  // static last(cityId: string) {
+  //   return createSelector([AppDataState], (state: IOwmData[]) => {
+  //     return state.filter(data => data.city.id.toString() === cityId).slice(-1)[0];
+  //   });
+  // }
 }

@@ -1,0 +1,79 @@
+{
+  "rules": {
+    "owm": {
+      ".read": true,
+      "$owm": {
+        ".write": true,
+    		".validate": "
+        	newData.hasChildren(['listByDate', 'updated', 'cnt'])
+        	&& newData.child('updated').isNumber()
+        	&& newData.child('cnt').isNumber()
+        ",
+      }
+    },
+    "cities":{
+      ".read": true,
+      "$city": {
+        "r":{
+        ".write": true,
+    		".validate": "newData.isNumber() && 
+          (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        },
+        "u":{
+        ".write": true,
+    		".validate": "newData.isNumber() && 
+          (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        }
+      },
+    },
+    "stats":{
+      ".read": true,
+      "r":{
+        ".write": true,
+    	  ".validate": "newData.isNumber() && 
+        (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+      },
+      "u":{
+        ".write": true,
+    	  ".validate": "newData.isNumber() && 
+        (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+      },
+      "$cityId":{
+       	"reads":{
+          ".write": true,
+          ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        },
+        "updates":{
+          ".write": true,
+    		  ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        }
+      }
+    },
+    "history-log":{
+      ".read": true,
+     		"$ip":{
+     			"$time":{
+						".write": true,
+   					".validate": "newData.isString() && root.child('cities').child(newData.val()).exists()"             
+         	}
+        }
+    },
+    "errors-log":{
+      ".read": true,
+     		"$ip":{
+     			"$time":{
+						".write": true,
+   					".validate": "newData.isString()"             
+         	}
+        }
+    },
+    "invocations-log":{
+      ".read": false,
+      ".write": false
+    },
+    "$other": { 
+      ".read": false, 
+      ".write": false 
+    }
+  }
+}

@@ -21,7 +21,7 @@ export class OwmDataService {
   snackbarOptions: ISnackbarData = {
     message: '',
     class: 'snackbar__warn',
-    delay: 200
+    delay: 100
   };
   constructor(
     private _owm: OwmService,
@@ -44,12 +44,7 @@ export class OwmDataService {
   // is required in the front end in order to avoid
   // Firebase Cloud Functions outbound http requests
   getData(cityId: string): Observable<IOwmData> {
-    // const optionsMemory: ISnackbarData = {
-    //   message: 'Query memory',
-    //   class: 'snackbar__warn',
-    //   delay: 200
-    // };
-    // this._snackbar.show(optionsMemory);
+    
     this._snackbar.show({...this.snackbarOptions, message: 'Query memory'});
     if (this.cachedData[cityId] && this.isNotExpired(this.cachedData[cityId])) {
       return of(this.cachedData[cityId])
@@ -60,12 +55,6 @@ export class OwmDataService {
       );
     }
 
-    // const optionsDB: ISnackbarData = {
-    //   message: 'Query DB',
-    //   class: 'snackbar__warn',
-    //   delay: 200
-    // };
-    // this._snackbar.show(optionsDB);
     this._snackbar.show({...this.snackbarOptions, message: 'Query DB'});
     return this._cities.updateReads(cityId).pipe(
       switchMap(() => from(this._fb.getData(cityId))),
@@ -79,12 +68,6 @@ export class OwmDataService {
           );
         }
 
-        // const optionsOWM: ISnackbarData = {
-        //   message: 'Query OWM',
-        //   class: 'snackbar__warn',
-        //   delay: 200
-        // };
-        // this._snackbar.show(optionsOWM);
         this._snackbar.show({...this.snackbarOptions, message: 'Query OWM'});
         return this.requestNewOwmData(cityId).pipe(
           switchMap(() => {

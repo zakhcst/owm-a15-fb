@@ -46,6 +46,7 @@ export class HeaderToolbarComponent
   weatherBackgroundImg: string;
 
   @Select(AppDataState.last) data$: Observable<IOwmData>;
+  // @Select(AppDataState.last(this.selectedCityId)) data$: Observable<IOwmData>;
 
   constructor(
     private _router: Router,
