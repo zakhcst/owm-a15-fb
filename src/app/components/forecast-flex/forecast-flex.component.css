@@ -2,10 +2,17 @@
   height: 100%;
   padding: 5px;
   background: transparent;
+  scrollbar-width: none;
 }
 
 .content {
-  font-size: 12px;
+  font-size: 14px;
+  color: white;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 .table-header-background {
@@ -24,7 +31,6 @@
 .table-column_0 {
   padding: 0 5px 0 5px;
   width: 40px;
-  color: white;
 }
 
 .table-cell_00 {
@@ -35,5 +41,11 @@
 @media only screen and (max-height: 420px) {
   .content {
     font-size: 6px;
+  }
+}
+
+@media only screen and (max-height: 800px) {
+  .content {
+    font-size: 10px;
   }
 }

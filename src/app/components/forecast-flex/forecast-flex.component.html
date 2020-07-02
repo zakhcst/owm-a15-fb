@@ -1,14 +1,9 @@
-<mat-card class="forecast-card">
-
-  <div fxLayout="column" fxFill class="content">
+<mat-card class="forecast-card" (wheel)="onMouseWheel($event)">
+  <div fxFlex fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
     <div fxFlex fxLayout="row" [fxHide]="loadingOwmData">
       <!-- Date's column-->
-      <div
-        #fullHeightColumn
-        class="table-column_0"
-        fxLayout="column"
-        >
+      <div #fullHeightColumn class="table-column_0" fxLayout="column">
         <div
           fxFlex="5%"
           fxLayout="column"
@@ -34,12 +29,7 @@
           </div>
         </div>
 
-        <div
-          id="scrollbar-infill"
-          [ngStyle]="{
-            height: scrollbarHeight + 'px'
-          }"
-        ></div>
+        <div id="scrollbar-infill" [ngStyle]="{ height: scrollbarHeight + 'px' }"></div>
       </div>
       <!-- / Date's column-->
 
@@ -47,10 +37,10 @@
       <div fxFlex fxFill fxLayout="column" class="scroll-this" #gridContainer>
         <div fxFlex="5%" fxLayout="row">
           <span
-          fxFlex
-          fxLayoutAlign="center center"
-          class="table-header-background"
-          *ngFor="let timeSlot of timeTemplate; index as ind; trackBy: trackByIdFn"
+            fxFlex
+            fxLayoutAlign="center center"
+            class="table-header-background"
+            *ngFor="let timeSlot of timeTemplate; index as ind; trackBy: trackByIdFn"
             [ngStyle]="{
               'background-color': timeTemplate[ind].bgColor + '50',
               color: timeTemplate[ind].textColor
@@ -66,14 +56,14 @@
           fxLayout="row"
           *ngFor="let dataDaily of weatherData?.listByDate | keyvalue"
           [@showTimeSlot]="listByDateLength * timeTemplate.length"
-        >
+          >
           <!-- show each timeslot in the day's row -->
           <ng-container *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn">
             <app-data-cell
               fxFlex
               [dataDaily]="dataDaily.value"
               [timeSlot]="timeSlot"
-              ></app-data-cell>
+            ></app-data-cell>
           </ng-container>
         </div>
       </div>

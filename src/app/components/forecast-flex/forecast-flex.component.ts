@@ -35,7 +35,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   dateColumnTextColor: string;
 
   loadingOwmData = true;
-  loadingStats = true;
 
   weatherData: IOwmDataModel;
   listByDateLength = 0;
@@ -76,6 +75,11 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );
+  }
+
+  onMouseWheel(event: any) {
+    if (this.gridContainer && !this.gridContainer.nativeElement.shiftKey)
+      this.gridContainer.nativeElement.scrollLeft += event.deltaY;
   }
 
   hasScrollbar() {
