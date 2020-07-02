@@ -27,7 +27,6 @@ import { AppErrorPayloadModel } from '../../states/app.models';
   ],
 })
 export class ForecastFlexComponent implements OnInit, OnDestroy {
-  @ViewChild('fullHeightColumn', { static: true }) fullHeightColumn: ElementRef;
   @ViewChild('gridContainer', { static: true }) gridContainer: ElementRef;
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
@@ -42,11 +41,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   scrollbarHeight = 0;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
-
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.hasScrollbar();
-  }
 
   constructor(private _errors: ErrorsService) {}
 
@@ -64,11 +58,10 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     this.loadingOwmData = true;
     this.weatherDataSubscription = this.owmData$.pipe(filter(data => !!data)).subscribe(
       data => {
+        this.listByDateLength = Object.keys(data.listByDate).length;
         this.weatherData = data;
-        this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
 
         this.loadingOwmData = false;
-        this.hasScrollbar();
       },
       err => {
         this.loadingOwmData = false;
@@ -80,15 +73,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   onMouseWheel(event: any) {
     if (this.gridContainer && !this.gridContainer.nativeElement.shiftKey)
       this.gridContainer.nativeElement.scrollLeft += event.deltaY;
-  }
-
-  hasScrollbar() {
-    if (this.fullHeightColumn) {
-      setTimeout(() => {
-        this.scrollbarHeight =
-          this.fullHeightColumn.nativeElement.clientHeight - this.gridContainer.nativeElement.clientHeight;
-      }, 0);
-    }
   }
 
   trackByIdFn(index: any, item: any) {

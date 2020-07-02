@@ -1,7 +1,7 @@
 <mat-card class="forecast-card" (wheel)="onMouseWheel($event)">
   <div fxFlex fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
-    <div fxFlex fxLayout="row" [fxHide]="loadingOwmData">
+    <div fxFlex fxLayout="row" *ngIf="loadingOwmData === false">
       <!-- Date's column-->
       <div #fullHeightColumn class="table-column_0" fxLayout="column">
         <div
@@ -28,8 +28,6 @@
             </span>
           </div>
         </div>
-
-        <div id="scrollbar-infill" [ngStyle]="{ height: scrollbarHeight + 'px' }"></div>
       </div>
       <!-- / Date's column-->
 

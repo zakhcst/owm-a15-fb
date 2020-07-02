@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, Observable, pipe } from 'rxjs';
-import { switchMap, catchError, map, tap } from 'rxjs/operators';
+import { switchMap, catchError, map, tap, take } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { CitiesService } from './cities.service';
@@ -52,6 +52,7 @@ export class OwmDataService {
   getDataDB(cityId: string): Observable<IOwmDataModel> {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
     return this._fb.getData(cityId).pipe(
+      take(1),
       tap(() => this.updateDBReads(cityId)),
       switchMap((fbdata: IOwmDataModel) => {
         if (fbdata !== null && this.isNotExpired(fbdata)) {
