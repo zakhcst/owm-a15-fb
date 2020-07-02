@@ -10,7 +10,7 @@ import { OwmFallbackDataService } from './owm-fallback-data.service';
 import { of, asyncScheduler } from 'rxjs';
 import { ErrorsService } from './errors.service';
 import { getNewDataObject, MockErrorsService } from './testing.services.mocks';
-import { IOwmData } from '../models/owm-data.model';
+import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from './constants.service';
 
 describe('OwmFallbackDataService', () => {
@@ -47,7 +47,7 @@ describe('OwmFallbackDataService', () => {
 
   it('should receive http request data', () => {
     httpClient
-      .get<IOwmData>(ConstantsService.owmFallbackData)
+      .get<IOwmDataModel>(ConstantsService.owmFallbackData)
       .subscribe(
         data => expect(data).toEqual(getNewDataObject()),
         error => fail(error)

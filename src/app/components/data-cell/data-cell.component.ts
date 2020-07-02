@@ -1,17 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ITimeTemplate } from 'src/app/models/hours.model';
-import { IOwmDataTimeSlotUnit } from 'src/app/models/owm-data.model';
+import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
   selector: 'app-data-cell',
   templateUrl: './data-cell.component.html',
-  styleUrls: ['./data-cell.component.css']
+  styleUrls: ['./data-cell.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataCellComponent {
-  @Input() dataDaily: IOwmDataTimeSlotUnit;
+  @Input() dataDaily: IOwmDataModelTimeSlotUnit;
   @Input() timeSlot: ITimeTemplate;
-  // @Input() isCurrentTimeSlot: boolean;
 
   iconsUrl: string = ConstantsService.owmIconsUrl;
   iconsOwm: string = ConstantsService.iconsOwm;

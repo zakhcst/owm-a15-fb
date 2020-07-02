@@ -22,6 +22,7 @@
       &lt;&lt;
     </a>
     <span>OWM Forecast</span>
+    <span class="header-sample-text" *ngIf="owmData && !owmData.updated && isXs() === false">SAMPLE DATA</span>
     <span class="header-actions-container">
       <ng-container *ngFor="let action of toolbarActions">
         <mat-form-field

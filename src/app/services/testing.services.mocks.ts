@@ -1,6 +1,6 @@
 import { asyncScheduler, of, throwError } from 'rxjs';
 
-import { IOwmData } from '../models/owm-data.model';
+import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
 import {
   AppErrorPayloadModel,
@@ -12,9 +12,9 @@ import citiesJSON from '../../../misc/cities-obj.json';
 import { ISnackbarData } from '../models/snackbar.model';
 import { CitiesService } from './cities.service';
 
-export const data = <IOwmData>(<any>dataJSON);
-export const getNewDataObject = (state?: string): IOwmData => {
-  const fallbackData: IOwmData = JSON.parse(JSON.stringify(data));
+export const data = <IOwmDataModel>(<any>dataJSON);
+export const getNewDataObject = (state?: string): IOwmDataModel => {
+  const fallbackData: IOwmDataModel = JSON.parse(JSON.stringify(data));
   if (state === 'owm') {
     delete fallbackData.listByDate;
   }
@@ -42,18 +42,18 @@ export class MockOwmService {
 
 export class MockDataService {
   error = false;
-  dbData: IOwmData;
+  dbData: IOwmDataModel;
   getData(cityId: string) {
     this.dbData = getNewDataObject();
     return of(cityId ? this.dbData : null, asyncScheduler);
   }
-  setData(cityId: string, owmData: IOwmData) {
+  setData(cityId: string, owmData: IOwmDataModel) {
     this.dbData = owmData;
     return owmData && !this.error ? Promise.resolve() : Promise.reject();
   }
 }
 export class MockOwmDataService {
-  dbData: IOwmData;
+  dbData: IOwmDataModel;
   getData(cityId: string) {
     const lsError = localStorage.getItem('mockOwmDataServiceError');
     this.dbData = getNewDataObject();

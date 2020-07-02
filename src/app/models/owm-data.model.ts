@@ -1,17 +1,17 @@
-export interface IOwmData {
+export interface IOwmDataModel {
   city: IOwmCity;
   cnt: number;
   cod: string;
-  list: IOwmDataTimeSlotUnit[];
+  list: IOwmDataModelTimeSlotUnit[];
   message: number;
   updated?: number;
   listByDate?: {
-    [dateValue: string]: IOwmDataTimeSlotUnit;
+    [dateValue: string]: IOwmDataModelTimeSlotUnit;
   };
 }
 
-export interface IOwmDataObjectByCityId {
-  [cityId: string]: IOwmData;
+export interface IOwmDataModelObjectByCityId {
+  [cityId: string]: IOwmDataModel;
 }
 
 export interface IOwmCity {
@@ -26,7 +26,7 @@ export interface ICoords {
   lon: number;
 }
 
-export interface IOwmDataTimeSlotUnit {
+export interface IOwmDataModelTimeSlotUnit {
   clouds?: {
     all: number;
   };

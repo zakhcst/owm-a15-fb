@@ -1,17 +1,38 @@
 import { AppHistoryPayloadModel, AppErrorPayloadModel } from './app.models';
-import { IOwmData } from '../models/owm-data.model';
+import { IOwmDataModel } from '../models/owm-data.model';
 
 export class SetHistoryState {
-  static readonly type = '[activity] set';
+  static readonly type = '[activity] set history';
   constructor(public payload: AppHistoryPayloadModel) {}
 }
+
+export class SetHistoryIpState {
+  static readonly type = '[activity] set ip';
+  constructor(public payload: string) {}
+}
+
+export class SetSelectedCityIdState {
+  static readonly type = '[activity] set SelectedCityId';
+  constructor(public payload?: string) {}
+}
+
+export class SetStatusIpState {
+  static readonly type = '[status] set ip';
+  constructor(public payload: string) {}
+}
+
+export class SetStatusSelectedCityIdState {
+  static readonly type = '[status] set SelectedCityId';
+  constructor(public payload?: string) {}
+}
+
 export class SetErrorsState {
   static readonly type = '[errors] set';
   constructor(public payload: AppErrorPayloadModel) {}
 }
 
 export class SetDataState {
-  static readonly type = '[data] set';
-  constructor(public payload: IOwmData) {}
+  static readonly type = '[owm data] set';
+  constructor(public payload: IOwmDataModel) {}
 }
 

@@ -6,10 +6,9 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 import { AngularMaterialModule } from './angular-material/angular-material.module';
-import { LayoutsModules } from './layouts/layouts.modules';
 import { environment } from '../../environments/environment';
 import { NgxsModule } from '@ngxs/store';
-import { AppHistoryState, AppErrorsState, AppDataState } from '../states/app.state';
+import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from '../states/app.state';
 
 @NgModule({
   imports: [
@@ -20,8 +19,7 @@ import { AppHistoryState, AppErrorsState, AppDataState } from '../states/app.sta
     // AngularFireModule.initializeApp(environment.emulator),
     AngularFireDatabaseModule,
     AngularMaterialModule,
-    LayoutsModules,
-    NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppDataState],
+    NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState],
       { developmentMode: !environment.production }),
   ],
   exports: [
@@ -31,7 +29,6 @@ import { AppHistoryState, AppErrorsState, AppDataState } from '../states/app.sta
     AngularFireModule,
     AngularFireDatabaseModule,
     AngularMaterialModule,
-    LayoutsModules,
     NgxsModule,
   ]
 })

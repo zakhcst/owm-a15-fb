@@ -1,69 +1,121 @@
 import { Injectable } from '@angular/core';
+import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import {
-  State,
-  Action,
-  StateContext,
-  Selector,
-} from '@ngxs/store';
-import { SetHistoryState, SetErrorsState, SetDataState } from './app.actions';
+  SetHistoryState,
+  SetErrorsState,
+  SetDataState,
+  SetStatusSelectedCityIdState,
+  SetStatusIpState,
+} from './app.actions';
 import {
-  AppHistoryModel,
-  HistoryRecordModel,
+  AppStatusModel,
   AppErrorsStateModel,
-  ErrorRecordModel
+  HistoryRecordModel,
+  ErrorRecordModel,
+  IHistoryModel,
 } from './app.models';
 import { GetBrowserIpService } from '../services/get-browser-ip.service';
 import { SnackbarService } from '../services/snackbar.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { HistoryService } from '../services/history.service';
 import { ErrorsService } from '../services/errors.service';
-import { IOwmData } from '../models/owm-data.model';
+import { IOwmDataModel } from '../models/owm-data.model';
+import { ConstantsService } from '../services/constants.service';
 
-const defaultActivity = {
-  ip: '',
-  initTime: new Date().valueOf(),
-  selectedCityId: '',
-  sessionHistory: []
-};
+@State<AppStatusModel>({
+  name: 'status',
+  defaults: {
+    ip: 'init',
+    sessionStartTime: new Date().valueOf(),
+    selectedCityId: ConstantsService.defaultCityId,
+  }
+})
+@Injectable()
+export class AppStatusState {
+  constructor(private _ip: GetBrowserIpService, ) { }
 
-@State<AppHistoryModel>({
-  name: 'activity',
-  defaults: defaultActivity
+  @Selector()
+  static selectStatusSelectedCityId(state: AppStatusModel) {
+    return state.selectedCityId;
+  }
+
+  @Selector()
+  static selectStatusIp(state: AppStatusModel) {
+    return state.ip;
+  }
+
+  @Action(SetStatusIpState)
+  setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
+    const payloadIP = action.payload || '';
+    if (payloadIP === 'ip-error' || payloadIP === '') {
+      return this._ip.requestIPv4()
+        .pipe(
+          switchMap(this._ip.validateIPv4),
+          tap((ip: string) => {
+            context.patchState({ ip });
+          }));
+    } else {
+      context.patchState({ ip: payloadIP });
+    }
+  }
+
+  @Action(SetStatusSelectedCityIdState)
+  setStatusSelectedCityIdState(context: StateContext<AppStatusModel>, action: SetStatusSelectedCityIdState) {
+    const selectedCityId = action.payload || context.getState().selectedCityId;
+    localStorage.setItem('selectedCityId', selectedCityId);
+    context.patchState({ selectedCityId });
+  }
+}
+
+@State<IHistoryModel>({
+  name: 'history',
+  defaults: [],
 })
 @Injectable()
 export class AppHistoryState {
   constructor(
-    private _ip: GetBrowserIpService,
+    private _store: Store,
     private _history: HistoryService,
     private _snackbar: SnackbarService
-  ) {}
+  ) { }
+
+  @Selector([AppStatusState])
+  static selectSelectedCityHistory(state: IHistoryModel, status: AppStatusModel): IHistoryModel {
+    return state.filter((snapshot) => {
+      return snapshot.city.id.toString() === status.selectedCityId.toString();
+    });
+  }
+
+  @Selector([AppHistoryState.selectSelectedCityHistory])
+  static selectSelectedCityHistoryLast(state: IOwmDataModel, cityHistory: IHistoryModel) {
+    return cityHistory.slice(-1)[0];
+  }
 
   @Action(SetHistoryState)
-  setHistoryState(
-    context: StateContext<AppHistoryModel>,
-    action: SetHistoryState
-  ) {
-    const { cityId, cityName, countryISO2 } = action.payload;
-    return this._ip.getIP().pipe(
-      switchMap(ip => {
-        const newEntry: HistoryRecordModel = {
-          cityId,
-          time: new Date().valueOf()
-        };
-        const update = {
-          sessionHistory: [...context.getState().sessionHistory, newEntry]
-        };
+  setHistoryState(context: StateContext<IHistoryModel>, action: SetHistoryState) {
+    const owmData = action.payload.owmData;
 
-        context.patchState(update);
-        localStorage.setItem('lastCityId', cityId);
+    const selectedCityId = owmData.city.id.toString();
+    const cityName = owmData.city.name;
+    const countryISO2 = owmData.city.country;
+    const ip = this._store.selectSnapshot(AppStatusState.selectStatusIp);
 
-        this._snackbar.show({
-          message: `Selected: ${cityName}, ${countryISO2}`,
-          class: 'snackbar__info'
-        });
-        return this._history.setDataToFB(ip, newEntry);
-      })
-    );
+    const newEntry: HistoryRecordModel = {
+      cityId: selectedCityId,
+      time: new Date().valueOf(),
+    };
+
+    // Reuse exising snapshot
+    const existingSnapshot = context.getState().find(snapshot => snapshot.updated === owmData.updated);
+    const sessionHistory = [...context.getState(), existingSnapshot || owmData ];
+
+    context.setState(sessionHistory);
+
+    this._snackbar.show({
+      message: `Selected: ${cityName}, ${countryISO2}`,
+      class: 'snackbar__info',
+    });
+    return this._history.setDataToFB(ip, newEntry);
   }
 }
 
@@ -72,33 +124,26 @@ const defaultErrorsRecord = {
   sessionErrors: [
     {
       logMessage: 'Init',
-      time: new Date().valueOf()
-    }
-  ]
+      time: new Date().valueOf(),
+    },
+  ],
 };
 
 @State<AppErrorsStateModel>({
   name: 'errors',
-  defaults: defaultErrorsRecord
+  defaults: defaultErrorsRecord,
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(
-    private _ip: GetBrowserIpService,
-    private _errors: ErrorsService,
-    private _snackbar: SnackbarService
-  ) {}
+  constructor(private _ip: GetBrowserIpService, private _errors: ErrorsService, private _snackbar: SnackbarService) { }
 
   @Action(SetErrorsState)
-  setErrorsState(
-    context: StateContext<AppErrorsStateModel>,
-    action: SetErrorsState
-  ) {
+  setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
     return this._ip.getIP().pipe(
-      switchMap(ip => {
+      switchMap((ip) => {
         const newEntry: ErrorRecordModel = {
           logMessage: action.payload.logMessage,
-          time: new Date().valueOf()
+          time: new Date().valueOf(),
         };
         const update = {
           ip,
@@ -107,7 +152,7 @@ export class AppErrorsState {
         context.patchState(update);
         this._snackbar.show({
           message: `Error: ${action.payload.userMessage}`,
-          class: 'snackbar__error'
+          class: 'snackbar__error',
         });
         return this._errors.setDataToFB(ip, newEntry);
       })
@@ -115,33 +160,22 @@ export class AppErrorsState {
   }
 }
 
-@State<IOwmData[]>({
+@State<IOwmDataModel>({
   name: 'data',
-  defaults: []
+  defaults: null,
 })
 @Injectable()
-export class AppDataState {
-  @Action(SetDataState)
-  setDataState(context: StateContext<IOwmData[]>, action: SetDataState) {
-    const owmData = action.payload;
-    context.setState([...context.getState(), owmData]);
-
-    const historyLogItem = {
-      cityId: owmData.city.id.toString(),
-      cityName: owmData.city.name,
-      countryISO2: owmData.city.country,
-      owmData
-    };
-    return context.dispatch(new SetHistoryState(historyLogItem));
-  }
+export class AppOwmDataState {
 
   @Selector()
-  static last(state: IOwmData[]) {
-    return state.length > 0 ? state[state.length - 1] : null;
+  static selectOwmData(state: IOwmDataModel) {
+    return state;
   }
-  // static last(cityId: string) {
-  //   return createSelector([AppDataState], (state: IOwmData[]) => {
-  //     return state.filter(data => data.city.id.toString() === cityId).slice(-1)[0];
-  //   });
-  // }
+
+  @Action(SetDataState)
+  setDataState(context: StateContext<IOwmDataModel>, action: SetDataState) {
+    const owmData = action.payload;
+    context.setState(owmData);
+    return context.dispatch(new SetHistoryState({ owmData }));
+  }
 }

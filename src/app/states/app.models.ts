@@ -1,21 +1,20 @@
-import { IOwmData } from '../models/owm-data.model';
+import { IOwmDataModel } from '../models/owm-data.model';
 
 export interface HistoryRecordModel {
   cityId: string;
   time: number;
-  owmData?: IOwmData;
 }
-export interface AppHistoryModel {
-  ip?: string;
-  selectedCityId?: string;
-  sessionHistory: HistoryRecordModel[];
+
+export interface IHistoryModel extends Array<IOwmDataModel> {}
+
+export interface AppStatusModel {
+  ip: string;
+  sessionStartTime: number; 
+  selectedCityId: string;
 }
 
 export interface AppHistoryPayloadModel {
-  cityId?: string;
-  cityName?: string;
-  countryISO2?: string;
-  owmData: IOwmData;
+  owmData: IOwmDataModel;
 }
 
 export interface ErrorRecordModel {

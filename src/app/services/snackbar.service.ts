@@ -28,7 +28,6 @@ export class SnackbarService {
   show(data: ISnackbarData) {
     if (this.q[0] !== data) {
       this.q.push(data);
-      console.log('push', data.message)
     }
     if (this.q[0] === data) {
       this.zone.run(() => {

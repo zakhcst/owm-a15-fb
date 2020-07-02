@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ITimeTemplate } from '../models/hours.model';
-import { IOwmData } from '../models/owm-data.model';
+import { IOwmDataModel } from '../models/owm-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class ConstantsService {
     'https://api.openweathermap.org/data/2.5/forecast';
   public static readonly defaultUnits = 'metric';
   public static get defaultCityId() {
-    return localStorage.getItem('lastCityId') || '2643743'; // Defaults to London, UK
+    return localStorage.getItem('selectedCityId') || '2643743'; // Defaults to London, UK
   }
 
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
@@ -108,10 +108,10 @@ export class ConstantsService {
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
   public static readonly getWeatherDefaultBgImg = () => ConstantsService.weatherBgImgPath +  ConstantsService.weatherDefaultBgImgFileName;
 
-  public static readonly getWeatherBgImg = (data: IOwmData) => {
+  public static readonly getWeatherBgImg = (data: IOwmDataModel) => {
     const main = data && data.list && data.list[0] && data.list[0].weather[0].main;
     const syspod = data && data.list && data.list[0] && data.list[0].sys.pod;
-    
+
     if (
       main &&
       main !== '' &&

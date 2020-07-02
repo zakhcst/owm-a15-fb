@@ -24,7 +24,14 @@
   flex: 1 1 auto;
   flex-wrap: nowrap;
   background: transparent ;
-  border-bottom: solid 0.1px grey;
+}
+
+.header-sample-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .header-actions-container {

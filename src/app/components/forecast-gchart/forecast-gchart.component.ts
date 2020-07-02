@@ -11,12 +11,14 @@ import { take, filter, map, distinctUntilKeyChanged } from 'rxjs/operators';
 import { GoogleChartComponent } from 'angular-google-charts';
 
 import { Select } from '@ngxs/store';
-import { AppErrorPayloadModel, AppHistoryModel } from '../../states/app.models';
+import { AppErrorPayloadModel, IHistoryModel } from '../../states/app.models';
 import { ITimeTemplate } from '../../models/hours.model';
 
 import { ConstantsService } from '../../services/constants.service';
 import { OwmDataService } from '../../services/owm-data.service';
 import { ErrorsService } from '../../services/errors.service';
+import { IOwmDataModel } from 'src/app/models/owm-data.model';
+import { AppOwmDataState } from 'src/app/states/app.state';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -44,48 +46,53 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   weatherParams = ConstantsService.weatherParams;
   listByDateActive: any;
 
-  @Select((state: any) => state.activity) activity$: Observable<
-    AppHistoryModel
-  >;
-
+  // @Select((state: any) => state.activity) activity$: Observable<IHistoryModel>;
+  @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
+  
   constructor(private _data: OwmDataService, private _errors: ErrorsService) { }
   ngOnInit() {
-    this.activitySubscription = this.activity$
-      .pipe(
-        map(
-          activity =>
-            activity.sessionHistory[activity.sessionHistory.length - 1]
-        ),
-        distinctUntilKeyChanged('cityId'),
-        filter(activity => activity['cityId'] !== 'Init')
-      )
-      .subscribe(activity => {
-        this.onChange(activity.cityId);
-      });
+    // this.activitySubscription = this.activity$
+    //   .pipe(
+    //     map(
+    //       activity =>
+    //         activity[activity.length - 1]
+    //     ),
+    //     distinctUntilKeyChanged('cityId'),
+    //     filter(activity => activity['cityId'] !== 'Init')
+    //   )
+    //   .subscribe(activity => {
+    //     this.onChange(activity.cityId);
+    //   });
+      this.onChange();
   }
 
   ngOnDestroy() {
     if (this.weatherDataSubscription) {
       this.weatherDataSubscription.unsubscribe();
     }
-    if (this.activitySubscription) {
-      this.activitySubscription.unsubscribe();
-    }
+    // if (this.activitySubscription) {
+    //   this.activitySubscription.unsubscribe();
+    // }
   }
 
-  onChange(eventSelectedCityId: string) {
+  // onChange(eventSelectedCityId: string) {
+  onChange() {
     this.loadingOwmData = true;
-    if (this.weatherData$) {
-      this.weatherDataSubscription.unsubscribe();
-    }
-    this.weatherData$ = this._data.getData(eventSelectedCityId).pipe(take(1));
-
-    this.weatherDataSubscription = this.weatherData$.subscribe(
+    // if (this.weatherData$) {
+    //   this.weatherDataSubscription.unsubscribe();
+    // }
+    // this.weatherData$ = this._data.getDataAll(eventSelectedCityId).pipe(take(1));
+    this.weatherDataSubscription = this.owmData$
+      .pipe(
+        filter((data) => !!data)
+      )
+      .subscribe(
+    // this.weatherDataSubscription = this.weatherData$.subscribe(
       data => {
         this.weatherData = data;
         this.listByDateActive = this.weatherData.listByDate;
         this.loadingOwmData = false;
-        this.setCardBg2TimeSlotBg();
+        // this.setCardBg2TimeSlotBg();
         this.setGChartData();
       },
       err => {

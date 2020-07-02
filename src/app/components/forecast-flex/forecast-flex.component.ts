@@ -1,15 +1,16 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, /* AfterViewInit,*/HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
-
-import { Select } from '@ngxs/store';
-import { AppErrorPayloadModel } from '../../states/app.models';
-import { ITimeTemplate } from '../../models/hours.model';
+import { filter, tap } from 'rxjs/operators';
 
 import { ConstantsService } from '../../services/constants.service';
+import { ITimeTemplate } from '../../models/hours.model';
 import { ErrorsService } from '../../services/errors.service';
-import { IOwmData } from '../../models/owm-data.model';
-import { AppDataState } from 'src/app/states/app.state';
+
+import { Select } from '@ngxs/store';
+import { IOwmDataModel } from '../../models/owm-data.model';
+import { AppOwmDataState } from 'src/app/states/app.state';
+import { AppErrorPayloadModel } from '../../states/app.models';
 
 @Component({
   selector: 'app-forecast-flex',
@@ -18,17 +19,12 @@ import { AppDataState } from 'src/app/states/app.state';
   animations: [
     trigger('showTimeSlot', [
       transition(':enter', [
-        query(
-          ':enter',
-          [
-            style({ opacity: 0 }),
-            stagger('0.1s', [animate('0.3s', style({ opacity: 1 }))])
-          ],
-          { optional: true }
-        )
-      ])
-    ])
-  ]
+        query(':enter', [style({ opacity: 0 }), stagger('0.1s', [animate('0.3s', style({ opacity: 1 }))])], {
+          optional: true,
+        }),
+      ]),
+    ]),
+  ],
 })
 export class ForecastFlexComponent implements OnInit, OnDestroy {
   @ViewChild('fullHeightColumn', { static: true }) fullHeightColumn: ElementRef;
@@ -41,14 +37,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   loadingOwmData = true;
   loadingStats = true;
 
-  weatherData: IOwmData;
+  weatherData: IOwmDataModel;
   listByDateLength = 0;
-  weatherData$: Observable<IOwmData>;
   weatherDataSubscription: Subscription;
   scrollbarHeight = 0;
 
-  @Select(AppDataState.last) data$: Observable<IOwmData>;
-  
+  @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.hasScrollbar();
@@ -66,19 +61,14 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ngAfterViewInit() {
-  //   setTimeout(() => this.hasScrollbar(), 0);
-  // }
-
   onInit() {
     this.loadingOwmData = true;
-    this.weatherDataSubscription = this.data$.subscribe(
+    this.weatherDataSubscription = this.owmData$.pipe(filter(data => !!data)).subscribe(
       data => {
         this.weatherData = data;
-        this.listByDateLength = Object.keys(data.listByDate).length;
+        this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
 
         this.loadingOwmData = false;
-        this.setCardBg2TimeSlotBg();
         this.hasScrollbar();
       },
       err => {
@@ -88,23 +78,11 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     );
   }
 
-  setCardBg2TimeSlotBg() {
-    const timeSlot = this.timeTemplate.find(this.isCurrentTimeSlot);
-    this.cardBackground = timeSlot.bgColor;
-    this.dateColumnTextColor = timeSlot.textColor;
-  }
-
-  isCurrentTimeSlot(timeSlot: ITimeTemplate): boolean {
-    const hour = new Date().getHours();
-    return timeSlot.hour <= hour && hour < timeSlot.hour + 3;
-  }
-
   hasScrollbar() {
     if (this.fullHeightColumn) {
       setTimeout(() => {
         this.scrollbarHeight =
-          this.fullHeightColumn.nativeElement.clientHeight -
-          this.gridContainer.nativeElement.clientHeight;
+          this.fullHeightColumn.nativeElement.clientHeight - this.gridContainer.nativeElement.clientHeight;
       }, 0);
     }
   }
@@ -116,7 +94,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   addError(custom: string, errorMessage: string) {
     const errorLog: AppErrorPayloadModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
-      logMessage: `ForecastFlexComponent: ${custom}: ${errorMessage}`
+      logMessage: `ForecastFlexComponent: ${custom}: ${errorMessage}`,
     };
     this._errors.add(errorLog);
   }

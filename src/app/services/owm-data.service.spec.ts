@@ -114,14 +114,8 @@ describe('OwmDataService', () => {
   it('getData: should return _owmFallback data when _cities.updateReads fails', async(() => {
     const reads = mockCitiesService.reads;
     mockErrorsService.messages = [];
-    const spyFallBackDataServiceGetData = spyOn(
-      mockOwmFallbackDataService,
-      'getData'
-    ).and.callThrough();
-    const spyDataServiceGetData = spyOn(
-      mockDataService,
-      'getData'
-    ).and.callThrough();
+    const spyFallBackDataServiceGetData = spyOn(mockOwmFallbackDataService, 'getData').and.callThrough();
+    const spyDataServiceGetData = spyOn(mockDataService, 'getData').and.callThrough();
     service.getData(null).subscribe(
       responseData => {
         expect(mockCitiesService.reads).toBe(reads);

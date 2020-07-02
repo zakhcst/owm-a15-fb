@@ -1,4 +1,17 @@
 {
     "workbench.colorCustomizations": {},
-    "editor.wordWrapColumn": 120
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.wordWrapColumn": 120,
+    "prettier.singleQuote": true,
+    "prettier.printWidth": 120,
+    "prettier.useEditorConfig": true,
+    "prettier.bracketSpacing": true,
+    // "[javascript]": {
+    //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // },
+    // "[typescript]": {
+    //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // },
+    "typescript.preferences.quoteStyle": "single",
+    "javascript.preferences.quoteStyle": "single",
 }
