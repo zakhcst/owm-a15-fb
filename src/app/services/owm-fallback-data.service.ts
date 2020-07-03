@@ -13,7 +13,6 @@ export class OwmFallbackDataService {
 
   getData(): Observable<IOwmDataModel> {
     return this._http.get<IOwmDataModel>(ConstantsService.owmFallbackData).pipe(
-      // logs error at this level and rethrows for component err log
       catchError(err => {
         this._errors.add({
           userMessage: 'Connection or service problem',

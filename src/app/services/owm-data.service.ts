@@ -71,10 +71,14 @@ export class OwmDataService {
   getDataOWM(cityId: string): Observable<IOwmDataModel> {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
     return this._owm.getData(cityId).pipe(
-      map((newOwmData: IOwmDataModel) => this.setListByDate(newOwmData)),
-      tap((newOwmDataIncludingListByDate: IOwmDataModel) => this._fb.setData(cityId, newOwmDataIncludingListByDate)),
-      switchMap((newOwmDataIncludingListByDate) => of(newOwmDataIncludingListByDate)),
-      catchError((err) => this.getFallbackData())
+      switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
+      catchError(err => {
+        this._errors.add({
+          userMessage: 'Connection or service problem',
+          logMessage: 'OwmDataService: getData: ' + err.message
+        });
+        return this.getFallbackData();
+      })
     );
   }
 

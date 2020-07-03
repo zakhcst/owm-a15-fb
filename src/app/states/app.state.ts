@@ -21,6 +21,7 @@ import { HistoryService } from '../services/history.service';
 import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from '../services/constants.service';
+import { DataService } from '../services/data.service';
 
 @State<AppStatusModel>({
   name: 'status',
@@ -32,7 +33,7 @@ import { ConstantsService } from '../services/constants.service';
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private _ip: GetBrowserIpService, ) { }
+  constructor(private _ip: GetBrowserIpService) { }
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -76,12 +77,13 @@ export class AppHistoryState {
   constructor(
     private _store: Store,
     private _history: HistoryService,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _fb: DataService
   ) { }
 
   @Selector([AppStatusState])
   static selectSelectedCityHistory(state: IHistoryModel, status: AppStatusModel): IHistoryModel {
-    return state.filter((snapshot) => {
+    return state.filter(snapshot => {
       return snapshot.city.id.toString() === status.selectedCityId.toString();
     });
   }
@@ -115,7 +117,11 @@ export class AppHistoryState {
       message: `Selected: ${cityName}, ${countryISO2}`,
       class: 'snackbar__info',
     });
-    return this._history.setDataToFB(ip, newEntry);
+    return this._history.setDataToFB(ip, newEntry).then( () => {
+      if (!existingSnapshot) {
+        return this._fb.setData(selectedCityId, owmData);
+      }
+    });
   }
 }
 
