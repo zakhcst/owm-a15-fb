@@ -27,7 +27,7 @@ import { AppErrorPayloadModel } from '../../states/app.models';
   ],
 })
 export class ForecastFlexComponent implements OnInit, OnDestroy {
-  @ViewChild('gridContainer', { static: true }) gridContainer: ElementRef;
+  @ViewChild('gridContainer', { static: false }) gridContainer: ElementRef;
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
   cardBackground: string;
@@ -71,7 +71,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   }
 
   onMouseWheel(event: any) {
-    if (this.gridContainer && !this.gridContainer.nativeElement.shiftKey)
+    if (this.gridContainer && !event.shiftKey)
       this.gridContainer.nativeElement.scrollLeft += event.deltaY;
   }
 

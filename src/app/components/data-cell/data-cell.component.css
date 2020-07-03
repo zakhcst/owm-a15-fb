@@ -17,7 +17,7 @@
   /* transform: scale(0.95); */
   border: 1px solid black;
 }
-
+/* 
 .table-cell_data-background:hover .description {
   overflow: hidden;
   animation: scroll-left var(--animation-duration-description) linear infinite;
@@ -30,7 +30,7 @@
   50% {
     transform: translateX(100%);
   }
-}
+} */
 
 .table-secondary_data_line {
   margin: 2px 0 2px 0;

@@ -1,4 +1,4 @@
-<mat-card class="forecast-card" (wheel)="onMouseWheel($event)">
+<mat-card class="forecast-card">
   <div fxFlex fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
     <div fxFlex fxLayout="row" *ngIf="loadingOwmData === false">
@@ -18,7 +18,6 @@
             *ngFor="let dataDaily of weatherData?.listByDate | keyvalue; trackBy: trackByIdFn"
           >
             <span
-              fxLayout.xxsv="row"
               fxLayout="column"
               fxLayoutAlign="end center"
             >
@@ -32,7 +31,7 @@
       <!-- / Date's column-->
 
       <!-- Hours columns-->
-      <div fxFlex fxFill fxLayout="column" class="scroll-this" #gridContainer>
+      <div fxFlex fxFill fxLayout="column" class="scroll-this" #gridContainer (wheel)="onMouseWheel($event)">
         <div fxFlex="5%" fxLayout="row">
           <span
             fxFlex

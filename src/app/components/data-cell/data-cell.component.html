@@ -1,24 +1,30 @@
 <span
   fxFlex
   *ngIf="!dataDaily[timeSlot.hour]"
-  [ngClass]="'table-cell_data_empty-background'"
+  class="table-cell_data_empty-background"
 ></span>
-<span
+<div
   fxFlex
+  fxLayout="column"
+  fxLayoutAlign="center center"
   *ngIf="dataDaily[timeSlot.hour]"
-  [ngClass]="'table-cell_data-background'"
+  class="table-cell_data-background"
   [ngStyle]="{
     'background-color': timeSlot.bgColor + '40',
     color: timeSlot.textColor
   }"
-  fxLayout="column"
-  fxLayoutAlign="center center"
+>
+  <div
+    fxFlex
+    fxFlex.gt-xs="25%"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    class="description"
   >
-  <div fxFlex fxFlex.gt-xs="25%" fxLayout="row" fxLayoutAlign="center center" class="description">
     <img [src]="iconsOwm + dataDaily[timeSlot.hour].weather[0].icon + '.png'" />
     <span>
       {{ dataDaily[timeSlot.hour].weather[0].main }}
-      {{ dataDaily[timeSlot.hour].main.temp | number: '1.0-0' }}&#176;C
+      {{ dataDaily[timeSlot.hour].main.temp | number: "1.0-0" }}&#176;C
     </span>
   </div>
   <div fxFlex fxLayout="column" class="table-secondary_data">
@@ -26,12 +32,12 @@
       fxFlex="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
-      [ngClass]="'table-secondary_data_line'"
+      class="table-secondary_data_line"
     >
       <img [src]="iconPressure" />
       <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
-          &nbsp;{{ dataDaily[timeSlot.hour].main.pressure | number: '1.0-0' }}
+          &nbsp;{{ dataDaily[timeSlot.hour].main.pressure | number: "1.0-0" }}
         </span>
         <span fxFlex fxLayoutAlign="start end">&nbsp;hPa</span>
       </span>
@@ -41,7 +47,7 @@
       fxFlex="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
-      [ngClass]="'table-secondary_data_line'"
+      class="table-secondary_data_line"
     >
       <img [src]="iconWind" />
       <span fxFill>
@@ -61,7 +67,7 @@
           >
             {{ arrow000Deg }}
           </span>
-          {{ dataDaily[timeSlot.hour].wind.speed | number: '1.0-0' }}
+          {{ dataDaily[timeSlot.hour].wind.speed | number: "1.0-0" }}
         </span>
         <span fxFlex fxLayoutAlign="start end">&nbsp;m/s</span>
       </span>
@@ -71,15 +77,15 @@
       fxFlex="25%"
       fxLayout="row"
       fxLayoutAlign="start end"
-      [ngClass]="'table-secondary_data_line'"
+      class="table-secondary_data_line"
     >
       <img [src]="iconHumidity" />
       <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
-          &nbsp;{{ dataDaily[timeSlot.hour].main.humidity | number: '1.0-0' }}
+          &nbsp;{{ dataDaily[timeSlot.hour].main.humidity | number: "1.0-0" }}
         </span>
         <span fxFlex fxLayoutAlign="start end">&nbsp;%&nbsp;</span>
       </span>
     </span>
-  </div> 
-</span>
+  </div>
+</div>
