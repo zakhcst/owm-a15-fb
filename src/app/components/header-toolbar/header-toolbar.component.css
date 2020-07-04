@@ -5,7 +5,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('../../../assets/backgrounds/default.jpg');
+  background-image: url("../../../assets/backgrounds/default.jpg");
   transition: background-image 1s ease-in-out 0.5s;
 }
 .container-toolbar-outlet {
@@ -15,7 +15,6 @@
 }
 
 .toolbar {
-  --toolbar-background-color: #444;
   width: 100vw;
   top: 0;
   left: 0;
@@ -23,14 +22,14 @@
   display: flex;
   flex: 1 1 auto;
   flex-wrap: nowrap;
-  background: transparent ;
+  background: transparent;
 }
 
 .header-sample-text {
   display: flex;
   flex: 1 1 auto;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 }
 
@@ -46,10 +45,10 @@
   text-decoration: none;
   color: white;
   background-color: black;
-	padding: 0px 5px;
+  padding: 0px 5px;
   margin-right: 10px;
   margin-left: -5px;
-	display: inline-block;
+  display: inline-block;
   cursor: pointer;
   font-weight: lighter;
   border: solid 1px #4a5e77;
@@ -75,7 +74,7 @@
 
 ::ng-deep .mat-select-panel {
   background: #5981b2;
-  background-image: url('../../../assets/backgrounds/default.jpg');
+  background-image: url("../../../assets/backgrounds/default.jpg");
   background-size: cover;
 }
 

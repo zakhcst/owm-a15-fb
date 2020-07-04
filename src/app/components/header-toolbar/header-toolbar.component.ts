@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostBinding, HostListener } from '@angular/core';
 import { ICities } from '../../models/cities.model';
 import { ActivatedRoute, Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
@@ -28,7 +28,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   public get valueAsStyle(): any {
     if (this.matToolbar) {
       this.toolbarHeight = this.matToolbar._elementRef.nativeElement.clientHeight + 1;
-      
+
     }
     return this._sanitizer.bypassSecurityTrustStyle(`--toolbar-height: ${this.toolbarHeight}px`);
   }
@@ -39,12 +39,17 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   selectedCityId: string = ConstantsService.defaultCityId;
   subscriptions: Subscription;
   showActionButtonsXS = false;
-  xs = false;
+  xs500w = false;
   toolbarHeight: number;
   weatherBackgroundImg: string;
   owmData: IOwmDataModel;
 
   @Select(AppOwmDataState.selectOwmData) owmDataSelectedCityLast$: Observable<IOwmDataModel>;
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.isXs();
+  }
 
   constructor(
     private _router: Router,
@@ -87,6 +92,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnInit() {
+    this.isXs();
     const subscriptionBgImg: Subscription = this.owmDataSelectedCityLast$
       .pipe(
         filter(data => !!data),
@@ -101,7 +107,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
         (imgPath: string) => {
           this.container.nativeElement.style['background-image'] = `url(${imgPath})`;
         },
-        (err) => {
+        err => {
           this.addError('header-toolbar: ngOnInit: onChange: subscribe', err.message);
         }
       );
@@ -118,11 +124,11 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   isXs() {
-    return this.mediaObserver.isActive('xs');
+    this.xs500w = this.mediaObserver.isActive('xs500w');
   }
 
-  toggleActionButtonsXS($event: any) {
-    this.showActionButtonsXS = this.isXs() && this.showActionButtonsXS ? false : true;
+  toggleActionButtonsXS($event) {
+    this.showActionButtonsXS = this.xs500w && this.showActionButtonsXS ? false : true;
   }
 
   hideActionButtonsXS($event) {
