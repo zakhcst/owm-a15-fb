@@ -47,17 +47,7 @@ export class AppStatusState {
 
   @Action(SetStatusIpState)
   setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
-    const payloadIP = action.payload || '';
-    if (payloadIP === 'ip-error' || payloadIP === '') {
-      return this._ip.requestIPv4()
-        .pipe(
-          switchMap(this._ip.validateIPv4),
-          tap((ip: string) => {
-            context.patchState({ ip });
-          }));
-    } else {
-      context.patchState({ ip: payloadIP });
-    }
+    return context.patchState({ ip: action.payload });
   }
 
   @Action(SetStatusSelectedCityIdState)
@@ -109,7 +99,7 @@ export class AppHistoryState {
 
     // Reuse exising snapshot
     const existingSnapshot = context.getState().find(snapshot => snapshot.updated === owmData.updated);
-    const sessionHistory = [...context.getState(), existingSnapshot || owmData ];
+    const sessionHistory = [...context.getState(), existingSnapshot || owmData];
 
     context.setState(sessionHistory);
 
@@ -117,7 +107,7 @@ export class AppHistoryState {
       message: `Selected: ${cityName}, ${countryISO2}`,
       class: 'snackbar__info',
     });
-    return this._history.setDataToFB(ip, newEntry).then( () => {
+    return this._history.setDataToFB(ip, newEntry).then(() => {
       if (!existingSnapshot) {
         return this._fb.setData(selectedCityId, owmData);
       }
