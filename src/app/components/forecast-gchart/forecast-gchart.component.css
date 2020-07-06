@@ -6,6 +6,7 @@
 
 .content {
   font-size: 16px;
+  color: white;
 }
 
 .table-cell_data_empty-background {
@@ -36,16 +37,16 @@
 }
 
 .legend {
-  writing-mode: vertical-rl;
-  text-orientation: sideways;
-  transform: rotate(180deg);
+  border: solid 1px grey;
+  margin: 5px;
+  padding: 5px;
+  width: 80%;
 }
 
 .table-cell_data-background {
   min-width: 120px;
   margin: 2px;
   padding: 2px 0 2px 0;
-  /* opacity: 0; */
 }
 
 .table-secondary_data_line {

@@ -31,7 +31,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
   cardBackground: string;
-  dateColumnTextColor: string;
+  textColor: string = '#FFFFFF';
 
   loadingOwmData = true;
   loadingStats = true;
@@ -175,26 +175,24 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
         },
         vAxes: {
           0: {
-            textStyle: { color: this.dateColumnTextColor }
-            // title: 'Celsius, m/s, %'
+            textStyle: { color: this.textColor }
           },
           1: {
-            textStyle: { color: this.dateColumnTextColor },
-            // title: 'hPa'
+            textStyle: { color: '#00FF00' },
             maxValue: 1050,
             minValue: 1000,
             format: '####'
           }
         },
         vAxis: {
-          textStyle: { color: this.dateColumnTextColor },
-          titleTextStyle: { color: this.dateColumnTextColor },
+          textStyle: { color: this.textColor },
+          titleTextStyle: { color: this.textColor },
           format: '##',
           maxValue: 100,
           minorGridlines: { count: 0 }
         },
         hAxis: {
-          textStyle: { color: this.dateColumnTextColor },
+          textStyle: { color: this.textColor },
           viewWindowMode: 'maximized'
         },
         chartArea: { left: '5%', top: '5%', width: '85%', height: '75%' },
@@ -230,19 +228,21 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     }
   }
 
-  setCardBg2TimeSlotBg() {
-    const hour = new Date().getHours();
-    const timeSlot = this.timeTemplate.find(
-      timeSlotStart =>
-        timeSlotStart.hour <= hour && hour < timeSlotStart.hour + 3
-    );
-    this.cardBackground = timeSlot.bgColor;
-    this.dateColumnTextColor = timeSlot.textColor;
-  }
-  isCurrentTimeSlot(timeSlot) {
-    const hour = new Date().getHours();
-    return timeSlot.hour <= hour && hour < timeSlot.hour + 3;
-  }
+  // setCardBg2TimeSlotBg() {
+  //   const hour = new Date().getHours();
+  //   const timeSlot = this.timeTemplate.find(
+  //     timeSlotStart =>
+  //       timeSlotStart.hour <= hour && hour < timeSlotStart.hour + 3
+  //   );
+  //   this.cardBackground = timeSlot.bgColor;
+  //   // this.textColor = timeSlot.textColor;
+  //   this.textColor = '#FFF';
+  // }
+
+  // isCurrentTimeSlot(timeSlot) {
+  //   const hour = new Date().getHours();
+  //   return timeSlot.hour <= hour && hour < timeSlot.hour + 3;
+  // }
 
   addError(custom: string, errorMessage: string) {
     const errorLog: AppErrorPayloadModel = {
