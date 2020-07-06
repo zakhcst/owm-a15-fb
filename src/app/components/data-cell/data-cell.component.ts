@@ -13,7 +13,6 @@ export class DataCellComponent {
   @Input() dataDaily: IOwmDataModelTimeSlotUnit;
   @Input() timeSlot: ITimeTemplate;
 
-  iconsUrl: string = ConstantsService.owmIconsUrl;
   iconsOwm: string = ConstantsService.iconsOwm;
   iconWind: string = ConstantsService.iconWind;
   iconHumidity: string = ConstantsService.iconHumidity;

@@ -1,6 +1,7 @@
 .container {
   height: 100vh;
   width: 100vw;
+  min-height: 260px;
   background-color: rgb(91, 134, 174);
   background-size: cover;
   background-position: center;

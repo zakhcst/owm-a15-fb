@@ -7,7 +7,7 @@ import { ErrorsService } from './errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OwmService {
   constructor(private _http: HttpClient, private _errors: ErrorsService) {}
@@ -22,9 +22,8 @@ export class OwmService {
       '&APPID=' +
       ConstantsService.defaultAPPID;
 
-    return this._http.get<IOwmDataModel>(owmRequestUrl)
-    .pipe(
-      catchError(err => {
+    return this._http.get<IOwmDataModel>(owmRequestUrl).pipe(
+      catchError((err) => {
         // openweathermap.org/faq
         // Q: API calls return an error 429
         // A: You will get the error 429 if you have FREE tariff and make more than 60 API calls per minute
@@ -32,9 +31,15 @@ export class OwmService {
         if (err.code === 429) {
           this._errors.add({
             userMessage: 'FREE tariff, make more than 60 API calls per minute exceeded!',
-            logMessage: 'OwmService: FREE tariff, make more than 60 API calls per minute exceeded!' + err.message
+            logMessage: 'OwmService: FREE tariff, make more than 60 API calls per minute exceeded!' + err.message,
+          });
+        } else {
+          this._errors.add({
+            userMessage: 'OwmService API error',
+            logMessage: 'OwmService: API error' + err,
           });
         }
+
         return throwError(err);
       })
     );

@@ -38,17 +38,17 @@ export class ConstantsService {
   public static readonly owmData = 'owm';
   public static readonly historyLog = 'history-log';
   public static readonly errorsLog = 'errors-log';
-  public static readonly default5DayForecastUrl =
-    'https://api.openweathermap.org/data/2.5/forecast';
+  
+  public static readonly default5DayForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
   public static readonly defaultUnits = 'metric';
+  public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
+
   public static get defaultCityId() {
     return localStorage.getItem('selectedCityId') || '2643743'; // Defaults to London, UK
   }
 
-  public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
-  public static readonly getIpUrl =
-    'https://us-central1-owm-a7-fb.cloudfunctions.net/getip';
+  public static readonly getIpUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net/getip';
   public static readonly ipv4RE = new RegExp(
     '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
   );
@@ -88,19 +88,14 @@ export class ConstantsService {
   };
 
   public static readonly timeTemplate: ITimeTemplate[] = [
-    { hour: 0, bgColor: '#305090', textColor: 'white' },
-    { hour: 3, bgColor: '#4060bb', textColor: 'white' },
-    { hour: 6, bgColor: '#6090ee', textColor: 'white' },
-    // center 4 slots different text color for hi contrast
-    // { hour: 9, bgColor: '#70b0ff', textColor: 'black' },
-    // { hour: 12, bgColor: '#90c0ff', textColor: 'black' },
-    // { hour: 15, bgColor: '#a0d0ff', textColor: 'black' },
-    // { hour: 18, bgColor: '#70c0ff', textColor: 'black' },
-    { hour: 9, bgColor: '#70b0ff', textColor: 'white' },
-    { hour: 12, bgColor: '#90c0ff', textColor: 'white' },
-    { hour: 15, bgColor: '#a0d0ff', textColor: 'white' },
-    { hour: 18, bgColor: '#70c0ff', textColor: 'white' },
-    { hour: 21, bgColor: '#5080dd', textColor: 'white' }
+    { hour:  0, bgColor: '#30509050', textColor: 'white' },
+    { hour:  3, bgColor: '#4060bb50', textColor: 'white' },
+    { hour:  6, bgColor: '#6090ee50', textColor: 'white' },
+    { hour:  9, bgColor: '#70b0ff50', textColor: 'white' },
+    { hour: 12, bgColor: '#90c0ff50', textColor: 'white' },
+    { hour: 15, bgColor: '#a0d0ff50', textColor: 'white' },
+    { hour: 18, bgColor: '#70c0ff50', textColor: 'white' },
+    { hour: 21, bgColor: '#5080dd50', textColor: 'white' }
   ];
 
   public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');

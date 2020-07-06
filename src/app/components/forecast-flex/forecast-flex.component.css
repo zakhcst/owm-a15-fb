@@ -1,5 +1,6 @@
 .forecast-card {
   height: 100%;
+  min-height: 180px;
   padding: 5px;
   background: transparent;
   scrollbar-width: none;
@@ -50,5 +51,11 @@
 @media only screen and (max-height: 800px) {
   .content {
     font-size: 10px;
+  }
+}
+
+@media only screen and (max-height: 399px) {
+  .date-column__date {
+    display: none !important;
   }
 }

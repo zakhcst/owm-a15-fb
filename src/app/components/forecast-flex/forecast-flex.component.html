@@ -15,15 +15,19 @@
           <div
             fxFlex
             fxLayoutAlign="start center"
-            *ngFor="let dataDaily of weatherData?.listByDate | keyvalue; trackBy: trackByIdFn"
+            *ngFor="
+              let dataDaily of weatherData?.listByDate | keyvalue;
+              trackBy: trackByIdFn
+            "
           >
-            <span
-              fxLayout="column"
-              fxLayoutAlign="end center"
-            >
+            <span fxLayout="column" fxLayoutAlign="end center">
               <span>{{ dataDaily.key | date: "EEE" }}&nbsp;</span>
-              <span>{{ dataDaily.key | date: "dd" }}&nbsp;</span>
-              <span>{{ dataDaily.key | date: "MMM" }}&nbsp;</span>
+              <span class="date-column__date"
+                >{{ dataDaily.key | date: "dd" }}&nbsp;</span
+              >
+              <span class="date-column__date"
+                >{{ dataDaily.key | date: "MMM" }}&nbsp;</span
+              >
             </span>
           </div>
         </div>
@@ -31,17 +35,25 @@
       <!-- / Date's column-->
 
       <!-- Hours columns-->
-      <div fxFlex fxFill fxLayout="column" class="scroll-this" #gridContainer (wheel)="onMouseWheel($event)">
+      <div
+        fxFlex
+        fxFill
+        fxLayout="column"
+        class="scroll-this"
+        #gridContainer
+        (wheel)="onMouseWheel($event)"
+      >
         <div fxFlex="5%" fxLayout="row">
           <span
             fxFlex
             fxLayoutAlign="center center"
             class="table-header-background"
-            *ngFor="let timeSlot of timeTemplate; index as ind; trackBy: trackByIdFn"
-            [ngStyle]="{
-              'background-color': timeTemplate[ind].bgColor + '50',
-              color: timeTemplate[ind].textColor
-            }"
+            *ngFor="
+              let timeSlot of timeTemplate;
+              index as ind;
+              trackBy: trackByIdFn
+            "
+            [ngStyle]="{ 'background-color': timeTemplate[ind].bgColor }"
           >
             {{ (timeSlot.hour > 9 ? "" : "0") + timeSlot.hour + ":00" }}
           </span>
@@ -53,9 +65,11 @@
           fxLayout="row"
           *ngFor="let dataDaily of weatherData?.listByDate | keyvalue"
           [@showTimeSlot]="listByDateLength * timeTemplate.length"
-          >
+        >
           <!-- show each timeslot in the day's row -->
-          <ng-container *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn">
+          <ng-container
+            *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn"
+          >
             <app-data-cell
               fxFlex
               [dataDaily]="dataDaily.value"

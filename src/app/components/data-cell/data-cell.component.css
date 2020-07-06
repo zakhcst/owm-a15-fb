@@ -1,36 +1,19 @@
 .table-cell_data_empty-background {
   min-width: 120px;
   margin: 2px;
-  --animation-duration-description: 4s;
 }
 
 .table-cell_data-background {
   min-width: 120px;
   margin: 2px;
   padding: 2px 0 2px 0;
-  transition: 0.1s;
   box-sizing: border-box;
   overflow: hidden;
 }
 
 .table-cell_data-background:hover {
-  /* transform: scale(0.95); */
   border: 1px solid black;
 }
-/* 
-.table-cell_data-background:hover .description {
-  overflow: hidden;
-  animation: scroll-left var(--animation-duration-description) linear infinite;
-}
-@keyframes scroll-left {
-  49% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  50% {
-    transform: translateX(100%);
-  }
-} */
 
 .table-secondary_data_line {
   margin: 2px 0 2px 0;
@@ -53,11 +36,11 @@
 
 @media only screen and (max-height: 420px) {
   img {
-    width: 30%;
+    width: 20%;
     height: auto;
   }
-  .table-secondary_data {
-    display: none !important;
+  *{
+    font-size: 80%;
   }
 }
 
