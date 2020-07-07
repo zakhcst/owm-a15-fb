@@ -3,26 +3,19 @@ import { Routes, RouterModule } from '@angular/router';
 import { GoogleChartsModule } from 'angular-google-charts';
 
 import { SharedModule } from '../../modules/shared.module';
-import { ResolverCitiesService } from '../../modules/routing-resolvers/resolver-cities.service';
 import { ForecastGChartComponent } from './forecast-gchart.component';
+import { ForecastGchartLegendComponent } from '../forecast-gchart-legend/forecast-gchart-legend.component';
 
 const componentRoutes: Routes = [
   {
     path: '',
     component: ForecastGChartComponent,
-    resolve: { cities: ResolverCitiesService },
-  }
+  },
 ];
 
 @NgModule({
-  declarations: [ForecastGChartComponent,
-  ],
-  imports: [
-    RouterModule.forChild(componentRoutes),
-    SharedModule,
-    GoogleChartsModule.forRoot(),
-  ],
+  declarations: [ForecastGChartComponent, ForecastGchartLegendComponent],
+  imports: [RouterModule.forChild(componentRoutes), SharedModule, GoogleChartsModule.forRoot()],
   exports: [RouterModule],
 })
-
-export class ForecastGChartModule { }
+export class ForecastGChartModule {}

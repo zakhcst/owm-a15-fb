@@ -1,11 +1,13 @@
 .forecast-card {
   height: 100%;
+  width: 100%;
   padding: 5px;
   background: transparent;
+  --date-column-width: 40px;
 }
 
 .content {
-  font-size: 16px;
+  font-size: 12px;
   color: white;
 }
 
@@ -20,146 +22,29 @@
   background-color: rgba(119, 139, 255, 0.575);
 }
 
-.table-column_0 {
-  width: 40px;
-}
-
-.table-cell_00 {
-  padding: 5px 2px;
-}
-
-.table-cell_date {
-  margin: 0px;
-  padding: 5px 2px;
-
-  flex-flow: column;
-  align-content: center;
+.date-column {
+  width: var(--date-column-width);
 }
 
 .legend {
   border: solid 1px grey;
   margin: 5px;
   padding: 5px;
-  width: 80%;
-}
-
-.table-cell_data-background {
-  min-width: 120px;
-  margin: 2px;
-  padding: 2px 0 2px 0;
-}
-
-.table-secondary_data_line {
-  margin: 2px 0 2px 0;
-}
-
-.table-secondary_data_icon img {
-  width: 60%;
-  height: auto;
+  width: 70%;
 }
 
 .table-secondary_data-opacity {
   opacity: 0.6;
 }
 
-@media only screen {
-  .content {
-    font-size: 60%;
-  }
-
-  img {
-    width: 25%;
-    height: auto;
+@media only screen and (max-width: 800px), (max-height: 800px){
+  .legend, .date-column {
+    font-size: 90%;
   }
 }
 
-@media only screen and (min-width: 600px) {
-  .content {
-    font-size: 70%;
-  }
-
-  img {
-    width: 40%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-width: 1000px) {
-  .content {
-    font-size: 75%;
-  }
-
-  img {
-    width: 50%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-width: 1300px) {
-  .content {
+@media only screen and (max-width: 600px), (max-height: 600px){
+  .legend, .date-column {
     font-size: 80%;
-  }
-
-  img {
-    width: 75%;
-    height: auto;
-  }
-}
-
-@media only screen and (max-height: 400px) {
-  .content {
-    font-size: 40%;
-  }
-
-  img {
-    width: 10%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-height: 400px) {
-  .content {
-    font-size: 60%;
-  }
-
-  img {
-    width: 15%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-height: 600px) {
-  .content {
-    font-size: 80%;
-  }
-
-  img {
-    width: 20%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-height: 700px) {
-  .content {
-    font-size: auto;
-  }
-
-  img {
-    width: 30%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-height: 800px) {
-  img {
-    width: 35%;
-    height: auto;
-  }
-}
-
-@media only screen and (min-height: 900px) {
-  img {
-    width: 40%;
-    height: auto;
   }
 }

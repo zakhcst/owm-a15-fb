@@ -1,79 +1,39 @@
 <mat-card class="forecast-card">
-
-  <div fxLayout="column" fxFill class="content">
-
-    <div fxLayout="row" fxFlexAlign="center" class="legend">
-    <div fxFill fxLayout="row" fxLayoutAlign="space-around center" >
-      <span>
-        <svg width="30" height="10">
-          <line style="stroke-width: 2px; stroke: rgb(255, 5, 5);" x1="5" y1="5" x2="25" y2="5" ></line>
-        </svg>
-        Temp, &#176;C
-      </span>
-      <span>
-        <svg width="30" height="10">
-          <line style="stroke-width: 2px; stroke: rgb(5, 5, 255);" x1="5" y1="5" x2="25" y2="5" ></line>
-        </svg>
-        Wind,  m/s
-      </span>
-      <span>
-        <svg width="30" height="10">
-          <line style="stroke-width: 2px; stroke: rgb(255, 255, 5);" x1="5" y1="5" x2="25" y2="5" ></line>
-        </svg>
-        Humidity, %
-      </span>
-      <span>
-        <svg width="30" height="10">
-          <line style="stroke-width: 2px; stroke: rgb(5, 2555, 5);" x1="5" y1="5" x2="25" y2="5" ></line>
-        </svg>
-        <span style="color: #00FF00;">
-          Pressure, hPa
-        </span>
-      </span>
-    </div>
-    </div>
-
-    <div fxFlex fxLayout="row" [fxHide]="loadingOwmData">
-      <!-- / Day/Date column-->
-      <div #dateColumn class="table-column_0" fxLayout="column">
-        <div fxFlex fxLayout="column" id="daycolumn">
-          <div
-            fxFlex
-            fxLayoutAlign="start center"
-            class="table-cell_date"
-            *ngFor="
-              let dataDaily of listByDateActive | keyvalue;
-              index as $index
-            "
-          >
-            <span fxLayout="column" fxLayoutAlign="end center">
-              <span>{{ dataDaily.key | date: "EEE" }}</span>
-              <span>{{ dataDaily.key | date: "dd" }}</span>
-              <span>{{ dataDaily.key | date: "MMM" }}</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div fxFlex fxFill fxLayout="column">
+  <div fxFlex fxFill fxLayout="column" class="content">
+    <app-forecast-gchart-legend
+      fxFlexAlign="center"
+      class="legend"
+    ></app-forecast-gchart-legend>
+    <div fxFlex fxFlexFill fxLayout="column" #graphsColumn class="scroll-this">
+      <div
+        fxFlex
+        fxLayout="row"
+        *ngFor="let dayK of activeDays"
+        (click)="clickedDay(dayK)"
+      >
         <div
-          fxFlex
-          fxFill
-          fxLayout="row"
-          *ngFor="let dataDaily of listByDateActive | keyvalue"
-          (click)="clickedDay(dataDaily)"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          class="date-column"
         >
-          <google-chart
-            #chartElement
-            style="width: 100%;"
-            [dynamicResize]="true"
-            [type]="chart[dataDaily.key].type"
-            [data]="chart[dataDaily.key].data"
-            [columns]="chart[dataDaily.key].columnNames"
-            [options]="chart[dataDaily.key].options"
-          >
-          </google-chart>
+          <span>{{ dayK | date: "EEE" }}</span>
+          <span>{{ dayK | date: "dd" }}</span>
+          <span>{{ dayK | date: "MMM" }}</span>
         </div>
+
+        <google-chart
+          fxFlex
+          fxFlexFill
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          style="width: 85%;"
+          [dynamicResize]="true"
+          [type]="chart[dayK].type"
+          [data]="chart[dayK].data"
+          [columns]="chart[dayK].columnNames"
+          [options]="chart[dayK].options"
+        >
+        </google-chart>
       </div>
     </div>
 

@@ -5,10 +5,13 @@ export interface IOwmDataModel {
   list: IOwmDataModelTimeSlotUnit[];
   message: number;
   updated?: number;
-  listByDate?: {
-    [dateValue: string]: IOwmDataModelTimeSlotUnit;
-  };
+  listByDate?: IListByDateModel;
 }
+
+export interface IListByDateModel {
+  [dateValue: string]: IOwmDataModelTimeSlotUnit;
+}
+
 
 export interface IOwmDataModelObjectByCityId {
   [cityId: string]: IOwmDataModel;
