@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { from, Observable, throwError, combineLatest, of } from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 import {
   switchMap,
   take,
   shareReplay,
-  catchError,
-  takeLast
+  catchError
 } from 'rxjs/operators';
 import { ICities } from '../models/cities.model';
 
@@ -18,7 +17,7 @@ export class CitiesService {
 
   getData(): Observable<ICities> {
     return this._db
-      .object<ICities>('/cities')
+      .object<ICities>('cities')
       .valueChanges()
       .pipe(
         take(1),

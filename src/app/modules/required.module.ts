@@ -16,7 +16,6 @@ import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from
     BrowserAnimationsModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
-    // AngularFireModule.initializeApp(environment.emulator),
     AngularFireDatabaseModule,
     AngularMaterialModule,
     NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState],
