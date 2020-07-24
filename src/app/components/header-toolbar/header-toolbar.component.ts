@@ -53,7 +53,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _router: Router,
-    private _data: OwmDataService,
     private _activatedRoute: ActivatedRoute,
     private _store: Store,
     private _errors: ErrorsService,

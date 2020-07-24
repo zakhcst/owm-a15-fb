@@ -9,7 +9,13 @@
 .content {
   font-size: 12px;
   color: white;
+  scrollbar-width: none;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
 
 .table-cell_data_empty-background {
   min-width: 120px;
@@ -33,9 +39,6 @@
   width: 70%;
 }
 
-.table-secondary_data-opacity {
-  opacity: 0.6;
-}
 
 @media only screen and (max-width: 800px), (max-height: 800px){
   .legend, .date-column {

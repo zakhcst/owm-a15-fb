@@ -4,7 +4,7 @@
       fxFlexAlign="center"
       class="legend"
     ></app-forecast-gchart-legend>
-    <div fxFlex fxFlexFill fxLayout="column" #graphsColumn class="scroll-this">
+    <div fxFlex fxFill fxLayout="column" class="scroll-this">
       <div
         fxFlex
         fxLayout="row"
@@ -23,11 +23,9 @@
 
         <google-chart
           fxFlex
-          fxFlexFill
-          fxLayout="column"
           fxLayoutAlign="center center"
           style="width: 85%;"
-          [dynamicResize]="true"
+          [dynamicResize]="dynamicResize"
           [type]="chart[dayK].type"
           [data]="chart[dayK].data"
           [columns]="chart[dayK].columnNames"

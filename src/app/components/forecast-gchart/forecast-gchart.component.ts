@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { ErrorsService } from '../../services/errors.service';
 import { IOwmDataModel, IListByDateModel } from '../../models/owm-data.model';
 import { AppOwmDataState } from '../../states/app.state';
 import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data.service';
+import { GoogleChartComponent } from 'angular-google-charts';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -21,7 +22,6 @@ import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data
   styleUrls: ['./forecast-gchart.component.css'],
 })
 export class ForecastGChartComponent implements OnInit, OnDestroy {
-
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
   cardBackground: string;
 
@@ -35,6 +35,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   activeDays: string[];
   weatherDataDateKeys: string[];
   showMaxGraphs: number;
+  dynamicResize = true;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
 
@@ -74,7 +75,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   addError(custom: string, errorMessage: string) {
     const errorLog: AppErrorPayloadModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
-      logMessage: `ForecastComponent: ${custom}: ${errorMessage}`,
+      logMessage: `ForecastGChartComponent: ${custom}: ${errorMessage}`,
     };
     this._errors.add(errorLog);
   }
