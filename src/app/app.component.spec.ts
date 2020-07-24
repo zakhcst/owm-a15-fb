@@ -18,9 +18,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'owm-a9-fb'`, () => {
+  it(`should have as title 'owm-a10-fb'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('owm-a9-fb');
+    expect(app.title).toEqual('owm-a10-fb');
   });
 });
