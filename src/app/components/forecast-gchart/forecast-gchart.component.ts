@@ -39,7 +39,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
 
-  constructor(private _data: OwmDataService, private _errors: ErrorsService, private _populateGchartData: PopulateGchartDataService) {}
+  constructor(private _errors: ErrorsService, private _populateGchartData: PopulateGchartDataService) {}
   ngOnInit() {
     this.onChange();
   }

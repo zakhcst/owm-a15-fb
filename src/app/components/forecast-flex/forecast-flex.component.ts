@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import { ConstantsService } from '../../services/constants.service';
 import { ITimeTemplate } from '../../models/hours.model';

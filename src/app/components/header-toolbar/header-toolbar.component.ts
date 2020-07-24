@@ -10,10 +10,10 @@ import { AppErrorPayloadModel } from '../../states/app.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
-import { IOwmDataModel } from 'src/app/models/owm-data.model';
-import { OwmDataService } from 'src/app/services/owm-data.service';
-import { AppOwmDataState } from 'src/app/states/app.state';
-import { SetStatusSelectedCityIdState } from 'src/app/states/app.actions';
+import { IOwmDataModel } from '../../models/owm-data.model';
+import { OwmDataService } from '../../services/owm-data.service';
+import { AppOwmDataState } from '../../states/app.state';
+import { SetStatusSelectedCityIdState } from '../../states/app.actions';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -54,6 +54,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
+    private _data: OwmDataService, // Instantiate service to start rxjs listener
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
