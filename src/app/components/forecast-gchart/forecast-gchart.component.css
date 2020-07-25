@@ -16,18 +16,6 @@
   display: none;
 }
 
-
-.table-cell_data_empty-background {
-  min-width: 120px;
-  margin: 2px;
-}
-
-.table-header-background {
-  min-width: 120px;
-  margin: 2px;
-  background-color: rgba(119, 139, 255, 0.575);
-}
-
 .date-column {
   width: var(--date-column-width);
 }
@@ -37,8 +25,14 @@
   margin: 5px;
   padding: 5px;
   width: 70%;
+  background: rgba(0, 0, 0, 0.2);
 }
-
+.gchart {
+  min-height: 100%;
+}
+google-chart > div {
+  min-height: 100%;
+}
 
 @media only screen and (max-width: 800px), (max-height: 800px){
   .legend, .date-column {

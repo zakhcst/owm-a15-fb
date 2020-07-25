@@ -73,7 +73,7 @@ export class PopulateGchartDataService {
     if (dayKIndex < weatherDataDateKeys.length - 1) {
       const nextDay0Hour = weatherDataListByDate[weatherDataDateKeys[dayKIndex + 1]]['0'];
       last = [
-        '0:00',
+        '23:59',
         nextDay0Hour.main.temp,
         nextDay0Hour.wind.speed,
         nextDay0Hour.main.humidity,
@@ -81,7 +81,7 @@ export class PopulateGchartDataService {
       ];
     } else {
       last = [...this.chart[dayK].data[this.chart[dayK].data.length - 1]];
-      last[0] = '0:00';
+      last[0] = '23:59';
     }
 
     this.chart[dayK].data.push(last);
