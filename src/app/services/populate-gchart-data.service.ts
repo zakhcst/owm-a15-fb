@@ -98,7 +98,7 @@ export class PopulateGchartDataService {
       vAxes: {
         0: {
           textStyle: { color: this.textColor },
-          maxValue: 100,
+          // maxValue: 100,
           format: '###',
           viewWindowMode: 'maximized',
         },

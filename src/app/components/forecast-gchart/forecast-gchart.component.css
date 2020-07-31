@@ -17,7 +17,8 @@
 }
 
 .date-column {
-  width: var(--date-column-width);
+  max-width: var(--date-column-width);
+  min-width: var(--date-column-width);
 }
 
 .legend {
@@ -27,21 +28,56 @@
   width: 70%;
   background: rgba(0, 0, 0, 0.2);
 }
-.gchart {
-  min-height: 100%;
+
+.flex {
+  display: flex;
+  flex: 1 1 auto;
 }
-google-chart > div {
+.flex-column {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-justify-content-center {
+  justify-content: center;
+}
+.flex-justify-content-stretch {
+  justify-content: stretch;
+}
+.flex-align-self-center {
+  align-self: center;
+}
+.flex-align-self-stretch {
+  align-self: stretch;
+}
+.flex-align-content-stretch {
+  align-content: stretch;
+}
+.flex-align-items-stretch {
+  align-items: stretch;
+}
+.flex-align-items-center {
+  align-items: center;
+}
+.flex-align-content-center {
+  align-content: center;
+}
+.max-size {
   min-height: 100%;
+  min-width: 100%;
 }
 
-@media only screen and (max-width: 800px), (max-height: 800px){
-  .legend, .date-column {
+@media only screen and (max-width: 800px), (max-height: 800px) {
+  .legend,
+  .date-column {
     font-size: 90%;
   }
 }
 
-@media only screen and (max-width: 600px), (max-height: 600px){
-  .legend, .date-column {
+@media only screen and (max-width: 600px), (max-height: 600px) {
+  .legend,
+  .date-column {
     font-size: 80%;
   }
 }

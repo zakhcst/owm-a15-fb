@@ -1,47 +1,53 @@
-<mat-card class="forecast-card">
-  <div fxFlex fxFill fxLayout="column" class="content">
+<mat-card
+  class="forecast-card flex flex-row flex-justify-content-stretch flex-align-items-stretch"
+>
+  <div class="content flex flex-column">
     <app-forecast-gchart-legend
-      fxFlexAlign="center"
-      class="legend"
+      class="legend flex-align-self-center"
     ></app-forecast-gchart-legend>
-    <div fxFlex fxFill fxLayout="column" class="scroll-this">
-      <div
-        fxFlex
-        fxLayout="row"
-        *ngFor="let dayK of activeDays"
-        (click)="clickedDay(dayK)"
-      >
+
+    <div class="flex flex-row scroll-this" #dateColumn>
+      <div class="flex flex-column date-column flex-justify-content-stretch">
         <div
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          class="date-column"
+          class="flex flex-row flex-align-items-stretch"
+          *ngFor="let dayK of activeDays"
+          (click)="clickedDay(dayK)"
         >
-          <span>{{ dayK | date: "EEE" }}</span>
-          <span>{{ dayK | date: "dd" }}</span>
-          <span>{{ dayK | date: "MMM" }}</span>
+          <div
+            class="date-column flex flex-column flex-justify-content-center flex-align-items-center"
+          >
+            <span>{{ dayK | date: "EEE" }}</span>
+            <span>{{ dayK | date: "dd" }}</span>
+            <span>{{ dayK | date: "MMM" }}</span>
+          </div>
         </div>
-
-        <google-chart
-          fxFlex
-          fxLayoutAlign="center center"
-          style="width: 85%;"
-          [dynamicResize]="dynamicResize"
-          [type]="chart[dayK].type"
-          [data]="chart[dayK].data"
-          [columns]="chart[dayK].columnNames"
-          [options]="chart[dayK].options"
-        >
-        </google-chart>
       </div>
-    </div>
+      <div class="flex flex-column flex-align-items-stretch">
+        <div
+          class="flex flex-row flex-justify-content-stretch"
+          *ngFor="let dayK of activeDays"
+          (click)="clickedDay(dayK)"
+        >
+          <google-chart
+            class="flex flex-column flex-justify-content-center"
+            [dynamicResize]="true"
+            [width]="chart[dayK].width"
+            [height]="chart[dayK].height"
+            [type]="chart[dayK].type"
+            [data]="chart[dayK].data"
+            [columns]="chart[dayK].columnNames"
+            [options]="chart[dayK].options"
+          >
+          </google-chart>
+        </div>
+      </div>
 
-    <div
-      fxFlex
-      fxLayout="column"
-      fxLayoutAlign="center center"
-      *ngIf="loadingOwmData"
-    >
-      <mat-spinner diameter="50"></mat-spinner>
+      <div
+        class="flex flex-column flex-justify-content-center"
+        *ngIf="loadingOwmData"
+      >
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
     </div>
   </div>
 </mat-card>

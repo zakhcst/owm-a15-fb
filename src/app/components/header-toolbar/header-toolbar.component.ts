@@ -28,7 +28,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   public get valueAsStyle(): any {
     if (this.matToolbar) {
       this.toolbarHeight = this.matToolbar._elementRef.nativeElement.clientHeight + 1;
-
     }
     return this._sanitizer.bypassSecurityTrustStyle(`--toolbar-height: ${this.toolbarHeight}px`);
   }
