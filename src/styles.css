@@ -23,3 +23,15 @@
 .flex-justify-center {
   justify-self: center;
 }
+/* Overriding the global styles and local scoping (.mat-select-panel) the selectors, according the Angular Material Docs */
+.mat-select-panel.header-toolbar-mat-select {
+  background: #5981b2;
+  background-image: url("assets/backgrounds/default.jpg");
+  background-size: cover;
+}
+.header-toolbar-mat-select .mat-option-text {
+  color: white;
+}
+.header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar {
+  display: none;
+}
