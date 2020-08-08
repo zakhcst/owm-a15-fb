@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "owm-a10-fb": {
+      "hosting": {
+        "owm-a10-fb": [
+          "owm-a10-fb"
+        ]
+      }
+    }
+  }
+}
