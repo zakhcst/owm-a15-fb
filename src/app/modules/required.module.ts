@@ -15,7 +15,7 @@ import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment['emulator'] ?  environment['rtdb-emulator'] : environment.firebase),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularMaterialModule,
     NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState],

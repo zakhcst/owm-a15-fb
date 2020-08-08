@@ -1,3 +1,5 @@
+const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
+
 export const environment = {
   production: true,
   firebase: {
@@ -7,5 +9,6 @@ export const environment = {
     projectId: 'owm-a7-fb',
     storageBucket: 'owm-a7-fb.appspot.com',
     messagingSenderId: '1062734348256'
-  }
+  },
+  'functions': firebaseFunctionsUrl
 };

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ITimeTemplate } from '../models/hours.model';
-import { IOwmDataModel } from '../models/owm-data.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -48,15 +48,14 @@ export class ConstantsService {
   }
 
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
-  public static readonly getIpUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net/getip';
+  public static readonly getIpUrl = environment['functions'] + '/getip';
   public static readonly ipv4RE = new RegExp(
     '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
   );
   public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly iconsOwm = 'assets/icons-list/';
   public static readonly iconWind = 'assets/icons8-windsock-16.png';
-  public static readonly iconPressure =
-    'assets/icons8-atmospheric-pressure-16.png';
+  public static readonly iconPressure = 'assets/icons8-atmospheric-pressure-16.png';
   public static readonly iconHumidity = 'assets/icons8-hygrometer-16.png';
   public static readonly iconGithub = 'assets/icon32-github.svg';
   public static readonly iconExtLink = 'assets/icon24-external-link.svg';
