@@ -96,7 +96,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
       .pipe(
         filter(data => !!data),
         tap((data: IOwmDataModel) => this.owmData = data),
-        map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data)),
+        map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data.list[0])),
         filter((newDataImgPath: string) => {
           const currentBgImgPath = this.container.nativeElement.style['background-image'].split('"')[1];
           return currentBgImgPath !== newDataImgPath;

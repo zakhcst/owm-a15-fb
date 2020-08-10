@@ -44,6 +44,7 @@ export interface IOwmDataModelTimeSlotUnit {
     temp_kf?: number;
     temp_max?: number;
     temp_min?: number;
+    feels_like?: number;
   };
   rain?: {
     '3h': number;
@@ -63,4 +64,5 @@ export interface IOwmDataModelTimeSlotUnit {
     deg: number;
     speed: number;
   };
+  visibility: number;
 }

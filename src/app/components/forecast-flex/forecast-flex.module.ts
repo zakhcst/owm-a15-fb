@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../modules/shared.module';
 import { ForecastFlexComponent } from './forecast-flex.component';
 import { DataCellComponent } from '../data-cell/data-cell.component';
+import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 
 const componentRoutes: Routes = [
   {
@@ -13,8 +14,9 @@ const componentRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ForecastFlexComponent, DataCellComponent],
+  declarations: [ForecastFlexComponent, DataCellComponent, DataCellExpandedComponent],
   imports: [RouterModule.forChild(componentRoutes), SharedModule],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  entryComponents: [DataCellExpandedComponent]
 })
 export class ForecastFlexModule {}

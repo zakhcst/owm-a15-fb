@@ -33,5 +33,21 @@
   color: white;
 }
 .header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar {
-  display: none;
+  width: 5px;
+}
+.header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar-thumb:hover {
+  background: green;
+}
+.header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+}
+.header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
+}
+
+.data-cell-expanded .mat-dialog-container {
+  padding: 0;
+  border-radius: 0;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ITimeTemplate } from '../models/hours.model';
+import { IOwmDataModel, IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -102,9 +103,9 @@ export class ConstantsService {
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
   public static readonly getWeatherDefaultBgImg = () => ConstantsService.weatherBgImgPath +  ConstantsService.weatherDefaultBgImgFileName;
 
-  public static readonly getWeatherBgImg = (data: IOwmDataModel) => {
-    const main = data && data.list && data.list[0] && data.list[0].weather[0].main;
-    const syspod = data && data.list && data.list[0] && data.list[0].sys.pod;
+  public static readonly getWeatherBgImg = (dataListHour: IOwmDataModelTimeSlotUnit) => {
+    const main = dataListHour.weather[0].main;
+    const syspod = dataListHour.sys.pod;
 
     if (
       main &&

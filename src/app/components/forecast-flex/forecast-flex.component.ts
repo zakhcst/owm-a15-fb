@@ -11,6 +11,8 @@ import { Select } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
 import { AppOwmDataState } from 'src/app/states/app.state';
 import { AppErrorPayloadModel } from '../../states/app.models';
+import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-forecast-flex',
@@ -42,7 +44,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
 
-  constructor(private _errors: ErrorsService) {}
+  constructor(private _errors: ErrorsService, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.onInit();
@@ -77,6 +79,17 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   trackByIdFn(index: any, item: any) {
     return index;
+  }
+
+  showDataCellExpanded(timeSlotData) {
+    if (timeSlotData)
+    this.dialog.open(DataCellExpandedComponent, {
+      // height: '60vh',
+      // width: '60vw',
+      data: {timeSlotData},
+      panelClass: 'data-cell-expanded',
+      hasBackdrop: true
+    });
   }
 
   addError(custom: string, errorMessage: string) {

@@ -74,6 +74,7 @@
               fxFlex
               [dataDaily]="dataDaily.value"
               [timeSlot]="timeSlot"
+              (click)="showDataCellExpanded(dataDaily.value[timeSlot.hour])"
             ></app-data-cell>
           </ng-container>
         </div>

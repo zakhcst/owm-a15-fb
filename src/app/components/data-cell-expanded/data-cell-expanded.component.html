@@ -1,0 +1,54 @@
+<div
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  class="data-cell-expanded-container"
+  [ngStyle]="{
+    'background-image': 'url(' + bgImgPath + ')'
+  }"
+  (click)="closeDialog()"
+>
+  <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+    <div>{{ this.dateTime | date: "dd MMMM y":"UTC" }}&nbsp;</div>
+    <div>{{ this.dateTime | date: "EEEE":"UTC" }}&nbsp;</div>
+    <div>{{ this.dateTime | date: "HH:mm":"UTC" }}&nbsp;</div>
+  </div>
+
+  <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+    <img [src]="iconsOwm + this.timeSlotData.weather[0].icon + '.png'" />
+    <span>
+      {{ this.timeSlotData.weather[0].main }}
+    </span>
+  </div>
+
+  <div fxFlex="60%" class="data-table-grid">
+    <span class="">Description</span>
+    <span class="grid-col-23">{{ this.timeSlotData.weather[0].description | titlecase}}</span>
+    <span class="red">Temperature</span>
+    <span class="red right">{{ this.timeSlotData.main.temp | number: "1.0-0" }}</span>
+    <span class="red">&#176;C</span>
+    <span class="red">Feels like</span>
+    <span class="red right">{{ this.timeSlotData.main.feels_like | number: "1.0-0" }}</span>
+    <span class="red">&#176;C</span>
+    <span class="green">Pressure</span>
+    <span class="green right">{{ this.timeSlotData.main.pressure | number: "1.0-0" }}</span>
+    <span class="green">hPa</span>
+    <span class="green">Sea level</span>
+    <span class="green right">{{ this.timeSlotData.main.sea_level | number: "1.0-0" }}</span>
+    <span class="green">hPa</span>
+    <span class="green">Ground level</span>
+    <span class="green right">{{ this.timeSlotData.main.grnd_level | number: "1.0-0" }}</span>
+    <span class="green">hPa</span>
+    <span class="blue">Wind Speed</span>
+    <span class="blue right">{{ this.timeSlotData.wind.speed | number: "1.0-0" }}</span>
+    <span class="blue ">m/s</span>
+    <span class="blue">Direction</span>
+    <span class="blue right">{{ this.timeSlotData.wind.deg }}</span>
+    <span class="blue">Degrees</span>
+    <span class="yellow">Humidity</span>
+    <span class="yellow right">{{ this.timeSlotData.main.humidity | number: "1.0-0" }}</span>
+    <span class="yellow">%</span>
+    <span class="">Visibility</span>
+    <span class="right">{{ this.timeSlotData.visibility | number: "1.0-0" }}</span>
+    <span class="">m</span>
+  </div>
+</div>
