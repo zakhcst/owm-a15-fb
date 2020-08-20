@@ -2,9 +2,16 @@
   class="forecast-card flex flex-row flex-justify-content-stretch flex-align-items-stretch"
 >
   <div class="content flex flex-column">
-    <app-forecast-gchart-legend
-      class="legend flex-align-self-center"
-    ></app-forecast-gchart-legend>
+    <div>
+      <div class="flex flex-row">
+        <div class="date-column"></div>
+        <div class="flex flex-row flex-justify-content-center">
+          <app-forecast-gchart-legend
+            class="legend"
+          ></app-forecast-gchart-legend>
+        </div>
+      </div>
+    </div>
 
     <div class="flex flex-row scroll-this" #dateColumn>
       <div class="flex flex-column date-column flex-justify-content-stretch">
