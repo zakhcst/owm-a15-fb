@@ -1,7 +1,7 @@
 .stats-card {
   height: 100%;
   padding: 10px;
-  overflow-y: overlay;
+  /* overflow-y: overlay; */
   z-index: 0;
   background-color: transparent;
   color: white;
@@ -20,8 +20,19 @@
   background-color: #888888;
 }
 
-.scroll-this {
-  overflow: auto;
+.scroll-this::-webkit-scrollbar {
+  width: 5px;
+}
+.scroll-this::-webkit-scrollbar-thumb:hover {
+  background: rgb(200, 200, 200);
+}
+.scroll-this::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+}
+.scroll-this::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
 }
 
 .truncate {
@@ -30,13 +41,9 @@
   white-space: nowrap;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 @media only screen and (max-height: 599px) {
   .stats-card {
-    font-size: 60%;
+    font-size: 50%;
   }
 }
 

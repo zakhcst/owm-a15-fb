@@ -84,8 +84,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   showDataCellExpanded(timeSlotData) {
     if (timeSlotData)
     this.dialog.open(DataCellExpandedComponent, {
-      // height: '60vh',
-      // width: '60vw',
       data: {timeSlotData},
       panelClass: 'data-cell-expanded',
       hasBackdrop: true

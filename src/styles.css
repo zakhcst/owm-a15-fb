@@ -36,7 +36,7 @@
   width: 5px;
 }
 .header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar-thumb:hover {
-  background: green;
+  background: rgb(200, 200, 200);
 }
 .header-toolbar-mat-select.mat-select-panel::-webkit-scrollbar-thumb {
   background: #555;
