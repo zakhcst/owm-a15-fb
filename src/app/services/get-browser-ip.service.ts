@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConstantsService } from './constants.service';
 import { of, Observable } from 'rxjs';
-import { switchMap, share, catchError, shareReplay } from 'rxjs/operators';
+import { switchMap, catchError, shareReplay } from 'rxjs/operators';
 import { ErrorsService } from './errors.service';
 @Injectable({
   providedIn: 'root',

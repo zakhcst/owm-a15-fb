@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ConstantsService } from './constants.service';
-import { HistoryRecordModel, AppHistoryPayloadModel } from '../states/app.models';
+import { HistoryRecordModel} from '../states/app.models';
 import { Store } from '@ngxs/store';
-import { SetHistoryState } from '../states/app.actions';
 import { IHistoryLog } from '../models/history-log.model';
 import { Observable } from 'rxjs';
 import { take, shareReplay } from 'rxjs/operators';
