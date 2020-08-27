@@ -39,43 +39,45 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   weatherData: IOwmDataModel;
   listByDateLength = 0;
-  weatherDataSubscription: Subscription;
   scrollbarHeight = 0;
   listByDate: IListByDateModel;
   threeDayForecast = false;
+  subscriptions: Subscription;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
   @Select(AppStatusState.threeDayForecast) threeDayForecast$: Observable<boolean>;
-  
-  constructor(private _errors: ErrorsService, public dialog: MatDialog) { }
+
+  constructor(private _errors: ErrorsService, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.onInit();
   }
 
   ngOnDestroy() {
-    if (this.weatherDataSubscription) {
-      this.weatherDataSubscription.unsubscribe();
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
     }
   }
 
   onInit() {
     this.loadingOwmData = true;
-    this.weatherDataSubscription = this.owmData$.pipe(filter(data => !!data)).subscribe(
-      data => {
+    this.subscriptions = this.owmData$.pipe(filter((data) => !!data)).subscribe(
+      (data) => {
         this.weatherData = data;
         this.listByDate = data.listByDate;
         this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
         this.loadingOwmData = false;
       },
-      err => {
+      (err) => {
         this.loadingOwmData = false;
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );
-    this.threeDayForecast$.subscribe(threeDayForecast => {
+
+    const threeDayForecastSubscription = this.threeDayForecast$.subscribe((threeDayForecast) => {
       this.threeDayForecast = threeDayForecast;
-    })
+    });
+    this.subscriptions.add(threeDayForecastSubscription);
   }
 
   onMouseWheel(event: any) {
@@ -93,7 +95,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
       this.dialog.open(DataCellExpandedComponent, {
         data: { timeSlotData },
         panelClass: 'data-cell-expanded',
-        hasBackdrop: true
+        hasBackdrop: true,
       });
     }
   }

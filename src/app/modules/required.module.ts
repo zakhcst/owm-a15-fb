@@ -7,6 +7,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 import { environment } from '../../environments/environment';
 import { NgxsModule } from '@ngxs/store';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from '../states/app.state';
 
 @NgModule({
@@ -18,6 +19,7 @@ import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from
     AngularFireDatabaseModule,
     NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState],
       { developmentMode: !environment.production }),
+    NgxsStoragePluginModule.forRoot({ key: 'status'}),
   ],
   exports: [
     BrowserModule,

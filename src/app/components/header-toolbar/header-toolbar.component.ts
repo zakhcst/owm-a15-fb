@@ -66,7 +66,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _data: OwmDataService, // Instantiate service to start rxjs listener
+    private _data: OwmDataService, // Instantiate service to start listener
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
@@ -135,7 +135,9 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
   }
 
   isXs() {
