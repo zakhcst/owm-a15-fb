@@ -9,6 +9,8 @@ import { AppRoutingModule } from './modules/routing.module';
 import { AppErrorHandlerService } from './services/app-error-handler.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpInterceptorService } from './services/http-interceptor.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent, AppSnackBarInnerComponent],
@@ -17,7 +19,8 @@ import { HttpInterceptorService } from './services/http-interceptor.service';
     HttpClientModule,
     RequiredModules,
     AdditionalModules,
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   exports: [RequiredModules],
   providers: [
