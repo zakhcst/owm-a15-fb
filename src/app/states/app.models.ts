@@ -11,6 +11,8 @@ export interface AppStatusModel {
   ip: string;
   sessionStartTime: number; 
   selectedCityId: string;
+  threeDayForecast: boolean;
+  timeSlotBgPicture: boolean;
 }
 
 export interface AppHistoryPayloadModel {

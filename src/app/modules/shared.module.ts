@@ -4,12 +4,14 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
 import { LayoutsModules } from './layouts/layouts.modules';
 import { ReplacePipe } from '../pipes/replace.pipe';
 import { SortKeysPipe } from '../pipes/sort-keys.pipe';
+import { SliceArrayPipe } from '../pipes/slice-array.pipe';
 
 @NgModule({
   declarations: [
     SortCitiesPipe,
     ReplacePipe,
     SortKeysPipe,
+    SliceArrayPipe,
   ],
   imports: [
     AngularMaterialModule,
@@ -21,6 +23,7 @@ import { SortKeysPipe } from '../pipes/sort-keys.pipe';
     SortKeysPipe,
     AngularMaterialModule,
     LayoutsModules,
+    SliceArrayPipe,
   ]
 })
 export class SharedModule { }

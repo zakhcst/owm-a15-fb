@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatToolbarModule,
     MatSlideToggleModule,
     MatDialogModule,
+    MatIconModule,
   ],
   exports: [
     CommonModule,
@@ -32,6 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatToolbarModule,
     MatSlideToggleModule,
     MatDialogModule,
+    MatIconModule
   ]
 })
-export class AngularMaterialModule {}
+export class AngularMaterialModule { }

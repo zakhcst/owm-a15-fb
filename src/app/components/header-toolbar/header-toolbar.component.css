@@ -68,6 +68,29 @@
   animation-duration: 1s;
 }
 
+.button-settings {
+  width: 35px;
+  height: 35px;
+  margin: 0 10px;
+  border: solid 1px #4a5e77;
+  fill: white;
+  background-color: black;
+  padding: 3px;
+} 
+
+
+.button-settings:hover {
+  fill: transparent;
+  --blink-color: yellow;
+  --blink-bgcolor: transparent;
+  animation-name: blink-animation;
+  animation-iteration-count: infinite;
+  animation-duration: 1s; 
+}
+.button-settings-xs {
+  margin: 10px 2px;
+}
+
 .header-action {
   margin-left: 10px !important;
   font-size: 60%;
@@ -117,6 +140,7 @@
   50% {
     background-color: var(--blink-bgcolor);
     color: var(--blink-color);
+    fill: var(--blink-color);
   }
 }
 .toolbar-menu-toggle-xs {

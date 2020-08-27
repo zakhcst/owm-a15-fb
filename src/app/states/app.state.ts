@@ -6,17 +6,13 @@ import {
   SetDataState,
   SetStatusSelectedCityIdState,
   SetStatusIpState,
+  SetStatusTimeSlotBgPicture,
+  SetStatusThreeDayForecast,
 } from './app.actions';
-import {
-  AppStatusModel,
-  AppErrorsStateModel,
-  HistoryRecordModel,
-  ErrorRecordModel,
-  IHistoryModel,
-} from './app.models';
+import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { GetBrowserIpService } from '../services/get-browser-ip.service';
 import { SnackbarService } from '../services/snackbar.service';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { HistoryService } from '../services/history.service';
 import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
@@ -29,11 +25,13 @@ import { DataService } from '../services/data.service';
     ip: 'init',
     sessionStartTime: new Date().valueOf(),
     selectedCityId: ConstantsService.defaultCityId,
-  }
+    threeDayForecast: false,
+    timeSlotBgPicture: false,
+  },
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private _ip: GetBrowserIpService) { }
+  constructor(private _ip: GetBrowserIpService) {}
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -43,6 +41,16 @@ export class AppStatusState {
   @Selector()
   static selectStatusIp(state: AppStatusModel) {
     return state.ip;
+  }
+  
+  @Selector()
+  static timeSlotBgPicture(state: AppStatusModel) {
+    return state.timeSlotBgPicture;
+  }
+
+  @Selector()
+  static threeDayForecast(state: AppStatusModel) {
+    return state.threeDayForecast;
   }
 
   @Action(SetStatusIpState)
@@ -55,6 +63,16 @@ export class AppStatusState {
     const selectedCityId = action.payload || context.getState().selectedCityId;
     localStorage.setItem('selectedCityId', selectedCityId);
     context.patchState({ selectedCityId });
+  }
+
+  @Action(SetStatusTimeSlotBgPicture)
+  setStatusTimeSlotBgPicture(context: StateContext<AppStatusModel>, action: SetStatusTimeSlotBgPicture) {
+    return context.patchState({ timeSlotBgPicture: action.payload });
+  }
+
+  @Action(SetStatusThreeDayForecast)
+  setStatusThreeDayForecast(context: StateContext<AppStatusModel>, action: SetStatusThreeDayForecast) {
+    return context.patchState({ threeDayForecast: action.payload });
   }
 }
 
@@ -69,11 +87,11 @@ export class AppHistoryState {
     private _history: HistoryService,
     private _snackbar: SnackbarService,
     private _fb: DataService
-  ) { }
+  ) {}
 
   @Selector([AppStatusState])
   static selectSelectedCityHistory(state: IHistoryModel, status: AppStatusModel): IHistoryModel {
-    return state.filter(snapshot => {
+    return state.filter((snapshot) => {
       return snapshot.city.id.toString() === status.selectedCityId.toString();
     });
   }
@@ -131,7 +149,7 @@ const defaultErrorsRecord = {
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(private _ip: GetBrowserIpService, private _errors: ErrorsService, private _snackbar: SnackbarService) { }
+  constructor(private _ip: GetBrowserIpService, private _errors: ErrorsService, private _snackbar: SnackbarService) {}
 
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
@@ -143,7 +161,7 @@ export class AppErrorsState {
         };
         const update = {
           ip,
-          sessionErrors: [...context.getState().sessionErrors, newEntry]
+          sessionErrors: [...context.getState().sessionErrors, newEntry],
         };
         context.patchState(update);
         this._snackbar.show({
@@ -162,7 +180,6 @@ export class AppErrorsState {
 })
 @Injectable()
 export class AppOwmDataState {
-
   @Selector()
   static selectOwmData(state: IOwmDataModel) {
     return state;

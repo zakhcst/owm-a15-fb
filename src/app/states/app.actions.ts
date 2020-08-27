@@ -21,6 +21,16 @@ export class SetStatusIpState {
   constructor(public payload: string) {}
 }
 
+export class SetStatusTimeSlotBgPicture {
+  static readonly type = '[status] set timeSlotBgPicture';
+  constructor(public payload: boolean) {}
+}
+
+export class SetStatusThreeDayForecast {
+  static readonly type = '[status] set threeDayForecast';
+  constructor(public payload: boolean) {}
+}
+
 export class SetStatusSelectedCityIdState {
   static readonly type = '[status] set SelectedCityId';
   constructor(public payload?: string) {}

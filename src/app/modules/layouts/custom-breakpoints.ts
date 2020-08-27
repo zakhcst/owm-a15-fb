@@ -11,7 +11,7 @@ const CUSTOM_XS_BREAKPOINTS = [{
   // eXtra Small Horizontal
   alias: 'xs500w',
   suffix: 'xs500w',
-  mediaQuery: '(max-width: 500px)',
+  mediaQuery: '(max-width: 540px)',
   overlapping: true,
   priority: 1002
 }];

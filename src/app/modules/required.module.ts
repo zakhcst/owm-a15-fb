@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 
-import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { environment } from '../../environments/environment';
 import { NgxsModule } from '@ngxs/store';
 import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from '../states/app.state';
@@ -17,7 +16,6 @@ import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
-    AngularMaterialModule,
     NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState],
       { developmentMode: !environment.production }),
   ],
@@ -27,7 +25,6 @@ import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState } from
     HttpClientModule,
     AngularFireModule,
     AngularFireDatabaseModule,
-    AngularMaterialModule,
     NgxsModule,
   ]
 })

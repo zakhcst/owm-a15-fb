@@ -26,8 +26,9 @@
 /* Overriding the global styles and local scoping (.mat-select-panel) the selectors, according the Angular Material Docs */
 .mat-select-panel.header-toolbar-mat-select {
   background: #5981b2;
-  background-image: url("assets/backgrounds/default.jpg");
   background-size: cover;
+  background-image: url("assets/backgrounds/default.jpg");
+  border-radius: 0;
 }
 .header-toolbar-mat-select .mat-option-text {
   color: white;
@@ -50,4 +51,12 @@
 .data-cell-expanded .mat-dialog-container {
   padding: 0;
   border-radius: 0;
+}
+
+.dialog-settings .mat-dialog-container{
+  padding: 0;
+  border-radius: 0;
+  background: #5981b2;
+  background-size: cover;
+  background-image: url("assets/backgrounds/default.jpg");
 }

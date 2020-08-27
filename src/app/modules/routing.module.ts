@@ -8,7 +8,7 @@ import { HomeModule } from '../components/home/home.module';
 import { ConstantsService } from '../services/constants.service';
 import { ResolverCitiesService } from './routing-resolvers/resolver-cities.service';
 import { ResolverInitialDataService } from './routing-resolvers/resolver-initial-data.service';
-
+import { ResolverRegisterIconsService } from './routing-resolvers/resolver-register-icons.service';
 
 const appRoutes: Routes = [
   {
@@ -16,65 +16,57 @@ const appRoutes: Routes = [
     component: HeaderToolbarComponent,
     resolve: {
       cities: ResolverCitiesService,
-      initialData: ResolverInitialDataService
+      initialData: ResolverInitialDataService,
+      icons: ResolverRegisterIconsService,
     },
     children: [
       {
         path: ConstantsService.views.stats.path,
-        loadChildren: () =>
-          import('src/app/components/stats/stats.module').then(
-            m => m.StatsModule
-          ),
-        pathMatch: 'full'
+        loadChildren: () => import('src/app/components/stats/stats.module').then((m) => m.StatsModule),
+        pathMatch: 'full',
       },
       {
         path: ConstantsService.views.forecastFlex.path,
         loadChildren: () =>
-          import('src/app/components/forecast-flex/forecast-flex.module').then(
-            m => m.ForecastFlexModule
-          ),
-        pathMatch: 'full'
+          import('src/app/components/forecast-flex/forecast-flex.module').then((m) => m.ForecastFlexModule),
+        pathMatch: 'full',
       },
       {
         path: ConstantsService.views.forecastGChart.path,
         loadChildren: () =>
-          import(
-            'src/app/components/forecast-gchart/forecast-gchart.module'
-          ).then(m => m.ForecastGChartModule),
-        pathMatch: 'full'
+          import('src/app/components/forecast-gchart/forecast-gchart.module').then((m) => m.ForecastGChartModule),
+        pathMatch: 'full',
       },
-      { path: '', redirectTo: '/home', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: '/home', pathMatch: 'full' },
+    ],
   },
   {
     path: 'home',
-    loadChildren: () =>
-      import('src/app/components/home/home.module').then(m => m.HomeModule)
+    loadChildren: () => import('src/app/components/home/home.module').then((m) => m.HomeModule),
   },
   {
     path: 'error',
     component: ErrorPageComponent,
-    data: { errorMessage: ' Error Page', redirectPage: 'home' }
+    data: { errorMessage: ' Error Page', redirectPage: 'home' },
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '**',
     component: ErrorPageComponent,
-    data: { errorMessage: ' Page Not Found', redirectPage: 'home' }
-  }
+    data: { errorMessage: ' Page Not Found', redirectPage: 'home' },
+  },
 ];
 
 @NgModule({
   declarations: [ErrorPageComponent],
   imports: [
-    SharedModule,
     RouterModule.forRoot(
       appRoutes
       // , { enableTracing: true } // debugging only
     ),
     HeaderToolbarModule,
-    HomeModule
+    HomeModule,
   ],
-  exports: [SharedModule, RouterModule]
+  exports: [SharedModule, RouterModule],
 })
 export class AppRoutingModule {}

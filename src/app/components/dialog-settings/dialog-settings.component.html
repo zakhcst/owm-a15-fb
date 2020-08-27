@@ -1,0 +1,25 @@
+<div class="dialog-settings-container" (click)="closeDialog()">
+  <div class="grid">
+    Picture background
+    <mat-slide-toggle
+      #toggle
+      style="transform: rotate(180deg);"
+      [color]="'primary'"
+      [checked]="timeSlotBgPicture"
+      (toggleChange)="toggleTimeSlotBgPicture()"
+      (click)="$event.stopPropagation()"
+    >
+    </mat-slide-toggle>
+
+    3 day forecast
+    <mat-slide-toggle
+      #toggle
+      style="transform: rotate(180deg);"
+      [color]="'primary'"
+      [checked]="threeDayForecast"
+      (toggleChange)="toggleThreeDayForecast()"
+      (click)="$event.stopPropagation()"
+    >
+    </mat-slide-toggle>
+  </div>
+</div>

@@ -1,11 +1,9 @@
 .table-cell_data_empty-background {
   min-width: 120px;
-  margin: 2px;
 }
 
 .table-cell_data-background {
   min-width: 120px;
-  margin: 2px;
   padding: 2px 0 2px 0;
   box-sizing: border-box;
   overflow: hidden;
@@ -34,13 +32,10 @@
   }
 }
 
-@media only screen and (max-height: 420px) {
+@media only screen and (max-height: 400px) {
   img {
     width: 20%;
     height: auto;
-  }
-  *{
-    font-size: 80%;
   }
 }
 

@@ -9,8 +9,8 @@
   fxLayoutAlign="center center"
   *ngIf="dataDaily[timeSlot.hour]"
   class="table-cell_data-background"
-  [ngStyle]="{ 'background-color': timeSlot.bgColor }"
->
+  [ngStyle]="{ 'background-color': timeSlot.bgColor , 'background-image': urlBgImgPath }"
+  >
   <div
     fxFlex
     fxFlex.gt-xs="25%"

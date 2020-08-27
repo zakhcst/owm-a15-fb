@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostBinding, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  HostBinding,
+  HostListener,
+} from '@angular/core';
 import { ICities } from '../../models/cities.model';
 import { ActivatedRoute, Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
@@ -14,6 +23,8 @@ import { IOwmDataModel } from '../../models/owm-data.model';
 import { OwmDataService } from '../../services/owm-data.service';
 import { AppOwmDataState } from '../../states/app.state';
 import { SetStatusSelectedCityIdState } from '../../states/app.actions';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -34,8 +45,10 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   toolbarActions: [] = [];
   toolbarShow = true;
+  loaded = false;
   cities: ICities;
   selectedCityId: string = ConstantsService.defaultCityId;
+  iconSettings: string = ConstantsService.iconSettings;
   subscriptions: Subscription;
   showActionButtonsXS = false;
   xs500w = false;
@@ -57,7 +70,8 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
-    public mediaObserver: MediaObserver
+    public mediaObserver: MediaObserver,
+    public dialog: MatDialog
   ) {
     this.subscriptions = this._router.events
       .pipe(
@@ -80,10 +94,10 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       );
     const subscriptionCities: Subscription = this._activatedRoute.data.subscribe(
-      data => {
+      (data) => {
         this.cities = data.cities;
       },
-      err => {
+      (err) => {
         this.addError('header-toolbar: subscriptionCities', err.message);
       }
     );
@@ -94,8 +108,8 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     this.isXs();
     const subscriptionBgImg: Subscription = this.owmDataSelectedCityLast$
       .pipe(
-        filter(data => !!data),
-        tap((data: IOwmDataModel) => this.owmData = data),
+        filter((data) => !!data),
+        tap((data: IOwmDataModel) => (this.owmData = data)),
         map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data.list[0])),
         filter((newDataImgPath: string) => {
           const currentBgImgPath = this.container.nativeElement.style['background-image'].split('"')[1];
@@ -105,9 +119,11 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
       .subscribe(
         (imgPath: string) => {
           this.container.nativeElement.style['background-image'] = `url(${imgPath})`;
+          this.loaded = true;
         },
-        err => {
+        (err) => {
           this.addError('header-toolbar: ngOnInit: onChange: subscribe', err.message);
+          this.loaded = true;
         }
       );
 
@@ -124,6 +140,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   isXs() {
     this.xs500w = this.mediaObserver.isActive('xs500w');
+    return this.xs500w;
   }
 
   toggleActionButtonsXS($event) {
@@ -132,6 +149,29 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   hideActionButtonsXS($event) {
     this.showActionButtonsXS = false;
+  }
+
+  showSettings(settingsButton, isXs: boolean) {
+    const dialogWidth = 300;
+    const dialogHeight = 150;
+    const settingsButtonLeft = settingsButton._elementRef.nativeElement.offsetLeft;
+    const settingsButtonTop = settingsButton._elementRef.nativeElement.offsetTop;
+    const settingsButtonHeight = settingsButton._elementRef.nativeElement.clientHeight;
+    const settingsButtonoffsetWidth = settingsButton._elementRef.nativeElement.offsetWidth;
+    const dialogPositionTop = settingsButtonTop + settingsButtonHeight;
+    const dialogPositionLeft = settingsButtonLeft + (this.isXs() ? settingsButtonoffsetWidth : -dialogWidth);
+
+    this.dialog.open(DialogSettingsComponent, {
+      panelClass: 'dialog-settings',
+      position: {
+        top: dialogPositionTop + 'px',
+        left: dialogPositionLeft + 'px',
+      },
+      width: dialogWidth + 'px',
+      height: dialogHeight + 'px',
+      data: { settingsButton, dialogWidth, dialogHeight, mediaObserver: this.mediaObserver },
+      hasBackdrop: true,
+    });
   }
 
   selectionChange() {

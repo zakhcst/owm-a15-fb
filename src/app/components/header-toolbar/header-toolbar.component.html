@@ -65,6 +65,14 @@
           >{{ action["title"] }}</a
         >
       </ng-container>
+
+      <mat-icon
+        #settingsIcon
+        *ngIf="xs500w === false && loaded"
+        svgIcon="settings"
+        class="button-settings"
+        (click)="showSettings(settingsIcon)"
+      ></mat-icon>
     </span>
   </mat-toolbar>
 
@@ -92,6 +100,13 @@
         >{{ action["title"] }}</a
       >
     </ng-container>
+    <mat-icon
+        #settingsIconXs
+        *ngIf="loaded"
+        svgIcon="settings"
+        class="button-settings button-settings-xs"
+        (click)="showSettings(settingsIconXs, true)"
+      ></mat-icon>
   </div>
 
   <div class="container-toolbar-outlet" (click)="hideActionButtonsXS($event)">

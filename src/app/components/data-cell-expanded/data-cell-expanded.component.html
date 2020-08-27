@@ -1,26 +1,26 @@
 <div
   fxLayout="column"
   fxLayoutAlign="center center"
-  class="data-cell-expanded-container"
+  class="container-data-cell-expanded"
   [ngStyle]="{
     'background-image': 'url(' + bgImgPath + ')'
   }"
   (click)="closeDialog()"
 >
-  <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="center center" mat-dialog-title>
     <div>{{ this.dateTime | date: "dd MMMM y":"UTC" }}&nbsp;</div>
     <div>{{ this.dateTime | date: "EEEE":"UTC" }}&nbsp;</div>
     <div>{{ this.dateTime | date: "HH:mm":"UTC" }}&nbsp;</div>
   </div>
 
-  <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+  <div fxFlex="15%" fxLayout="row" fxLayoutAlign="center center">
     <img [src]="iconsOwm + this.timeSlotData.weather[0].icon + '.png'" />
     <span>
       {{ this.timeSlotData.weather[0].main }}
     </span>
   </div>
 
-  <div fxFlex="60%" class="data-table-grid">
+  <div fxFlex class="data-table-grid" mat-dialog-content>
     <span class="">Description</span>
     <span class="grid-col-23">{{ this.timeSlotData.weather[0].description | titlecase}}</span>
     <span class="red">Temperature</span>

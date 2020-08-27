@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ConstantsService {
-  constructor() {}
+  constructor() { }
 
   public static readonly views = {
     stats: { path: 'stats', title: 'Stats', type: 'button' },
@@ -39,7 +39,7 @@ export class ConstantsService {
   public static readonly owmData = 'owm';
   public static readonly historyLog = 'history-log';
   public static readonly errorsLog = 'errors-log';
-  
+
   public static readonly default5DayForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
   public static readonly defaultUnits = 'metric';
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
@@ -59,6 +59,7 @@ export class ConstantsService {
   public static readonly iconPressure = 'assets/icons8-atmospheric-pressure-16.png';
   public static readonly iconHumidity = 'assets/icons8-hygrometer-16.png';
   public static readonly iconGithub = 'assets/icon32-github.svg';
+  public static readonly iconSettings = 'assets/settings-black-48dp.svg';
   public static readonly iconExtLink = 'assets/icon24-external-link.svg';
   public static readonly arrow000Deg = String.fromCodePoint(8593);
   public static readonly snackbarDuration = 2500;
@@ -88,10 +89,10 @@ export class ConstantsService {
   };
 
   public static readonly timeTemplate: ITimeTemplate[] = [
-    { hour:  0, bgColor: '#30509050', textColor: 'white' },
-    { hour:  3, bgColor: '#4060bb50', textColor: 'white' },
-    { hour:  6, bgColor: '#6090ee50', textColor: 'white' },
-    { hour:  9, bgColor: '#70b0ff50', textColor: 'white' },
+    { hour: 0, bgColor: '#30509050', textColor: 'white' },
+    { hour: 3, bgColor: '#4060bb50', textColor: 'white' },
+    { hour: 6, bgColor: '#6090ee50', textColor: 'white' },
+    { hour: 9, bgColor: '#70b0ff50', textColor: 'white' },
     { hour: 12, bgColor: '#90c0ff50', textColor: 'white' },
     { hour: 15, bgColor: '#a0d0ff50', textColor: 'white' },
     { hour: 18, bgColor: '#70c0ff50', textColor: 'white' },
@@ -101,7 +102,7 @@ export class ConstantsService {
   public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');
   public static readonly weatherDefaultBgImgFileName = 'default.jpg';
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
-  public static readonly getWeatherDefaultBgImg = () => ConstantsService.weatherBgImgPath +  ConstantsService.weatherDefaultBgImgFileName;
+  public static readonly getWeatherDefaultBgImg = () => ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName;
 
   public static readonly getWeatherBgImg = (dataListHour: IOwmDataModelTimeSlotUnit) => {
     const main = dataListHour.weather[0].main;
