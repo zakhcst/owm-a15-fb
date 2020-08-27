@@ -8,8 +8,8 @@ import { ITimeTemplate } from '../../models/hours.model';
 import { ErrorsService } from '../../services/errors.service';
 
 import { Select } from '@ngxs/store';
-import { IOwmDataModel } from '../../models/owm-data.model';
-import { AppOwmDataState } from 'src/app/states/app.state';
+import { IOwmDataModel, IListByDateModel } from '../../models/owm-data.model';
+import { AppOwmDataState, AppStatusState } from 'src/app/states/app.state';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,10 +41,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   listByDateLength = 0;
   weatherDataSubscription: Subscription;
   scrollbarHeight = 0;
+  listByDate: IListByDateModel;
+  threeDayForecast = false;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
-
-  constructor(private _errors: ErrorsService, public dialog: MatDialog) {}
+  @Select(AppStatusState.threeDayForecast) threeDayForecast$: Observable<boolean>;
+  
+  constructor(private _errors: ErrorsService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.onInit();
@@ -60,9 +63,9 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     this.loadingOwmData = true;
     this.weatherDataSubscription = this.owmData$.pipe(filter(data => !!data)).subscribe(
       data => {
-        this.listByDateLength = Object.keys(data.listByDate).length;
         this.weatherData = data;
-
+        this.listByDate = data.listByDate;
+        this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
         this.loadingOwmData = false;
       },
       err => {
@@ -70,11 +73,15 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );
+    this.threeDayForecast$.subscribe(threeDayForecast => {
+      this.threeDayForecast = threeDayForecast;
+    })
   }
 
   onMouseWheel(event: any) {
-    if (this.gridContainer && !event.shiftKey)
+    if (this.gridContainer && !event.shiftKey) {
       this.gridContainer.nativeElement.scrollLeft += event.deltaY;
+    }
   }
 
   trackByIdFn(index: any, item: any) {
@@ -82,12 +89,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   }
 
   showDataCellExpanded(timeSlotData) {
-    if (timeSlotData)
-    this.dialog.open(DataCellExpandedComponent, {
-      data: {timeSlotData},
-      panelClass: 'data-cell-expanded',
-      hasBackdrop: true
-    });
+    if (timeSlotData) {
+      this.dialog.open(DataCellExpandedComponent, {
+        data: { timeSlotData },
+        panelClass: 'data-cell-expanded',
+        hasBackdrop: true
+      });
+    }
   }
 
   addError(custom: string, errorMessage: string) {

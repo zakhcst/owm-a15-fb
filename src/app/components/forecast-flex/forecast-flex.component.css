@@ -4,9 +4,9 @@
   padding: 5px;
   background: transparent;
   scrollbar-width: none;
-  --hour-column-min-width: 120px;
-  --hour-column-min-height: 15px;
-  --date-column-width: 40px;
+  --hour-slot-min-width: 120px;
+  --hour-row-min-height: 15px;
+  --column-date-width: 40px;
 }
 
 .content {
@@ -18,34 +18,35 @@
 ::-webkit-scrollbar {
   display: none;
 }
-
-.table-header-background {
-  min-width: var(--hour-column-min-width);
-  min-height: var(--hour-column-min-height);
-  margin: 2px;
+.table-header {
+  margin: 2px 0;
+}
+.table-header-time-slot {
+  min-width: var(--hour-slot-min-width);
+  min-height: var(--hour-row-min-height);
+  margin: 0 2px;
   background-color: #778bff93;
   box-sizing: border-box;
 }
 
-.table-cell_data {
-  min-width: var(--hour-column-min-width);
-  margin: 2px;
-}
-
-.table-column_0 {
-  padding: 0 5px 0 5px;
-  width: var(--hour-column-width);
-}
-
 .table-cell_00 {
-  padding: 5px 2px;
-  min-height: var(--hour-column-min-height);
+  margin: 2px;
+  min-height: var(--hour-row-min-height);
+}
+.table-column-date {
+  padding: 0 5px;
+  width: var(--column-date-width);
+}
+.date-column-slot {
+  margin: 2px 0;
 }
 
-@media only screen and (max-height: 420px) {
-  .content {
-    font-size: 6px;
-  }
+.table-row {
+  margin: 2px 0;
+}
+.table-cell_data {
+  min-width: var(--hour-slot-min-width);
+  margin: 0 2px;
 }
 
 @media only screen and (max-height: 800px) {
@@ -54,8 +55,14 @@
   }
 }
 
+@media only screen and (max-height: 300px) {
+  .content {
+    font-size: 6px;
+  }
+}
+
 @media only screen and (max-height: 399px) {
-  .date-column__date {
+  .date-column-slot-date {
     display: none !important;
   }
 }
