@@ -10,7 +10,7 @@ import { ITimeTemplate } from '../../models/hours.model';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { IOwmDataModel } from '../../models/owm-data.model';
-import { AppOwmDataState } from '../../states/app.state';
+import { AppOwmDataState, AppStatusState } from '../../states/app.state';
 import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
@@ -35,15 +35,17 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   orientationchangeObservable$: Observable<Event>;
   orientationchangeSubscription: Subscription;
   layoutChangesOrientation$: Observable<BreakpointState>;
+  threeDayForecast = false;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    setTimeout(() => {
-      this.resizeGraphs(this.activeDays);
-    }, 0);
-  }
+  @Select(AppStatusState.threeDayForecast) threeDayForecast$: Observable<boolean>;
+  
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event) {
+  //   setTimeout(() => {
+  //     this.resizeGraphs(this.activeDays);
+  //   }, 0);
+  // }
 
   constructor(
     private _errors: ErrorsService,
@@ -65,6 +67,13 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     this.layoutChangesOrientation$.subscribe((result) => {
       if (this.activeDays.length > 0) this.resizeGraphs(this.activeDays);
     });
+
+    this.threeDayForecast$.subscribe(threeDayForecast => {
+      this.threeDayForecast = threeDayForecast;
+      if (this.activeDays.length > 0) {
+        this.resizeGraphs(this.activeDays);
+      }
+    })
 
     this.onChange();
   }
@@ -111,7 +120,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     if (dateColumn) {
       const activeDaysLength = activeDays.length;
       const activeDaysHeightCoef = activeDaysLength === 1 ? 0.8 : 0.94;
-      const graphHeight = Math.floor((dateColumn.clientHeight * activeDaysHeightCoef) / activeDaysLength);
+      const graphHeight = Math.floor((dateColumn.clientHeight * activeDaysHeightCoef) / (activeDaysLength === 1 ? 1 : (this.threeDayForecast ? 3 : activeDaysLength)));
       const graphWidth = Math.floor(documentBodyWidth - 20 - 10 - 40);
 
       activeDays.forEach((dayK) => {
