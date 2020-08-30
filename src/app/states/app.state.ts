@@ -10,19 +10,19 @@ import {
   SetStatusThreeDayForecast,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
-import { GetBrowserIpService } from '../services/get-browser-ip.service';
 import { SnackbarService } from '../services/snackbar.service';
-import { switchMap } from 'rxjs/operators';
 import { HistoryService } from '../services/history.service';
 import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from '../services/constants.service';
 import { DataService } from '../services/data.service';
+import { NormalizeDataService } from '../services/normalize-data.service';
 
 @State<AppStatusModel>({
   name: 'status',
   defaults: {
-    ip: 'init',
+    ip: '--ip',
+    normalizedIp: '--ip',
     sessionStartTime: new Date().valueOf(),
     selectedCityId: ConstantsService.defaultCityId,
     threeDayForecast: false,
@@ -31,7 +31,7 @@ import { DataService } from '../services/data.service';
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private _ip: GetBrowserIpService) {}
+  constructor(private normalizedData: NormalizeDataService) {}
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -42,7 +42,11 @@ export class AppStatusState {
   static selectStatusIp(state: AppStatusModel) {
     return state.ip;
   }
-  
+  @Selector()
+  static selectStatusNormalizedIp(state: AppStatusModel) {
+    return state.normalizedIp;
+  }
+
   @Selector()
   static timeSlotBgPicture(state: AppStatusModel) {
     return state.timeSlotBgPicture;
@@ -55,7 +59,9 @@ export class AppStatusState {
 
   @Action(SetStatusIpState)
   setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
-    return context.patchState({ ip: action.payload });
+    const ip = action.payload;
+    const normalizedIp = this.normalizedData.ip(ip);
+    return context.patchState({ ip, normalizedIp });
   }
 
   @Action(SetStatusSelectedCityIdState)
@@ -108,7 +114,7 @@ export class AppHistoryState {
     const selectedCityId = owmData.city.id.toString();
     const cityName = owmData.city.name;
     const countryISO2 = owmData.city.country;
-    const ip = this._store.selectSnapshot(AppStatusState.selectStatusIp);
+    const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
 
     const newEntry: HistoryRecordModel = {
       cityId: selectedCityId,
@@ -116,7 +122,7 @@ export class AppHistoryState {
     };
 
     // Reuse exising snapshot
-    const existingSnapshot = context.getState().find(snapshot => snapshot.updated === owmData.updated);
+    const existingSnapshot = context.getState().find((snapshot) => snapshot.updated === owmData.updated);
     const sessionHistory = [...context.getState(), existingSnapshot || owmData];
 
     context.setState(sessionHistory);
@@ -125,7 +131,7 @@ export class AppHistoryState {
       message: `Selected: ${cityName}, ${countryISO2}`,
       class: 'snackbar__info',
     });
-    return this._history.setDataToFB(ip, newEntry).then(() => {
+    return this._history.setDataToFB(normalizedIp, newEntry).then(() => {
       if (!existingSnapshot) {
         return this._fb.setData(selectedCityId, owmData);
       }
@@ -134,11 +140,11 @@ export class AppHistoryState {
 }
 
 const defaultErrorsRecord = {
-  ip: '',
   sessionErrors: [
     {
       logMessage: 'Init',
       time: new Date().valueOf(),
+      ip: ''
     },
   ],
 };
@@ -149,28 +155,30 @@ const defaultErrorsRecord = {
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(private _ip: GetBrowserIpService, private _errors: ErrorsService, private _snackbar: SnackbarService) {}
+  constructor(
+    private _errors: ErrorsService,
+    private _snackbar: SnackbarService,
+    private _store: Store
+  ) {}
 
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
-    return this._ip.getIP().pipe(
-      switchMap((ip) => {
-        const newEntry: ErrorRecordModel = {
-          logMessage: action.payload.logMessage,
-          time: new Date().valueOf(),
-        };
-        const update = {
-          ip,
-          sessionErrors: [...context.getState().sessionErrors, newEntry],
-        };
-        context.patchState(update);
-        this._snackbar.show({
-          message: `Error: ${action.payload.userMessage}`,
-          class: 'snackbar__error',
-        });
-        return this._errors.setDataToFB(ip, newEntry);
-      })
-    );
+    const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
+    const ip = this._store.selectSnapshot(AppStatusState.selectStatusIp);
+    const newEntry: ErrorRecordModel = {
+      logMessage: action.payload.logMessage,
+      time: new Date().valueOf(),
+      ip
+    };
+    const update = {
+      sessionErrors: [...context.getState().sessionErrors, newEntry],
+    };
+    context.patchState(update);
+    this._snackbar.show({
+      message: `Error: ${action.payload.userMessage}`,
+      class: 'snackbar__error',
+    });
+    return this._errors.setDataToFB(normalizedIp, newEntry);
   }
 }
 

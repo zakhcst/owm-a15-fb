@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IOwmStats } from 'src/app/models/owm-stats.model';
 import { ICities } from 'src/app/models/cities.model';
 import {
@@ -10,6 +10,9 @@ import {
   query,
   stagger
 } from '@angular/animations';
+import { Select } from '@ngxs/store';
+import { AppStatusState } from 'src/app/states/app.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-stats',
@@ -31,7 +34,6 @@ import {
   ]
 })
 export class StatsComponent implements OnInit {
-  ip: string;
   stats: IOwmStats;
   cities: ICities;
   historyLog: any[];
@@ -40,11 +42,11 @@ export class StatsComponent implements OnInit {
   checkedCities = true;
   showDetails = {};
 
-  constructor(private _activatedRoute: ActivatedRoute, private _router: Router) {}
+  @Select(AppStatusState.selectStatusIp) ip$: Observable<string>;
+  constructor(private _activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this._activatedRoute.data.subscribe(data => {
-      this.ip = data.ip;
       this.stats = data.stats;
       this.cities = data.cities;
       this.citiesLength = Object.keys(data.cities).length;

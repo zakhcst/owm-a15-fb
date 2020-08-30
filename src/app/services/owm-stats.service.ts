@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 import { ErrorsService } from './errors.service';
 import { IOwmStats } from '../models/owm-stats.model';
 @Injectable({
@@ -18,7 +18,7 @@ export class OwmStatsService {
     return this._db
       .object('/stats')
       .valueChanges()
-      .pipe(
+      .pipe(take(1),
         catchError(err => {
           this._errors.add({
             userMessage: 'Connection or service problem',

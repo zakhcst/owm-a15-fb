@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 
-import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { Resolve } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 
 import { GetBrowserIpService } from '../../services/get-browser-ip.service';
+import { Store } from '@ngxs/store';
+import { SetStatusIpState } from 'src/app/states/app.actions';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ResolverIpService implements Resolve<string> {
-  constructor(private _ip: GetBrowserIpService,  private _router: Router) {}
+  constructor(private _store: Store, private _ip: GetBrowserIpService) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<string> | Observable<never> {
-    // console.log('ResolverIpService');
-    return this._ip.getIP().pipe(
-      shareReplay(1)
+  resolve(): Observable<string> | Observable<never> {
+    return this._ip.getIPv4().pipe(
+      catchError((errIp) => {
+        return of('255.255.255.255');
+      }),
+      switchMap((ip: string) => this._store.dispatch([new SetStatusIpState(ip)]))
     );
   }
 }

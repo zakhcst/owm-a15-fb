@@ -9,6 +9,7 @@ export interface IHistoryModel extends Array<IOwmDataModel> {}
 
 export interface AppStatusModel {
   ip: string;
+  normalizedIp: string;
   sessionStartTime: number; 
   selectedCityId: string;
   threeDayForecast: boolean;
@@ -22,9 +23,9 @@ export interface AppHistoryPayloadModel {
 export interface ErrorRecordModel {
   logMessage: string;
   time: number;
+  ip?: string;
 }
 export interface AppErrorsStateModel {
-  ip?: string;
   sessionErrors: ErrorRecordModel[];
 }
 

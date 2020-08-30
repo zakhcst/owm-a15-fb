@@ -1,7 +1,7 @@
 <mat-card class="stats-card">
   <div fxLayout="column" fxFill>
     <div fxFlex="0 0 auto" fxLayout="row">
-      <p>Current client IPv4: {{ ip }}</p>
+      <p>Current client IPv4: {{ ip$ | async }}</p>
       <span fxFlex></span>
       <span fxLayout="row" fxLayoutAlign="start center">
         Cities&nbsp;

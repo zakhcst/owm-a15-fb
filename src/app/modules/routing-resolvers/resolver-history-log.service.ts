@@ -7,7 +7,6 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 import { HistoryService } from '../../services/history.service';
 import { IHistoryLog } from 'src/app/models/history-log.model';
@@ -19,6 +18,6 @@ export class ResolverHistoryLogService implements Resolve<IHistoryLog> {
   constructor(private _history: HistoryService, private _router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IHistoryLog> | Observable<never> {
-    return this._history.getData().pipe(take(1));
+    return this._history.getData();
   }
 }
