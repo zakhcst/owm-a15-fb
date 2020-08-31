@@ -37,6 +37,8 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+firebase/ui-debug.log
+firebase/database-debug.log
 
 # System Files
 .DS_Store
