@@ -82,7 +82,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   onMouseWheel(event: any) {
     if (this.gridContainer && !event.shiftKey) {
-      this.gridContainer.nativeElement.scrollLeft += event.deltaY;
+      const frames = 20;
+      const step = event.deltaY/frames;
+      let count = 0;
+      const interval = setInterval(() => {
+        this.gridContainer.nativeElement.scrollLeft += step;
+        if (++count >= frames) { clearInterval(interval); }
+      }, 10);
     }
   }
 
