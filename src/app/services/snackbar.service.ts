@@ -8,6 +8,7 @@ import {
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { ISnackbarData } from '../models/snackbar.model';
+import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,7 +33,8 @@ export class SnackbarService {
     if (this.q[0] === data) {
       this.zone.run(() => {
         const snackbarRef = this.ref(data);
-        snackbarRef.afterDismissed().subscribe(() => {
+        const afterDismissedSubscription: Subscription =  snackbarRef.afterDismissed().subscribe(() => {
+          afterDismissedSubscription.unsubscribe();
           this.q.shift();
           if (this.q.length > 0) {
             this.show(this.q[0]);
