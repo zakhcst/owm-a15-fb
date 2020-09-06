@@ -11,8 +11,8 @@
           [checked]="checkedCities"
           (toggleChange)="checkedCities = !checkedCities"
         >
-      </mat-slide-toggle>
-      &nbsp;IP
+        </mat-slide-toggle>
+        &nbsp;IP
       </span>
     </div>
     <br />
@@ -48,11 +48,11 @@
             (click)="showDetails[logEntryIp[0]] = !showDetails[logEntryIp[0]]"
           >
             <span fxFlex class="truncate">
-              {{ showDetails[logEntryIp[0]] ? '&#x23F7;' : '&#x23F5;' }}
-              {{ logEntryIp[0] | replace: '-':'.' }}
+              {{ showDetails[logEntryIp[0]] ? "&#x23F7;" : "&#x23F5;" }}
+              {{ logEntryIp[0] | replace: "-":"." }}
             </span>
-            <span fxFlex>{{ logEntryIp[2][0][0] | date: 'dd/MM/yyyy' }}</span>
-            <span fxFlex>{{ logEntryIp[2][0][0] | date: 'HH:mm' }}</span>
+            <span fxFlex>{{ logEntryIp[2][0][0] | date: "dd/MM/yyyy" }}</span>
+            <span fxFlex>{{ logEntryIp[2][0][0] | date: "HH:mm" }}</span>
             <span fxFlex>{{ cities[logEntryIp[2][0][1]].name }}</span>
             <span fxFlex>{{ logEntryIp[1].length }}</span>
           </div>
@@ -78,8 +78,8 @@
                 "
               >
                 <span fxFlex></span>
-                <span fxFlex>{{ logEntryTime[0] | date: 'dd/MM/yyyy' }}</span>
-                <span fxFlex>{{ logEntryTime[0] | date: 'HH:mm:ss' }}</span>
+                <span fxFlex>{{ logEntryTime[0] | date: "dd/MM/yyyy" }}</span>
+                <span fxFlex>{{ logEntryTime[0] | date: "HH:mm:ss" }}</span>
                 <span fxFlex>{{ cities[logEntryTime[1]].name }}</span>
                 <span fxFlex></span>
               </div>
@@ -113,7 +113,7 @@
         [@showStats]="citiesLength"
       >
         <div
-          *ngFor="let city of cities | keyvalue | sortCities ; let odd = odd"
+          *ngFor="let city of cities | keyvalue | sortCities; let odd = odd"
           fxFlex
           fxLayout="row"
           fxLayoutAlign="start center"

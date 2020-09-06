@@ -21,7 +21,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
 import { OwmDataService } from '../../services/owm-data.service';
-import { AppOwmDataState } from '../../states/app.state';
+import { AppOwmDataState, AppCitiesState } from '../../states/app.state';
 import { SetStatusSelectedCityIdState } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
@@ -46,7 +46,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   toolbarActions: [] = [];
   toolbarShow = true;
   loaded = false;
-  cities: ICities;
   selectedCityId: string = ConstantsService.defaultCityId;
   iconSettings: string = ConstantsService.iconSettings;
   subscriptions: Subscription;
@@ -57,6 +56,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   owmData: IOwmDataModel;
 
   @Select(AppOwmDataState.selectOwmData) owmDataSelectedCityLast$: Observable<IOwmDataModel>;
+  @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -93,15 +93,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
           this.addError('header-toolbar: router.events', err.message);
         }
       );
-    const subscriptionCities: Subscription = this._activatedRoute.data.subscribe(
-      (data) => {
-        this.cities = data.cities;
-      },
-      (err) => {
-        this.addError('header-toolbar: subscriptionCities', err.message);
-      }
-    );
-    this.subscriptions.add(subscriptionCities);
   }
 
   ngOnInit() {
@@ -176,7 +167,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     });
   }
 
-  selectionChange() {
+  selectedCityChange() {
     this._store.dispatch(new SetStatusSelectedCityIdState(this.selectedCityId));
   }
 

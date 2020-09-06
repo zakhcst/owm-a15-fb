@@ -1,28 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { from, Observable, throwError } from 'rxjs';
-import {
-  switchMap,
-  take,
-  shareReplay,
-  catchError
-} from 'rxjs/operators';
+import { switchMap, take, catchError } from 'rxjs/operators';
 import { ICities } from '../models/cities.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CitiesService {
-  constructor(private _db: AngularFireDatabase) { }
+  constructor(private _db: AngularFireDatabase) {  }
 
   getData(): Observable<ICities> {
-    return this._db
-      .object<ICities>('cities')
-      .valueChanges()
-      .pipe(
-        take(1),
-        shareReplay(1)
-      );
+    return this._db.object<ICities>('cities').valueChanges().pipe(take(1));
   }
 
   updateReads(cityId: string) {
@@ -33,9 +22,9 @@ export class CitiesService {
     return ref.valueChanges().pipe(
       take(1),
       switchMap((city: any) => {
-        return from(ref.update({ reads: (city && city.reads || 0) + 1 }));
+        return from(ref.update({ reads: ((city && city.reads) || 0) + 1 }));
       }),
-      catchError(err => {
+      catchError((err) => {
         console.log(err);
         return throwError('CitiesService: updateReads: ' + err);
       })

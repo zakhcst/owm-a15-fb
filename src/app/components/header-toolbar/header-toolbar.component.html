@@ -39,11 +39,11 @@
             panelClass="header-toolbar-mat-select"
             placeholder="City"
             [(value)]="selectedCityId"
-            (selectionChange)="selectionChange()"
+            (selectionChange)="selectedCityChange()"
           >
             <mat-option
               fxFlex
-              *ngFor="let city of cities | keyvalue | sortCities"
+              *ngFor="let city of cities$ | async | keyvalue | sortCities"
               [value]="city.key"
             >
               <span fxFlex fxFill fxLayoutAlign="space-between" fxLayout="row">
