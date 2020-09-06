@@ -2,6 +2,7 @@ import { AppHistoryPayloadModel, AppErrorPayloadModel } from './app.models';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
 import { IOwmStats } from '../models/owm-stats.model';
+import { IHistoryLog } from '../models/history-log.model';
 
 export class SetHistoryState {
   static readonly type = '[activity] set history';
@@ -56,5 +57,10 @@ export class SetCitiesState {
 export class SetStatsState {
   static readonly type = '[stats] set';
   constructor(public payload: IOwmStats) {}
+}
+
+export class SetHistoryLogState {
+  static readonly type = '[historyLog] set';
+  constructor(public payload: IHistoryLog) {}
 }
 

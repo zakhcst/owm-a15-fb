@@ -10,6 +10,7 @@ import {
   SetStatusThreeDayForecast,
   SetCitiesState,
   SetStatsState,
+  SetHistoryLogState,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -21,6 +22,7 @@ import { DataService } from '../services/data.service';
 import { NormalizeDataService } from '../services/normalize-data.service';
 import { ICities } from '../models/cities.model';
 import { IOwmStats } from '../models/owm-stats.model';
+import { IHistoryLog } from '../models/history-log.model';
 
 @State<AppStatusModel>({
   name: 'status',
@@ -235,6 +237,23 @@ export class AppStatsState {
 
   @Action(SetStatsState)
   setStatsState(context: StateContext<IOwmStats>, action: SetStatsState) {
+    context.setState(action.payload);
+  }
+}
+
+@State<IHistoryLog>({
+  name: 'historyLog',
+  defaults: null,
+})
+@Injectable()
+export class AppHistoryLogState {
+  @Selector()
+  static selectHistoryLog(state: IHistoryLog) {
+    return state;
+  }
+
+  @Action(SetHistoryLogState)
+  setStatsState(context: StateContext<IHistoryLog>, action: SetHistoryLogState) {
     context.setState(action.payload);
   }
 }
