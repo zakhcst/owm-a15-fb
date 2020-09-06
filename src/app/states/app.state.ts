@@ -9,6 +9,7 @@ import {
   SetStatusTimeSlotBgPicture,
   SetStatusThreeDayForecast,
   SetCitiesState,
+  SetStatsState,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -19,6 +20,7 @@ import { ConstantsService } from '../services/constants.service';
 import { DataService } from '../services/data.service';
 import { NormalizeDataService } from '../services/normalize-data.service';
 import { ICities } from '../models/cities.model';
+import { IOwmStats } from '../models/owm-stats.model';
 
 @State<AppStatusModel>({
   name: 'status',
@@ -216,6 +218,23 @@ export class AppCitiesState {
 
   @Action(SetCitiesState)
   setCitiesState(context: StateContext<ICities>, action: SetCitiesState) {
+    context.setState(action.payload);
+  }
+}
+
+@State<IOwmStats>({
+  name: 'stats',
+  defaults: null,
+})
+@Injectable()
+export class AppStatsState {
+  @Selector()
+  static selectStats(state: IOwmStats) {
+    return state;
+  }
+
+  @Action(SetStatsState)
+  setStatsState(context: StateContext<IOwmStats>, action: SetStatsState) {
     context.setState(action.payload);
   }
 }

@@ -8,7 +8,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../../environments/environment';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState, AppCitiesState } from '../states/app.state';
+import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState, AppCitiesState, AppStatsState } from '../states/app.state';
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { AppHistoryState, AppErrorsState, AppStatusState, AppOwmDataState, AppCi
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
-    NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState, AppCitiesState],
+    NgxsModule.forRoot([AppHistoryState, AppErrorsState, AppOwmDataState, AppStatusState, AppCitiesState, AppStatsState],
       { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({ key: ['status', 'cities', 'history', 'data', 'stats']}),
   ],
