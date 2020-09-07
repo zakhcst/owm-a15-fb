@@ -5,15 +5,17 @@ export interface HistoryRecordModel {
   time: number;
 }
 
-export interface IHistoryModel extends Array<IOwmDataModel> {}
+export interface IHistoryModel extends Array<IOwmDataModel> { }
 
 export interface AppStatusModel {
   ip: string;
   normalizedIp: string;
-  sessionStartTime: number; 
+  sessionStartTime: number;
   selectedCityId: string;
   threeDayForecast: boolean;
   timeSlotBgPicture: boolean;
+  connected: boolean;
+  away: boolean;
 }
 
 export interface AppHistoryPayloadModel {

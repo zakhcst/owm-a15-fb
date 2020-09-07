@@ -6,13 +6,13 @@ import { switchMap, catchError } from 'rxjs/operators';
 
 import { GetBrowserIpService } from '../../services/get-browser-ip.service';
 import { Store } from '@ngxs/store';
-import { SetStatusIpState } from 'src/app/states/app.actions';
+import { SetStatusIpState } from '../../states/app.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResolverIpService implements Resolve<string> {
-  constructor(private _store: Store, private _ip: GetBrowserIpService) {}
+  constructor(private _store: Store, private _ip: GetBrowserIpService) { }
 
   resolve(): Observable<string> | Observable<never> {
     return this._ip.getIPv4().pipe(

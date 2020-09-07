@@ -11,6 +11,8 @@ import {
   SetCitiesState,
   SetStatsState,
   SetHistoryLogState,
+  SetStatusConnected,
+  SetStatusAway,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -33,11 +35,13 @@ import { IHistoryLog } from '../models/history-log.model';
     selectedCityId: ConstantsService.defaultCityId,
     threeDayForecast: false,
     timeSlotBgPicture: false,
+    connected: true,
+    away: false,
   },
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private normalizedData: NormalizeDataService) {}
+  constructor(private normalizedData: NormalizeDataService) { }
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -63,6 +67,16 @@ export class AppStatusState {
     return state.threeDayForecast;
   }
 
+  @Selector()
+  static connected(state: AppStatusModel) {
+    return state.connected;
+  }
+
+  @Selector()
+  static away(state: AppStatusModel) {
+    return state.away;
+  }
+
   @Action(SetStatusIpState)
   setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
     const ip = action.payload;
@@ -79,12 +93,22 @@ export class AppStatusState {
 
   @Action(SetStatusTimeSlotBgPicture)
   setStatusTimeSlotBgPicture(context: StateContext<AppStatusModel>, action: SetStatusTimeSlotBgPicture) {
-    return context.patchState({ timeSlotBgPicture: action.payload });
+    context.patchState({ timeSlotBgPicture: action.payload });
   }
 
   @Action(SetStatusThreeDayForecast)
   setStatusThreeDayForecast(context: StateContext<AppStatusModel>, action: SetStatusThreeDayForecast) {
-    return context.patchState({ threeDayForecast: action.payload });
+    context.patchState({ threeDayForecast: action.payload });
+  }
+
+  @Action(SetStatusConnected)
+  setStatusConnected(context: StateContext<AppStatusModel>, action: SetStatusConnected) {
+    context.patchState({ connected: action.payload });
+  }
+
+  @Action(SetStatusAway)
+  setStatusAway(context: StateContext<AppStatusModel>, action: SetStatusAway) {
+    context.patchState({ away: action.payload });
   }
 }
 
@@ -99,7 +123,7 @@ export class AppHistoryState {
     private _history: HistoryService,
     private _snackbar: SnackbarService,
     private _fb: DataService
-  ) {}
+  ) { }
 
   @Selector([AppStatusState])
   static selectSelectedCityHistory(state: IHistoryModel, status: AppStatusModel): IHistoryModel {
@@ -165,7 +189,7 @@ export class AppErrorsState {
     private _errors: ErrorsService,
     private _snackbar: SnackbarService,
     private _store: Store
-  ) {}
+  ) { }
 
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
