@@ -1,9 +1,9 @@
 <div class="dialog-settings-container" (click)="closeDialog()">
   <div class="grid">
-    Picture background
+    Slots background
     <mat-slide-toggle
       #toggle
-      style="transform: rotate(180deg);"
+      style="transform: rotate(180deg)"
       [color]="'primary'"
       [checked]="timeSlotBgPicture"
       (toggleChange)="toggleTimeSlotBgPicture()"
@@ -11,10 +11,10 @@
     >
     </mat-slide-toggle>
 
-    3 day forecast
+    3/5 day forecast
     <mat-slide-toggle
       #toggle
-      style="transform: rotate(180deg);"
+      style="transform: rotate(180deg)"
       [color]="'primary'"
       [checked]="threeDayForecast"
       (toggleChange)="toggleThreeDayForecast()"

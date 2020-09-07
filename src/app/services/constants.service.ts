@@ -12,7 +12,7 @@ export class ConstantsService {
   public static readonly views = {
     stats: { path: 'stats', title: 'Stats', type: 'button' },
     forecastGChart: { path: 'forecast-gchart', title: 'GChart', type: 'button' },
-    forecastFlex: { path: 'forecast-flex', title: '3 Hour', type: 'button' },
+    forecastFlex: { path: 'forecast-flex', title: 'Details', type: 'button' },
     selectCities: { path: '', title: 'selectCities', type: 'selectCities' }
   };
 
