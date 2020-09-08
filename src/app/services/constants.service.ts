@@ -45,7 +45,7 @@ export class ConstantsService {
   public static readonly defaultAPPID = 'a354c550c575036102a4dce8d36e75d1';
 
   public static get defaultCityId() {
-    return localStorage.getItem('selectedCityId') || '2643743'; // Defaults to London, UK
+    return '2643743'; // Defaults to London, UK
   }
 
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';

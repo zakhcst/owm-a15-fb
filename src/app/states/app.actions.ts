@@ -74,3 +74,7 @@ export class SetHistoryLogState {
   constructor(public payload: IHistoryLog) { }
 }
 
+export class SetFallbackDataState {
+  static readonly type = '[fallback data] set';
+  constructor(public payload: IOwmDataModel) { }
+}

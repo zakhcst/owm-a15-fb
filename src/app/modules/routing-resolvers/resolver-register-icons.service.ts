@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Resolve } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,8 @@ export class ResolverRegisterIconsService implements Resolve<any> {
     iconRegistry.addSvgIcon('settings', _sanitizer.bypassSecurityTrustResourceUrl(ConstantsService.iconSettings));
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    return this._http.get(ConstantsService.iconSettings, { responseType: 'text' });
+  resolve(): Observable<any> {
+    // return this._http.get(ConstantsService.iconSettings, { responseType: 'text' });
+    return of(true);
   }
 }

@@ -5,7 +5,9 @@ export interface HistoryRecordModel {
   time: number;
 }
 
-export interface IHistoryModel extends Array<IOwmDataModel> { }
+export interface IHistoryModel {
+  [cityId: string]: IOwmDataModel;
+}
 
 export interface AppStatusModel {
   ip: string;

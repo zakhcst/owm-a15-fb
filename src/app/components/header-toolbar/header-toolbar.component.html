@@ -24,15 +24,19 @@
     <span>OWM Forecast</span>
     <span
       class="header-sample-text"
-      *ngIf="owmData && !owmData.updated && xs500w === false"
-      >SAMPLE DATA</span
+      *ngIf="owmData && owmDataExpired && xs500w === false"
+      >{{
+        (owmDataExpired ? "Offline" : "") +
+          (!owmData.updated ? " Sample" : "") +
+          " Data"
+      }}</span
     >
     <span class="header-actions-container">
       <ng-container *ngFor="let action of toolbarActions">
         <mat-form-field
           *ngIf="action['type'] === 'selectCities'"
           class="header-action"
-          style="width: 120px;"
+          style="width: 120px"
         >
           <mat-select
             fxFlex
@@ -101,12 +105,12 @@
       >
     </ng-container>
     <mat-icon
-        #settingsIconXs
-        *ngIf="loaded"
-        svgIcon="settings"
-        class="button-settings button-settings-xs"
-        (click)="showSettings(settingsIconXs, true)"
-      ></mat-icon>
+      #settingsIconXs
+      *ngIf="loaded"
+      svgIcon="settings"
+      class="button-settings button-settings-xs"
+      (click)="showSettings(settingsIconXs, true)"
+    ></mat-icon>
   </div>
 
   <div class="container-toolbar-outlet" (click)="hideActionButtonsXS($event)">

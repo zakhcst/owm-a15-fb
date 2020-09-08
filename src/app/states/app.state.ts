@@ -13,6 +13,7 @@ import {
   SetHistoryLogState,
   SetStatusConnected,
   SetStatusAway,
+  SetFallbackDataState,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -114,7 +115,7 @@ export class AppStatusState {
 
 @State<IHistoryModel>({
   name: 'history',
-  defaults: [],
+  defaults: {},
 })
 @Injectable()
 export class AppHistoryState {
@@ -126,46 +127,38 @@ export class AppHistoryState {
   ) { }
 
   @Selector([AppStatusState])
-  static selectSelectedCityHistory(state: IHistoryModel, status: AppStatusModel): IHistoryModel {
-    return state.filter((snapshot) => {
-      return snapshot.city.id.toString() === status.selectedCityId.toString();
-    });
-  }
-
-  @Selector([AppHistoryState.selectSelectedCityHistory])
-  static selectSelectedCityHistoryLast(state: IOwmDataModel, cityHistory: IHistoryModel) {
-    return cityHistory.slice(-1)[0];
+  static selectSelectedCityHistoryLast(state: IOwmDataModel, status: AppStatusModel) {
+    return state[status.selectedCityId];
   }
 
   @Action(SetHistoryState)
   setHistoryState(context: StateContext<IHistoryModel>, action: SetHistoryState) {
     const owmData = action.payload.owmData;
 
-    const selectedCityId = owmData.city.id.toString();
+    // const selectedCityId = owmData.city.id.toString();
     const cityName = owmData.city.name;
     const countryISO2 = owmData.city.country;
     const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
+    const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
 
     const newEntry: HistoryRecordModel = {
       cityId: selectedCityId,
       time: new Date().valueOf(),
     };
 
-    // Reuse exising snapshot
-    const existingSnapshot = context.getState().find((snapshot) => snapshot.updated === owmData.updated);
-    const sessionHistory = [...context.getState(), existingSnapshot || owmData];
-
-    context.setState(sessionHistory);
+    const existingSnapshot = context.getState()[selectedCityId];
+    let updateOwmDataToFB;
+    if (owmData.updated && (!existingSnapshot || existingSnapshot.updated !== owmData.updated)) {
+      const update = { ...context.getState(), [selectedCityId]: owmData };
+      context.setState(update);
+      updateOwmDataToFB = this._fb.setData(selectedCityId, owmData);
+    }
 
     this._snackbar.show({
       message: `Selected: ${cityName}, ${countryISO2}`,
       class: 'snackbar__info',
     });
-    return this._history.setDataToFB(normalizedIp, newEntry).then(() => {
-      if (!existingSnapshot) {
-        return this._fb.setData(selectedCityId, owmData);
-      }
-    });
+    return Promise.all([this._history.setDataToFB(normalizedIp, newEntry), updateOwmDataToFB]);
   }
 }
 
@@ -278,6 +271,23 @@ export class AppHistoryLogState {
 
   @Action(SetHistoryLogState)
   setStatsState(context: StateContext<IHistoryLog>, action: SetHistoryLogState) {
+    context.setState(action.payload);
+  }
+}
+
+@State<IOwmDataModel>({
+  name: 'fallbackData',
+  defaults: null,
+})
+@Injectable()
+export class AppFallbackDataState {
+  @Selector()
+  static selectFallbackData(state: IHistoryLog) {
+    return state;
+  }
+
+  @Action(SetFallbackDataState)
+  setFallbackDataState(context: StateContext<IOwmDataModel>, action: SetFallbackDataState) {
     context.setState(action.payload);
   }
 }

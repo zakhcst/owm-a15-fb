@@ -9,6 +9,7 @@ import { ConstantsService } from '../services/constants.service';
 import { ResolverCitiesService } from './routing-resolvers/resolver-cities.service';
 import { ResolverRegisterIconsService } from './routing-resolvers/resolver-register-icons.service';
 import { ResolverIpService } from './routing-resolvers/resolver-ip.service';
+import { ResolverFallbackService } from './routing-resolvers/resolver-fallback.service';
 
 const appRoutes: Routes = [
   {
@@ -18,6 +19,7 @@ const appRoutes: Routes = [
       cities: ResolverCitiesService,
       initialIP: ResolverIpService,
       icons: ResolverRegisterIconsService,
+      fallbackData: ResolverFallbackService
     },
     children: [
       {
@@ -69,4 +71,4 @@ const appRoutes: Routes = [
   ],
   exports: [SharedModule, RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

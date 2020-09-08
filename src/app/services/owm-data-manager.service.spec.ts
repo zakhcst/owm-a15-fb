@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 
-import { OwmDataService } from './owm-data.service';
+import { OwmDataManagerService } from './owm-data-manager.service';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { CitiesService } from './cities.service';
@@ -17,8 +17,8 @@ import {
   getNewDataObject
 } from './testing.services.mocks';
 
-describe('OwmDataService', () => {
-  let service: OwmDataService;
+describe('OwmDataManagerService', () => {
+  let service: OwmDataManagerService;
   let mockDataService: MockDataService;
   let mockOwmService: MockOwmService;
   let mockCitiesService: MockCitiesService;
@@ -58,7 +58,7 @@ describe('OwmDataService', () => {
         }
       ]
     });
-    service = TestBed.get(OwmDataService);
+    service = TestBed.get(OwmDataManagerService);
     dataService = TestBed.get(DataService);
   }));
 

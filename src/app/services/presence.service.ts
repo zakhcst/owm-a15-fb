@@ -12,7 +12,8 @@ export class PresenceService {
   constructor(private _db: AngularFireDatabase, private _store: Store) { }
 
   updateOnConnected() {
-    return this._db.object('.info/connected').valueChanges().pipe(
+    const connectedRef = this._db.object('.info/connected');
+    return connectedRef.valueChanges().pipe(
       tap(status => this._store.dispatch(new SetStatusConnected(!!status)))
     );
   }

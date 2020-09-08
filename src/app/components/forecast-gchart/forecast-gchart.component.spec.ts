@@ -7,7 +7,7 @@ import { ForecastGChartComponent } from './forecast-gchart.component';
 import { AppSnackBarInnerComponent } from '../app-snack-bar-inner/app-snack-bar-inner.component';
 import { SortCitiesPipe } from '../../pipes/sort-cities.pipe';
 
-import { OwmDataService } from '../../services/owm-data.service';
+import { OwmDataManagerService } from '../../services/owm-data-manager.service';
 // import { CitiesService } from '../../services/cities.service';
 // import { OwmStatsService } from '../../services/owm-stats.service';
 // import { GetBrowserIpService } from '../../services/get-browser-ip.service';
@@ -35,7 +35,7 @@ describe('ForecastComponent services', () => {
   let mockHistoryService: MockHistoryService;
 
   // let citiesService: CitiesService;
-  let owmDataService: OwmDataService;
+  let owmDataService: OwmDataManagerService;
   // let getBrowserIpService: GetBrowserIpService;
   // let owmStatsService: OwmStatsService;
   let historyService: HistoryService;
@@ -69,7 +69,7 @@ describe('ForecastComponent services', () => {
       imports: [RequiredModules],
       providers: [
         ForecastGChartComponent,
-        { provide: OwmDataService, useValue: mockOwmDataService },
+        { provide: OwmDataManagerService, useValue: mockOwmDataService },
         // { provide: GetBrowserIpService, useValue: mockGetBrowserIpService },
         // { provide: OwmStatsService, useValue: mockOwmStatsService },
         // { provide: CitiesService, useValue: mockCitiesService }
@@ -97,73 +97,24 @@ describe('ForecastComponent services', () => {
   });
 
   it('should have all async data', async(() => {
-    owmDataService = debugElement.injector.get(OwmDataService);
-    // getBrowserIpService = debugElement.injector.get(GetBrowserIpService);
-    // owmStatsService = debugElement.injector.get(OwmStatsService);
-    // citiesService = debugElement.injector.get(CitiesService);
-    historyService = debugElement.injector.get(HistoryService);
-    errorsService = debugElement.injector.get(ErrorsService);
+    owmDataService = debugElement.injector.get(OwmDataManagerService);
 
     expect(component.loadingOwmData).toBe(true);
-    // expect(component.loadingCities).toBe(true);
-    expect(component.loadingStats).toBe(true);
-    expect(component.loadingError).toBe(false);
 
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
-      // expect(component.cities).toBeTruthy('component.cities');
-      // expect(component.stats).toBeTruthy('component.stats');
-      // expect(component.ip).toBeTruthy('component.ip');
       expect(component.weatherData).toBeTruthy('component.weatherData');
 
       expect(component.loadingOwmData).toBe(false);
-      // expect(component.loadingCities).toBe(false);
-      // expect(component.loadingStats).toBe(false);
-      expect(component.loadingError).toBe(false);
 
       expect(component).toBeTruthy('expect(component');
-      // expect(citiesService).toBeTruthy('expect(citiesService');
       expect(owmDataService).toBeTruthy('expect(owmDataService');
-      // expect(getBrowserIpService).toBeTruthy('expect(getBrowserIpService');
-      // expect(owmStatsService).toBeTruthy('expect(owmStatsService');
       expect(historyService).toBeTruthy('expect(historyService');
       expect(errorsService).toBeTruthy('expect(errorsService');
     });
   }));
 
-  // it('should get ip', async(() => {
-  //   const ip = '2.2.2.2';
-  //   localStorage.setItem('mockIp', ip);
-
-  //   fixture.detectChanges();
-  //   fixture.whenStable().then(() => {
-  //     expect(mockErrorsService.messages.length).toBe(0);
-  //     expect(component.ip).toBe(ip);
-  //   });
-  // }));
-
-  // it('should return dummy error on getip failure', async(() => {
-  //   const ip = 'ip-error';
-  //   localStorage.setItem('mockIp', ip);
-
-  //   fixture.detectChanges();
-  //   fixture.whenStable().then(() => {
-  //     expect(mockErrorsService.messages.length).toBe(0);
-  //     expect(component.ip).toBeNull();
-  //   });
-  // }));
-
-  // it('should add error on failing service GetBrowserIpService', async(() => {
-  //   localStorage.setItem('mockGetBrowserIpServiceError', 'true');
-
-  //   fixture.detectChanges();
-  //   fixture.whenStable().then(() => {
-  //     expect(component.ip).toBeUndefined();
-  //     expect(mockHistoryService.messages.length).toBe(1);
-  //     expect(mockErrorsService.messages.length).toBe(1);
-  //   });
-  // }));
 
   it('should get stats from OwmStatsService', async(() => {
     const stats = { r: 1000, u: 1000 };
@@ -190,11 +141,8 @@ describe('ForecastComponent services', () => {
   it('should get cities from CitiesService', async(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
-    expect(component.loadingError).toBe(false);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      // expect(component.cities).toEqual(getNewCitiesObject());
-      expect(component.loadingError).toBe(false);
       expect(mockHistoryService.messages.length).toBe(1);
       expect(mockErrorsService.messages.length).toBe(0);
     });
@@ -203,11 +151,9 @@ describe('ForecastComponent services', () => {
   it('should add error on failing service CitiesService', async(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
-    expect(component.loadingError).toBe(false);
     localStorage.setItem('mockCitiesServiceError', 'true');
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(component.loadingError).toBe(true);
       expect(mockHistoryService.messages.length).toBe(0);
       expect(mockErrorsService.messages.length).toBe(1);
     });
@@ -216,11 +162,9 @@ describe('ForecastComponent services', () => {
   it('should get data from OwmDataService', async(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
-    expect(component.loadingError).toBe(false);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(component.weatherData).toEqual(getNewDataObject());
-      expect(component.loadingError).toBe(false);
       expect(mockHistoryService.messages.length).toBe(1);
       expect(mockErrorsService.messages.length).toBe(0);
     });
@@ -229,11 +173,9 @@ describe('ForecastComponent services', () => {
   it('should add error on failing service OwmDataService', async(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
-    expect(component.loadingError).toBe(false);
     localStorage.setItem('mockOwmDataServiceError', 'true');
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(component.loadingError).toBe(true);
       expect(mockHistoryService.messages.length).toBe(0);
       expect(mockErrorsService.messages.length).toBe(1);
     });

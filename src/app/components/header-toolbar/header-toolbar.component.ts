@@ -20,8 +20,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
-import { OwmDataService } from '../../services/owm-data.service';
-import { AppOwmDataState, AppCitiesState } from '../../states/app.state';
+import { OwmDataManagerService } from '../../services/owm-data-manager.service';
+import { AppOwmDataState, AppCitiesState, AppStatusState } from '../../states/app.state';
 import { SetStatusSelectedCityIdState } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
@@ -46,7 +46,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   toolbarActions: [] = [];
   toolbarShow = true;
   loaded = false;
-  selectedCityId: string = ConstantsService.defaultCityId;
+  selectedCityId: string = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId) || ConstantsService.defaultCityId;
   iconSettings: string = ConstantsService.iconSettings;
   subscriptions: Subscription;
   showActionButtonsXS = false;
@@ -54,6 +54,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   toolbarHeight: number;
   weatherBackgroundImg: string;
   owmData: IOwmDataModel;
+  owmDataExpired = false;
 
   @Select(AppOwmDataState.selectOwmData) owmDataSelectedCityLast$: Observable<IOwmDataModel>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
@@ -66,7 +67,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _data: OwmDataService, // Instantiate service to start listener
+    private _data: OwmDataManagerService, // Instantiate service to start listener
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
@@ -100,7 +101,10 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     const subscriptionBgImg: Subscription = this.owmDataSelectedCityLast$
       .pipe(
         filter((data) => !!data),
-        tap((data: IOwmDataModel) => (this.owmData = data)),
+        tap((data: IOwmDataModel) => {
+          this.owmData = data;
+          this.owmDataExpired = !this._data.isNotExpired(data);
+        }),
         map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data.list[0])),
         filter((newDataImgPath: string) => {
           const currentBgImgPath = this.container.nativeElement.style['background-image'].split('"')[1];
