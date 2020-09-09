@@ -77,8 +77,7 @@
   fill: white;
   background-color: black;
   padding: 3px;
-} 
-
+}
 
 .button-settings:hover {
   fill: transparent;
@@ -86,7 +85,7 @@
   --blink-bgcolor: transparent;
   animation-name: blink-animation;
   animation-iteration-count: infinite;
-  animation-duration: 1s; 
+  animation-duration: 1s;
 }
 .button-settings-xs {
   margin: 10px 2px;
@@ -114,6 +113,9 @@
   align-items: flex-end;
 }
 
+.disabled {
+  background-color: grey;
+}
 .active {
   background-color: green;
 }
@@ -129,8 +131,8 @@
   font-size: 60%;
 }
 
-.button-action:hover:not(.active),
-.button-action-xs:hover:not(.active) {
+.button-action:hover:not(.active):not(.disabled),
+.button-action-xs:hover:not(.active):not(.disabled) {
   --blink-bgcolor: orange;
   animation-name: blink-animation;
   animation-iteration-count: infinite;

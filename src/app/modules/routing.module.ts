@@ -10,7 +10,7 @@ import { ResolverCitiesService } from './routing-resolvers/resolver-cities.servi
 import { ResolverRegisterIconsService } from './routing-resolvers/resolver-register-icons.service';
 import { ResolverIpService } from './routing-resolvers/resolver-ip.service';
 import { ResolverFallbackService } from './routing-resolvers/resolver-fallback.service';
-
+import { GchartGuard } from './routing-guards/gchart.guard';
 const appRoutes: Routes = [
   {
     path: 'v1',
@@ -35,6 +35,7 @@ const appRoutes: Routes = [
       },
       {
         path: ConstantsService.views.forecastGChart.path,
+        canActivate: [GchartGuard],
         loadChildren: () =>
           import('src/app/components/forecast-gchart/forecast-gchart.module').then((m) => m.ForecastGChartModule),
         pathMatch: 'full',
@@ -70,5 +71,6 @@ const appRoutes: Routes = [
     HomeModule,
   ],
   exports: [SharedModule, RouterModule],
+  providers: [GchartGuard]
 })
 export class AppRoutingModule { }

@@ -55,9 +55,11 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   weatherBackgroundImg: string;
   owmData: IOwmDataModel;
   owmDataExpired = false;
+  connected = true;
 
   @Select(AppOwmDataState.selectOwmData) owmDataSelectedCityLast$: Observable<IOwmDataModel>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
+  @Select(AppStatusState.connected) connected$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -121,6 +123,9 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
           this.loaded = true;
         }
       );
+    this.connected$.subscribe(connected => {
+      this.connected = connected;
+    })
 
     this.subscriptions.add(subscriptionBgImg);
   }

@@ -65,6 +65,7 @@
           mat-mini-fab
           class="button-action"
           [routerLink]="action['path']"
+          [class.disabled]="!connected && action['disableOnDisconnected']"
           routerLinkActive="active"
           >{{ action["title"] }}</a
         >
@@ -101,6 +102,7 @@
         class="button-action-xs"
         [routerLink]="action['path']"
         routerLinkActive="active"
+        [class.disabled]="!connected && action['disableOnDisconnected']"
         >{{ action["title"] }}</a
       >
     </ng-container>
