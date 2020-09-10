@@ -1,11 +1,11 @@
 {
   "name": "owm-a10-fb",
-  "version": "0.0.1",
+  "version": "0.10.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4210",
-    "build": "ng build",
-    "build-prod": "ng build --prod",
+    "build": "node add-build-info.js && ng build",
+    "build-prod": "node add-build-info.js && ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -52,6 +52,7 @@
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^13.13.15",
     "codelyzer": "^6.0.0",
+    "firebase-tools": "^8.0.0",
     "fuzzy": "^0.1.3",
     "inquirer": "^6.2.2",
     "inquirer-autocomplete-prompt": "^1.0.1",
@@ -64,10 +65,10 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "open": "^7.0.3",
     "protractor": "~7.0.0",
+    "replace-in-file": "^6.1.0",
     "source-map-explorer": "^2.4.2",
     "ts-node": "^8.10.2",
     "tslint": "~6.1.0",
-    "typescript": "~3.9.7",
-    "firebase-tools": "^8.0.0"
+    "typescript": "~3.9.7"
   }
 }

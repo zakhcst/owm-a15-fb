@@ -16,3 +16,8 @@
   row-gap: 25px;
   align-items: center;
 }
+
+.build-text {
+  font-size: xx-small;
+  color: black;
+}

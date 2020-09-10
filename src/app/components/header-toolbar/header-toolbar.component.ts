@@ -155,7 +155,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   showSettings(settingsButton, isXs: boolean) {
     const dialogWidth = 300;
-    const dialogHeight = 150;
+    const dialogHeight = 200;
     const settingsButtonLeft = settingsButton._elementRef.nativeElement.offsetLeft;
     const settingsButtonTop = settingsButton._elementRef.nativeElement.offsetTop;
     const settingsButtonHeight = settingsButton._elementRef.nativeElement.clientHeight;

@@ -2,7 +2,6 @@
   <div class="grid">
     Slots background
     <mat-slide-toggle
-      #toggle
       style="transform: rotate(180deg)"
       [color]="'primary'"
       [checked]="timeSlotBgPicture"
@@ -13,7 +12,6 @@
 
     3/5 day forecast
     <mat-slide-toggle
-      #toggle
       style="transform: rotate(180deg)"
       [color]="'primary'"
       [checked]="threeDayForecast"
@@ -21,5 +19,9 @@
       (click)="$event.stopPropagation()"
     >
     </mat-slide-toggle>
+  </div>
+  <div class="build-text">
+    v{{ buildVersion }} {{ buildName }} {{ buildHash }} <br />
+    {{ buildTime | date: "dd/MM/yyyy HH:mm:ss" }}
   </div>
 </div>
