@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { SharedModule } from './shared.module';
 import { HeaderToolbarComponent } from '../components/header-toolbar/header-toolbar.component';
 import { HeaderToolbarModule } from '../components/header-toolbar/header-toolbar.module';
@@ -10,8 +10,9 @@ import { ResolverCitiesService } from './routing-resolvers/resolver-cities.servi
 import { ResolverRegisterIconsService } from './routing-resolvers/resolver-register-icons.service';
 import { ResolverIpService } from './routing-resolvers/resolver-ip.service';
 import { ResolverFallbackService } from './routing-resolvers/resolver-fallback.service';
-import { GchartGuard } from './routing-guards/gchart.guard';
-const appRoutes: Routes = [
+import { CanActivateGchart, CanLoadGChart } from './routing-guards/gchart.guard';
+
+export const appRoutes: Routes = [
   {
     path: 'v1',
     component: HeaderToolbarComponent,
@@ -19,7 +20,7 @@ const appRoutes: Routes = [
       cities: ResolverCitiesService,
       initialIP: ResolverIpService,
       icons: ResolverRegisterIconsService,
-      fallbackData: ResolverFallbackService
+      fallbackData: ResolverFallbackService,
     },
     children: [
       {
@@ -35,7 +36,8 @@ const appRoutes: Routes = [
       },
       {
         path: ConstantsService.views.forecastGChart.path,
-        canActivate: [GchartGuard],
+        canActivate: [CanActivateGchart],
+        canLoad: [CanLoadGChart],
         loadChildren: () =>
           import('src/app/components/forecast-gchart/forecast-gchart.module').then((m) => m.ForecastGChartModule),
         pathMatch: 'full',
@@ -63,14 +65,14 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [ErrorPageComponent],
   imports: [
-    RouterModule.forRoot(
-      appRoutes
-      // , { enableTracing: true } // debugging only
-    ),
+    RouterModule.forRoot(appRoutes, {
+      preloadingStrategy: PreloadAllModules,
+      // ,  enableTracing: true // debugging only
+    }),
     HeaderToolbarModule,
     HomeModule,
   ],
   exports: [SharedModule, RouterModule],
-  providers: [GchartGuard]
+  providers: [CanActivateGchart, CanLoadGChart],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

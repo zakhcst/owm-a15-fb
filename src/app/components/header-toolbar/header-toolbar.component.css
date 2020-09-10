@@ -78,7 +78,9 @@
   background-color: black;
   padding: 3px;
 }
-
+.disconnected {
+  background-color: red;
+}
 .button-settings:hover {
   fill: transparent;
   --blink-color: yellow;
