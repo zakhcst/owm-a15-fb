@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ITimeTemplate } from '../models/hours.model';
-import { IOwmDataModel, IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
+import { IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,8 +11,8 @@ export class ConstantsService {
 
   public static readonly views = {
     stats: { path: 'stats', title: 'Stats', type: 'button' },
-    forecastGChart: { path: 'forecast-gchart', title: 'GChart', type: 'button', disableOnDisconnected: true },
-    forecastFlex: { path: 'forecast-flex', title: 'Details', type: 'button' },
+    forecastGChart: { path: 'forecast-gchart', title: 'Chart', type: 'button', disableOnDisconnected: true },
+    forecastFlex: { path: 'forecast-detail', title: 'Detail', type: 'button' },
     selectCities: { path: '', title: 'selectCities', type: 'selectCities' }
   };
 
@@ -22,7 +22,7 @@ export class ConstantsService {
       ConstantsService.views.forecastGChart,
       ConstantsService.views.stats,
     ],
-    'forecast-flex': [
+    'forecast-detail': [
       ConstantsService.views.selectCities,
       ConstantsService.views.forecastFlex,
       ConstantsService.views.forecastGChart,
