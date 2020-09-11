@@ -1,6 +1,6 @@
 {
   "name": "owm-a10-fb",
-  "version": "0.10.19",
+  "version": "0.10.21",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4210",
