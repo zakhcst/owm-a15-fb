@@ -77,6 +77,7 @@
         svgIcon="settings"
         class="button-settings"
         [class.disconnected]="!connected"
+        [class.updates]="updates"
         (click)="showSettings(settingsIcon)"
       ></mat-icon>
     </span>
@@ -113,6 +114,7 @@
       svgIcon="settings"
       class="button-settings button-settings-xs"
       [class.disconnected]="!connected"
+      [class.updates]="updates"
       (click)="showSettings(settingsIconXs, true)"
     ></mat-icon>
   </div>

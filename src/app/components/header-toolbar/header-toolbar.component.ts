@@ -25,6 +25,7 @@ import { AppOwmDataState, AppCitiesState, AppStatusState } from '../../states/ap
 import { SetStatusSelectedCityIdState } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -56,6 +57,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   owmData: IOwmDataModel;
   owmDataExpired = false;
   connected = true;
+  updates = false;
 
   @Select(AppOwmDataState.selectOwmData) owmDataSelectedCityLast$: Observable<IOwmDataModel>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
@@ -74,7 +76,8 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
     public mediaObserver: MediaObserver,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public _updates: SwUpdate,
   ) {
     this.subscriptions = this._router.events
       .pipe(
@@ -96,6 +99,12 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
           this.addError('header-toolbar: router.events', err.message);
         }
       );
+
+    _updates.available.subscribe(event => {
+      console.log('current version is', event.current);
+      console.log('available version is', event.available);
+      this.updates = true;
+    });
   }
 
   ngOnInit() {

@@ -21,9 +21,9 @@ const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
 export const environment = {
   production: false,
   name: 'dev',
-  timeStamp: '1599782176337',
-  hash: 'c6a0683',
-  version: '0.10.1',
+  timeStamp: '1599789358716',
+  hash: 'eb259d0',
+  version: '0.10.5',
   emulator,
   firebase: emulator ? firebaseEmulator : firebaseConfig,
   'functions': emulator ? localEmulatorFunctionsUrl : firebaseFunctionsUrl,

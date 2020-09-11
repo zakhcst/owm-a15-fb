@@ -81,6 +81,9 @@
 .disconnected {
   background-color: red;
 }
+.updates {
+  background-color: green;
+}
 .button-settings:hover {
   fill: transparent;
   --blink-color: yellow;
