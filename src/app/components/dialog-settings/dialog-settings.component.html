@@ -21,11 +21,11 @@
     </mat-slide-toggle>
   </div>
   <div class="update-message" *ngIf="updates">
-    <div>A new version is available</div>
-    <div>Please reload</div>
+    <div>New release is available</div>
+    <div>Please reload to update</div>
   </div>
   <div class="build-text">
-    v{{ buildVersion }} {{ buildName }} {{ buildHash }} <br />
-    {{ buildTime | date: "dd/MM/yyyy HH:mm:ss" }}
+    <div>v{{ buildVersion }} Release {{ buildHash }} {{ buildName }}<br /></div>
+    <div>{{ buildTime | date: "dd/MM/yyyy HH:mm:ss" }}</div>
   </div>
 </div>

@@ -6,6 +6,7 @@ import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
 import { SwUpdate } from '@angular/service-worker';
 import { Subscription } from 'rxjs';
+import { buildInfo } from '../../../build-info';
 
 @Component({
   selector: 'app-dialog-settings',
@@ -14,9 +15,9 @@ import { Subscription } from 'rxjs';
 })
 export class DialogSettingsComponent implements OnInit, OnDestroy {
   buildName = environment.name;
-  buildTime = environment.timeStamp;
-  buildHash = environment.hash;
-  buildVersion = environment.version;
+  buildTime = buildInfo.timeStamp;
+  buildHash = buildInfo.hash;
+  buildVersion = buildInfo.version;
   updates = false;
   subscriptions: Subscription;
 
