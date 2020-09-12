@@ -18,7 +18,7 @@ export const appRoutes: Routes = [
     component: HeaderToolbarComponent,
     resolve: {
       cities: ResolverCitiesService,
-      initialIP: ResolverIpService,
+      initIpService: ResolverIpService,
       icons: ResolverRegisterIconsService,
       fallbackData: ResolverFallbackService,
     },

@@ -55,13 +55,13 @@ export class GetBrowserIpService {
 
   refreshIpOnConnect() {
     this.connected$
-      .pipe(
-        filter((connected) => {
-          return connected;
-        })
-      )
-      .subscribe(() => {
+      .subscribe((connected) => {
         console.log('refreshIpOnConnect');
+        if (!connected) {
+          this._store.dispatch([new SetStatusIpState('0.0.0.0')]);
+          return;
+        }
+
         if (this.getIPv4Subscription) {
           this.getIPv4Subscription.unsubscribe();
         }
