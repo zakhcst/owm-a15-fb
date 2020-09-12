@@ -7,7 +7,7 @@
   }"
   (click)="closeDialog()"
 >
-  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="center center" mat-dialog-title>
+  <div fxFlex="20%" fxLayout="column" fxLayoutAlign="center center" mat-dialog-title>
     <div>{{ this.dateTime | date: "dd MMMM y":"UTC" }}&nbsp;</div>
     <div>{{ this.dateTime | date: "EEEE":"UTC" }}&nbsp;</div>
     <div>{{ this.dateTime | date: "HH:mm":"UTC" }}&nbsp;</div>
@@ -20,7 +20,7 @@
     </span>
   </div>
 
-  <div fxFlex class="data-table-grid" mat-dialog-content>
+  <div fxFlex="50%" class="data-table-grid" mat-dialog-content>
     <span class="">Description</span>
     <span class="grid-col-23">{{ this.timeSlotData.weather[0].description | titlecase}}</span>
     <span class="red">Temperature</span>
