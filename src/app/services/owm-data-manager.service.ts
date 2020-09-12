@@ -20,7 +20,7 @@ export class OwmDataManagerService {
   snackbarOptions: ISnackbarData = {
     message: '',
     class: 'snackbar__warn',
-    delay: 100,
+    delay: 500,
   };
   getDataOnCityChangeInProgress = false;
   getDataOnConnectedInProgress = false;
