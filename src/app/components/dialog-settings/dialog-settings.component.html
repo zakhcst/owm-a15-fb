@@ -20,7 +20,7 @@
     >
     </mat-slide-toggle>
   </div>
-  <div class="update-message" *ngIf="updates">
+  <div class="update-message" *ngIf="updatesAvailable$ | async">
     <div>New release is available</div>
     <div>Please reload to update</div>
   </div>

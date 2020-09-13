@@ -1,11 +1,10 @@
-import { Component, OnInit, Inject, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SetStatusTimeSlotBgPicture, SetStatusThreeDayForecast } from 'src/app/states/app.actions';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
-import { SwUpdate } from '@angular/service-worker';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { buildInfo } from '../../../build-info';
 
 @Component({
@@ -13,16 +12,15 @@ import { buildInfo } from '../../../build-info';
   templateUrl: './dialog-settings.component.html',
   styleUrls: ['./dialog-settings.component.css'],
 })
-export class DialogSettingsComponent implements OnInit, OnDestroy {
+export class DialogSettingsComponent implements OnInit {
   buildName = environment.name;
   buildTime = buildInfo.timeStamp;
   buildHash = buildInfo.hash;
   buildVersion = buildInfo.version;
-  updates = false;
-  subscriptions: Subscription;
 
   timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
   threeDayForecast = this._store.selectSnapshot(AppStatusState.threeDayForecast);
+  @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -33,22 +31,10 @@ export class DialogSettingsComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogSettingsComponent>,
     private _store: Store,
-    public _updates: SwUpdate,
-  ) {
-    this.subscriptions = _updates.available.subscribe(event => {
-      console.log('current version is', event.current);
-      console.log('available version is', event.available);
-      this.updates = true;
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
     this.reposition();
-  }
-  ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.unsubscribe();
-    }
   }
 
   toggleThreeDayForecast() {

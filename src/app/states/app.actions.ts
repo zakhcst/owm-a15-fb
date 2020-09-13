@@ -49,6 +49,11 @@ export class SetStatusAway {
   constructor(public payload: boolean) { }
 }
 
+export class SetStatusUpdatesAvailable {
+  static readonly type = '[status] set Updates Available';
+  constructor(public payload: boolean) { }
+}
+
 export class SetErrorsState {
   static readonly type = '[errors] set';
   constructor(public payload: AppErrorPayloadModel) { }

@@ -14,6 +14,7 @@ import {
   SetStatusConnected,
   SetStatusAway,
   SetFallbackDataState,
+  SetStatusUpdatesAvailable,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -38,6 +39,7 @@ import { IHistoryLog } from '../models/history-log.model';
     timeSlotBgPicture: false,
     connected: true,
     away: false,
+    updatesAvailable: false,
   },
 })
 @Injectable()
@@ -78,6 +80,11 @@ export class AppStatusState {
     return state.away;
   }
 
+  @Selector()
+  static updatesAvailable(state: AppStatusModel) {
+    return state.updatesAvailable;
+  }
+
   @Action(SetStatusIpState)
   setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
     const ip = action.payload;
@@ -110,6 +117,11 @@ export class AppStatusState {
   @Action(SetStatusAway)
   setStatusAway(context: StateContext<AppStatusModel>, action: SetStatusAway) {
     context.patchState({ away: action.payload });
+  }
+
+  @Action(SetStatusUpdatesAvailable)
+  setStatusUpdatesAvailable(context: StateContext<AppStatusModel>, action: SetStatusUpdatesAvailable) {
+    context.patchState({ updatesAvailable: action.payload });
   }
 }
 

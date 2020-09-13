@@ -2,6 +2,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { PresenceService } from './services/presence.service';
 import { Subscription } from 'rxjs';
+import { SwUpdate } from '@angular/service-worker';
+import { Store } from '@ngxs/store';
+import { SetStatusUpdatesAvailable } from './states/app.actions';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,14 +15,42 @@ export class AppComponent implements OnDestroy {
   loading = false;
   subscriptions: Subscription;
 
-  constructor(private _router: Router, _presence: PresenceService) {
-    this.subscriptions = _router.events.subscribe((routerEvent: Event) => {
+  constructor(
+    private _router: Router,
+    private _presence: PresenceService,
+    private _updates: SwUpdate,
+    private _store: Store
+  ) {
+    this.setSubscribeOnRouterEvents();
+    this.setSubscribeOnConnected();
+    this.startListenerOnAway();
+    this.setSubscribeOnUpdates();
+  }
+
+  setSubscribeOnConnected() {
+    this.subscriptions.add(
+      this._presence.updateOnConnected().subscribe((connected) => console.log('AppComponent connected', connected))
+    );
+  }
+
+  startListenerOnAway() {
+    this._presence.updateOnAway();
+  }
+
+  setSubscribeOnUpdates() {
+    this._store.dispatch(new SetStatusUpdatesAvailable(false));
+    this.subscriptions.add(this._updates.available.subscribe(event => {
+      console.log('current version is', event.current);
+      console.log('available version is', event.available);
+      this._store.dispatch(new SetStatusUpdatesAvailable(true));
+    }));
+  }
+
+
+  setSubscribeOnRouterEvents() {
+    this.subscriptions = this._router.events.subscribe((routerEvent: Event) => {
       this.checkRouterEvent(routerEvent);
     });
-    this.subscriptions.add(
-      _presence.updateOnConnected().subscribe((connected) => console.log('AppComponent connected', connected))
-    );
-    _presence.updateOnAway();
   }
 
   checkRouterEvent(routerEvent: Event) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { SetStatusConnected, SetStatusAway } from '../states/app.actions';
 

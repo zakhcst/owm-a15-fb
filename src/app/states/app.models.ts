@@ -18,6 +18,7 @@ export interface AppStatusModel {
   timeSlotBgPicture: boolean;
   connected: boolean;
   away: boolean;
+  updatesAvailable: boolean;
 }
 
 export interface AppHistoryPayloadModel {
