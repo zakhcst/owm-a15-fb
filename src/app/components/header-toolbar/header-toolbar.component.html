@@ -21,16 +21,19 @@
     <a *ngIf="xs500w === false" class="home-button" [routerLink]="['/home']">
       &lt;&lt;
     </a>
-    <span>OWM Forecast</span>
     <span
-      class="header-sample-text"
-      *ngIf="owmData && owmDataExpired && xs500w === false"
-      >{{
-        (owmDataExpired ? "Offline" : "") +
-          (!owmData.updated ? " Sample" : "") +
-          " Data"
-      }}</span
-    >
+      >OWM Forecast
+      <br />
+      <span
+        *ngIf="owmData && owmDataExpired"
+        class="header-sample-text"
+        >{{
+          (owmDataExpired ? "Offline" : "") +
+            (!owmData.updated ? " Sample" : "") +
+            " Data"
+        }}</span
+      >
+    </span>
     <span class="header-actions-container">
       <ng-container *ngFor="let action of toolbarActions">
         <mat-form-field
