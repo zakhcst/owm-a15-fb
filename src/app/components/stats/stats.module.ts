@@ -12,9 +12,9 @@ const componentRoutes: Routes = [
     path: '',
     component: StatsComponent,
     resolve: {
-      cities: ResolverCitiesService,
-      stats: ResolverStatsService,
-      historyLog: ResolverHistoryLogService,
+      initCitiesService: ResolverCitiesService,
+      initStatsService: ResolverStatsService,
+      initHistoryLog: ResolverHistoryLogService,
     }
   }
 ];

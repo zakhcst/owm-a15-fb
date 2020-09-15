@@ -54,6 +54,11 @@ export class SetStatusUpdatesAvailable {
   constructor(public payload: boolean) { }
 }
 
+export class SetStatusLiveDataUpdate {
+  static readonly type = '[status] set Live Data Update';
+  constructor(public payload: boolean) { }
+}
+
 export class SetErrorsState {
   static readonly type = '[errors] set';
   constructor(public payload: AppErrorPayloadModel) { }

@@ -15,6 +15,7 @@ import {
   SetStatusAway,
   SetFallbackDataState,
   SetStatusUpdatesAvailable,
+  SetStatusLiveDataUpdate,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -40,11 +41,12 @@ import { IHistoryLog } from '../models/history-log.model';
     connected: true,
     away: false,
     updatesAvailable: false,
+    liveDataUpdate: false,
   },
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private normalizedData: NormalizeDataService) { }
+  constructor(private normalizedData: NormalizeDataService) {}
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -85,6 +87,11 @@ export class AppStatusState {
     return state.updatesAvailable;
   }
 
+  @Selector()
+  static liveDataUpdate(state: AppStatusModel) {
+    return state.liveDataUpdate;
+  }
+
   @Action(SetStatusIpState)
   setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
     const ip = action.payload;
@@ -123,6 +130,11 @@ export class AppStatusState {
   setStatusUpdatesAvailable(context: StateContext<AppStatusModel>, action: SetStatusUpdatesAvailable) {
     context.patchState({ updatesAvailable: action.payload });
   }
+
+  @Action(SetStatusLiveDataUpdate)
+  setStatusLiveDataUpdate(context: StateContext<AppStatusModel>, action: SetStatusLiveDataUpdate) {
+    context.patchState({ liveDataUpdate: action.payload });
+  }
 }
 
 @State<IHistoryModel>({
@@ -136,7 +148,7 @@ export class AppHistoryState {
     private _history: HistoryService,
     private _snackbar: SnackbarService,
     private _fb: DataService
-  ) { }
+  ) {}
 
   @Selector([AppStatusState])
   static selectSelectedCityHistoryLast(state: IOwmDataModel, status: AppStatusModel) {
@@ -179,7 +191,7 @@ const defaultErrorsRecord = {
     {
       logMessage: 'Init',
       time: new Date().valueOf(),
-      ip: ''
+      ip: '',
     },
   ],
 };
@@ -190,11 +202,7 @@ const defaultErrorsRecord = {
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(
-    private _errors: ErrorsService,
-    private _snackbar: SnackbarService,
-    private _store: Store
-  ) { }
+  constructor(private _errors: ErrorsService, private _snackbar: SnackbarService, private _store: Store) {}
 
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
@@ -203,7 +211,7 @@ export class AppErrorsState {
     const newEntry: ErrorRecordModel = {
       logMessage: action.payload.logMessage,
       time: new Date().valueOf(),
-      ip
+      ip,
     };
     const update = {
       sessionErrors: [...context.getState().sessionErrors, newEntry],

@@ -19,6 +19,7 @@ export interface AppStatusModel {
   connected: boolean;
   away: boolean;
   updatesAvailable: boolean;
+  liveDataUpdate: boolean;
 }
 
 export interface AppHistoryPayloadModel {

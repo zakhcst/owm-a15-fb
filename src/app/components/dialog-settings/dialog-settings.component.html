@@ -19,6 +19,16 @@
       (click)="$event.stopPropagation()"
     >
     </mat-slide-toggle>
+
+    Live Data Update
+    <mat-slide-toggle
+      style="transform: rotate(180deg)"
+      [color]="'primary'"
+      [checked]="liveDataUpdate"
+      (toggleChange)="toggleLiveDataUpdate()"
+      (click)="$event.stopPropagation()"
+    >
+    </mat-slide-toggle>
   </div>
   <div class="update-message" *ngIf="updatesAvailable$ | async">
     <div>New release is available</div>

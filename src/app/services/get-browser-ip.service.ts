@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConstantsService } from './constants.service';
 import { of, Observable, throwError, Subscription } from 'rxjs';
-import { switchMap, catchError, take, filter, tap } from 'rxjs/operators';
+import { switchMap, catchError, take } from 'rxjs/operators';
 import { ErrorsService } from './errors.service';
 import { Select, Store } from '@ngxs/store';
 import { AppStatusState } from '../states/app.state';

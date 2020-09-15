@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, pipe } from 'rxjs';
-import { switchMap, catchError, map, tap, take, filter } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { switchMap, catchError, tap, take, filter } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { CitiesService } from './cities.service';

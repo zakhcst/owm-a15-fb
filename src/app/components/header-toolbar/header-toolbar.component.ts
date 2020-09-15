@@ -9,7 +9,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { ICities } from '../../models/cities.model';
-import { ActivatedRoute, Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
+import { Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
 import { filter, map, tap } from 'rxjs/operators';
 import { Subscription, Observable } from 'rxjs';
@@ -25,7 +25,6 @@ import { AppOwmDataState, AppCitiesState, AppStatusState } from '../../states/ap
 import { SetStatusSelectedCityIdState } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
-import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -71,14 +70,12 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _router: Router,
-    private _activatedRoute: ActivatedRoute,
     private _data: OwmDataManagerService, // Instantiate service to start listener
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
     public mediaObserver: MediaObserver,
     public dialog: MatDialog,
-    // public _updates: SwUpdate,
   ) {
     this.subscriptions = this._router.events
       .pipe(
@@ -162,7 +159,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   showSettings(settingsButton, isXs: boolean) {
     const dialogWidth = 300;
-    const dialogHeight = 200;
+    const dialogHeight = 250;
     const settingsButtonLeft = settingsButton._elementRef.nativeElement.offsetLeft;
     const settingsButtonTop = settingsButton._elementRef.nativeElement.offsetTop;
     const settingsButtonHeight = settingsButton._elementRef.nativeElement.clientHeight;

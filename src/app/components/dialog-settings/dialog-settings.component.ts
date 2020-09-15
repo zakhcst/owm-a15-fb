@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SetStatusTimeSlotBgPicture, SetStatusThreeDayForecast } from 'src/app/states/app.actions';
+import { SetStatusTimeSlotBgPicture, SetStatusThreeDayForecast, SetStatusLiveDataUpdate } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
@@ -20,6 +20,7 @@ export class DialogSettingsComponent implements OnInit {
 
   timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
   threeDayForecast = this._store.selectSnapshot(AppStatusState.threeDayForecast);
+  liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
@@ -45,6 +46,11 @@ export class DialogSettingsComponent implements OnInit {
   toggleTimeSlotBgPicture() {
     this.timeSlotBgPicture = !this.timeSlotBgPicture;
     this._store.dispatch(new SetStatusTimeSlotBgPicture(this.timeSlotBgPicture));
+  }
+  
+  toggleLiveDataUpdate() {
+    this.liveDataUpdate = !this.liveDataUpdate;
+    this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
   }
 
   isXs() {
