@@ -56,7 +56,6 @@ export class GetBrowserIpService {
   refreshIpOnConnect() {
     this.connected$
       .subscribe((connected) => {
-        console.log('refreshIpOnConnect');
         if (!connected) {
           this._store.dispatch([new SetStatusIpState('0.0.0.0')]);
           return;
