@@ -9,16 +9,19 @@
       (click)="$event.stopPropagation()"
     >
     </mat-slide-toggle>
-
-    3/5 day forecast
-    <mat-slide-toggle
-      style="transform: rotate(180deg)"
+    
+    Days forecast
+    <mat-slider
+      thumbLabel
       [color]="'primary'"
-      [checked]="threeDayForecast"
-      (toggleChange)="toggleThreeDayForecast()"
+      [(ngModel)]="daysForecast"
+      (change)="updateDaysForecast()"
       (click)="$event.stopPropagation()"
+      tickInterval="1"
+      min="1"
+      max="5"
     >
-    </mat-slide-toggle>
+    </mat-slider>
 
     Live Data Update
     <mat-slide-toggle

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SetStatusTimeSlotBgPicture, SetStatusThreeDayForecast, SetStatusLiveDataUpdate } from 'src/app/states/app.actions';
+import { SetStatusTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
@@ -17,10 +17,10 @@ export class DialogSettingsComponent implements OnInit {
   buildTime = buildInfo.timeStamp;
   buildHash = buildInfo.hash;
   buildVersion = buildInfo.version;
-
   timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
-  threeDayForecast = this._store.selectSnapshot(AppStatusState.threeDayForecast);
   liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
+  daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
+  daysForecastOld = this.daysForecast;
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
@@ -38,9 +38,10 @@ export class DialogSettingsComponent implements OnInit {
     this.reposition();
   }
 
-  toggleThreeDayForecast() {
-    this.threeDayForecast = !this.threeDayForecast;
-    this._store.dispatch(new SetStatusThreeDayForecast(this.threeDayForecast));
+  updateDaysForecast() {
+    if (this.daysForecastOld === this.daysForecast) return;
+    this.daysForecastOld = this.daysForecast;
+    this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
   }
 
   toggleTimeSlotBgPicture() {

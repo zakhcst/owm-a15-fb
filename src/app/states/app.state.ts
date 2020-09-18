@@ -7,7 +7,6 @@ import {
   SetStatusSelectedCityIdState,
   SetStatusIpState,
   SetStatusTimeSlotBgPicture,
-  SetStatusThreeDayForecast,
   SetCitiesState,
   SetStatsState,
   SetHistoryLogState,
@@ -15,7 +14,8 @@ import {
   SetStatusAway,
   SetFallbackDataState,
   SetStatusUpdatesAvailable,
-  SetStatusLiveDataUpdate,
+  SetStatusLiveDataUpdate, 
+  SetStatusDaysForecast,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -36,12 +36,12 @@ import { IHistoryLog } from '../models/history-log.model';
     normalizedIp: '--ip',
     sessionStartTime: new Date().valueOf(),
     selectedCityId: ConstantsService.defaultCityId,
-    threeDayForecast: false,
     timeSlotBgPicture: false,
     connected: true,
     away: false,
     updatesAvailable: false,
     liveDataUpdate: false,
+    daysForecast: 5,
   },
 })
 @Injectable()
@@ -68,11 +68,6 @@ export class AppStatusState {
   }
 
   @Selector()
-  static threeDayForecast(state: AppStatusModel) {
-    return state.threeDayForecast;
-  }
-
-  @Selector()
   static connected(state: AppStatusModel) {
     return state.connected;
   }
@@ -90,6 +85,11 @@ export class AppStatusState {
   @Selector()
   static liveDataUpdate(state: AppStatusModel) {
     return state.liveDataUpdate;
+  }
+
+  @Selector()
+  static daysForecast(state: AppStatusModel) {
+    return state.daysForecast;
   }
 
   @Action(SetStatusIpState)
@@ -111,9 +111,9 @@ export class AppStatusState {
     context.patchState({ timeSlotBgPicture: action.payload });
   }
 
-  @Action(SetStatusThreeDayForecast)
-  setStatusThreeDayForecast(context: StateContext<AppStatusModel>, action: SetStatusThreeDayForecast) {
-    context.patchState({ threeDayForecast: action.payload });
+  @Action(SetStatusDaysForecast)
+  setStatusDaysForecast(context: StateContext<AppStatusModel>, action: SetStatusDaysForecast) {
+    context.patchState({ daysForecast: action.payload });
   }
 
   @Action(SetStatusConnected)

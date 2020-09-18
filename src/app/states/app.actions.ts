@@ -29,9 +29,10 @@ export class SetStatusTimeSlotBgPicture {
   constructor(public payload: boolean) { }
 }
 
-export class SetStatusThreeDayForecast {
-  static readonly type = '[status] set threeDayForecast';
-  constructor(public payload: boolean) { }
+
+export class SetStatusDaysForecast {
+  static readonly type = '[status] set Days Forecast';
+  constructor(public payload: number) { }
 }
 
 export class SetStatusSelectedCityIdState {

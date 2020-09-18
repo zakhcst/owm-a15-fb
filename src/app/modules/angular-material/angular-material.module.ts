@@ -8,8 +8,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -21,8 +23,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatSnackBarModule,
     MatToolbarModule,
     MatSlideToggleModule,
+    MatSliderModule,
     MatDialogModule,
     MatIconModule,
+    FormsModule, 
   ],
   exports: [
     CommonModule,
@@ -33,8 +37,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatSnackBarModule,
     MatToolbarModule,
     MatSlideToggleModule,
+    MatSliderModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    FormsModule, 
   ]
 })
 export class AngularMaterialModule { }

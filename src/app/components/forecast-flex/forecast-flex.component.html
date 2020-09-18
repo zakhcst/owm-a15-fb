@@ -11,20 +11,18 @@
           fxLayoutAlign="center"
         ></div>
 
-        <div fxFlex fxLayout="column" id="daycolumn">
+        <div fxFlex fxFill fxLayout="column" id="daycolumn">
           <div
             fxFlex
-            fxLayoutAlign="start center"
-            class="date-column-slot"
             *ngFor="
               let dataDaily of weatherData?.listByDate
                 | keyvalue
-                | sliceArray: (threeDayForecast ? 3 : 0);
+                | sliceArray: daysForecast;
               trackBy: trackByIdFn;
               index as ind
             "
           >
-            <span fxLayout="column" fxLayoutAlign="end center">
+            <span fxFlex fxLayout="column" fxLayoutAlign="center center">
               <span>{{ dataDaily.key | date: "EEE" }}&nbsp;</span>
               <span class="date-column-slot-date"
                 >{{ dataDaily.key | date: "dd" }}&nbsp;</span
@@ -63,30 +61,34 @@
           </span>
         </div>
         <!-- show a row for each day -->
-        <div
-          fxFlex
-          fxFill
-          fxLayout="row"
-          class="table-row"
-          *ngFor="
-            let dataDaily of weatherData?.listByDate
-              | keyvalue
-              | sliceArray: (threeDayForecast ? 3 : 0);
-            index as ind
-          "
-          [@showTimeSlot]="listByDateLength * timeTemplate.length"
-        >
-          <ng-container
-            *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn"
+        <div fxFlex fxFill fxLayout="column">
+          <div
+            fxFlex
+            fxFill
+            fxLayout="row"
+            class="table-row"
+            fxLayoutAlign="start center"
+            *ngFor="
+              let dataDaily of weatherData?.listByDate
+                | keyvalue
+                | sliceArray: daysForecast;
+              index as ind
+            "
+            [@showTimeSlot]="listByDateLength * timeTemplate.length"
           >
-            <app-data-cell
-              fxFlex
-              class="table-cell_data"
-              [dataDaily]="dataDaily.value"
-              [timeSlot]="timeSlot"
-              (click)="showDataCellExpanded(dataDaily.value[timeSlot.hour])"
-            ></app-data-cell>
-          </ng-container>
+            <ng-container
+              *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn"
+            >
+              <app-data-cell
+                fxFlex
+                fxFill
+                class="table-cell_data"
+                [dataDaily]="dataDaily.value"
+                [timeSlot]="timeSlot"
+                (click)="showDataCellExpanded(dataDaily.value[timeSlot.hour])"
+              ></app-data-cell>
+            </ng-container>
+          </div>
         </div>
       </div>
       <!-- Hours columns-->

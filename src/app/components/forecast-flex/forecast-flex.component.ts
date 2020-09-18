@@ -7,7 +7,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { ITimeTemplate } from '../../models/hours.model';
 import { ErrorsService } from '../../services/errors.service';
 
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel, IListByDateModel } from '../../models/owm-data.model';
 import { AppOwmDataState, AppStatusState } from 'src/app/states/app.state';
 import { AppErrorPayloadModel } from '../../states/app.models';
@@ -41,13 +41,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   listByDateLength = 0;
   scrollbarHeight = 0;
   listByDate: IListByDateModel;
-  threeDayForecast = false;
+  daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
   subscriptions: Subscription;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
-  @Select(AppStatusState.threeDayForecast) threeDayForecast$: Observable<boolean>;
+  @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
-  constructor(private _errors: ErrorsService, public dialog: MatDialog) {}
+  constructor(private _errors: ErrorsService, public dialog: MatDialog, private _store: Store) {}
 
   ngOnInit() {
     this.onInit();
@@ -74,10 +74,11 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
       }
     );
 
-    const threeDayForecastSubscription = this.threeDayForecast$.subscribe((threeDayForecast) => {
-      this.threeDayForecast = threeDayForecast;
+    const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
+      this.daysForecast = daysForecast;
     });
-    this.subscriptions.add(threeDayForecastSubscription);
+
+    this.subscriptions.add(daysForecastSubscription);
   }
 
   onMouseWheel(event: any) {

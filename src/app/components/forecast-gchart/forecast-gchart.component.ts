@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { Observable, Subscription, fromEvent } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { ITimeTemplate } from '../../models/hours.model';
 
@@ -33,15 +33,16 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   orientationchangeObservable$: Observable<Event>;
   layoutChangesOrientation$: Observable<BreakpointState>;
   subscriptions: Subscription;
-  threeDayForecast = false;
+  daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
-  @Select(AppStatusState.threeDayForecast) threeDayForecast$: Observable<boolean>;
+  @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
   constructor(
     private _errors: ErrorsService,
     private _populateGchartData: PopulateGchartDataService,
-    private _breakpointObserver: BreakpointObserver
+    private _breakpointObserver: BreakpointObserver,
+    private _store: Store,
   ) {}
 
   ngOnInit() {
@@ -59,13 +60,13 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(layoutChangesOrientationSubscription);
 
-    const threeDayForecastSubscription = this.threeDayForecast$.subscribe((threeDayForecast) => {
-      this.threeDayForecast = threeDayForecast;
+    const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
+      this.daysForecast = daysForecast;
       if (this.activeDays.length > 0) {
         this.resizeGraphs(this.activeDays);
       }
     });
-    this.subscriptions.add(threeDayForecastSubscription);
+    this.subscriptions.add(daysForecastSubscription);
 
     this.onChange();
   }
@@ -111,8 +112,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       const activeDaysLength = activeDays.length;
       const activeDaysHeightCoef = activeDaysLength === 1 ? 0.8 : 0.94;
       const graphHeight = Math.floor(
-        (dateColumn.clientHeight * activeDaysHeightCoef) /
-          (activeDaysLength === 1 ? 1 : this.threeDayForecast ? 3 : activeDaysLength)
+        (dateColumn.clientHeight * activeDaysHeightCoef) / this.daysForecast
       );
       const graphWidth = Math.floor(documentBodyWidth - 20 - 10 - 40);
 

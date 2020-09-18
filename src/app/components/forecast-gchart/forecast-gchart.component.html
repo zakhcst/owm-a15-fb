@@ -17,9 +17,10 @@
       <div class="flex flex-column date-column flex-justify-content-stretch">
         <div
           class="flex flex-row flex-align-items-stretch"
-          *ngFor="let dayK of activeDays | sliceArray: (threeDayForecast ? 3 : 0);"
+          *ngFor="let dayK of activeDays | sliceArray: daysForecast"
           (click)="clickedDay(dayK)"
-        >
+          >
+          <!-- *ngFor="let dayK of activeDays | sliceArray: (threeDayForecast ? 3 : 0);" -->
           <div
             class="date-column flex flex-column flex-justify-content-center flex-align-items-center"
           >
@@ -32,9 +33,10 @@
       <div class="flex flex-column flex-align-items-stretch">
         <div
           class="flex flex-row flex-justify-content-stretch"
-          *ngFor="let dayK of activeDays | sliceArray: (threeDayForecast ? 3 : 0);"
+          *ngFor="let dayK of activeDays | sliceArray: daysForecast"
           (click)="clickedDay(dayK)"
-        >
+          >
+          <!-- *ngFor="let dayK of activeDays | sliceArray: (threeDayForecast ? 3 : 0);" -->
           <google-chart
             class="flex flex-column flex-justify-content-center"
             [dynamicResize]="true"

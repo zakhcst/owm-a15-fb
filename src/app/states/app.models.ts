@@ -14,12 +14,12 @@ export interface AppStatusModel {
   normalizedIp: string;
   sessionStartTime: number;
   selectedCityId: string;
-  threeDayForecast: boolean;
   timeSlotBgPicture: boolean;
   connected: boolean;
   away: boolean;
   updatesAvailable: boolean;
   liveDataUpdate: boolean;
+  daysForecast: number;
 }
 
 export interface AppHistoryPayloadModel {
