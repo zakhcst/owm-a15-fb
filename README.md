@@ -17,13 +17,14 @@ Featured
   - custom pipes
   - rxjs
   - ngxs
+  - pwa
 
 - Firebase
 
   - realtime database
-  - cloud functions (NodeJS v8)
-  - docker facility for testing cloud functions locally (NodeJS v8)
+  - cloud functions
   - hosting
+  - RTDB and functions emulator
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli). 
 
@@ -37,16 +38,31 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ### Link
 
-Development build is depolyed at: https://owm-a10-fb.firebaseapp.com/
+Development build is depolyed at: https://owm-a10-fb.web.app
 
 ### Preview
 
-![preview1](/misc/Screenshot_1.png)
+![preview1](/misc/Screenshot_20201117_150111.png)
 
-![preview2](/misc/Screenshot_2.png)
+![preview2](/misc/Screenshot_20201117_150415.png)
 
-![preview3](/misc/Screenshot_3.png)
+![preview3](/misc/Screenshot_20201117_150453.png)
 
+![preview4](/misc/Screenshot_20201117_150541.png)
+
+![preview5](/misc/Screenshot_20201117_150612.png)
+
+![preview6](/misc/Screenshot_20201117_150647.png)
+
+![preview7](/misc/Screenshot_20201117_150726.png)
+
+![preview8](/misc/Screenshot_20201117_151050.png)
+
+![preview9](/misc/Screenshot_20201117_151134.png)
+
+![preview10](/misc/Screenshot_20201117_151404.png)
+
+![preview11](/misc/Screenshot_20201117_151523.png)
 
 ### Coverage
 
