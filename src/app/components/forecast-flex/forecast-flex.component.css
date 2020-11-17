@@ -7,7 +7,6 @@
   --hour-slot-min-width: 120px;
   --hour-row-min-height: 15px;
   --column-date-width: 40px;
-  /* --data-cell-max-height: 300px; */
 }
 
 .content {
@@ -40,7 +39,6 @@
 }
 .date-column-slot {
   margin: 2px 0;
-  /* max-height: var(--data-cell-max-height); */
 }
 
 .table-row {
@@ -49,7 +47,7 @@
 .table-cell_data {
   min-width: var(--hour-slot-min-width);
   margin: 0 2px;
-  /* max-height: var(--data-cell-max-height); */
+  max-height: 30vh;
 }
 
 @media only screen and (max-height: 800px) {
