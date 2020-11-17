@@ -34,6 +34,9 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   layoutChangesOrientation$: Observable<BreakpointState>;
   subscriptions: Subscription;
   daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
+  containerPadding = 20;
+  cardPadding = 10;
+  dateColumnWidth = 40;
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
@@ -42,13 +45,13 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     private _errors: ErrorsService,
     private _populateGchartData: PopulateGchartDataService,
     private _breakpointObserver: BreakpointObserver,
-    private _store: Store,
+    private _store: Store
   ) {}
 
   ngOnInit() {
     this.resizeObservable$ = fromEvent(window, 'resize');
     this.subscriptions = this.resizeObservable$.subscribe(() => {
-      this.resizeGraphs(this.activeDays);
+      if (this.activeDays.length > 0) this.resizeGraphs(this.activeDays);
     });
 
     const layoutChangesOrientation$ = this._breakpointObserver.observe([
@@ -62,9 +65,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
     const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
       this.daysForecast = daysForecast;
-      if (this.activeDays.length > 0) {
-        this.resizeGraphs(this.activeDays);
-      }
+      if (this.activeDays.length > 0) this.resizeGraphs(this.activeDays);
     });
     this.subscriptions.add(daysForecastSubscription);
 
@@ -96,7 +97,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     this.subscriptions.add(weatherDataSubscription);
   }
 
-  clickedDay(selectedDay) {
+  clickedDay(selectedDay: string) {
     const activeDaysLength = this.activeDays.length;
     this.activeDays = [];
     const activeDays = activeDaysLength === 1 ? [...this.weatherDataDateKeys] : [selectedDay];
@@ -110,11 +111,12 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
     if (dateColumn) {
       const activeDaysLength = activeDays.length;
-      const activeDaysHeightCoef = activeDaysLength === 1 ? 0.8 : 0.94;
-      const graphHeight = Math.floor(
-        (dateColumn.clientHeight * activeDaysHeightCoef) / this.daysForecast
+      const activeDaysHeightCoef = activeDaysLength === 1 ? 1 : 0.94;
+      const days = activeDaysLength === 1 ? 1 : this.daysForecast;
+      const graphHeight = Math.floor((dateColumn.clientHeight * activeDaysHeightCoef) / days);
+      const graphWidth = Math.floor(
+        documentBodyWidth - this.containerPadding - this.cardPadding - this.dateColumnWidth
       );
-      const graphWidth = Math.floor(documentBodyWidth - 20 - 10 - 40);
 
       activeDays.forEach((dayK) => {
         this.chart[dayK].height = graphHeight;

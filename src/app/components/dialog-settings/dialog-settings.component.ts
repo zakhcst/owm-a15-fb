@@ -17,10 +17,10 @@ export class DialogSettingsComponent implements OnInit {
   buildTime = buildInfo.timeStamp;
   buildHash = buildInfo.hash;
   buildVersion = buildInfo.version;
-  timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
-  liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
-  daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
-  daysForecastOld = this.daysForecast;
+  timeSlotBgPicture: boolean;
+  liveDataUpdate: boolean;
+  daysForecast: number;
+  daysForecastOld: number;
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
@@ -35,6 +35,10 @@ export class DialogSettingsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
+    this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
+    this.daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
+    this.daysForecastOld = this.daysForecast;
     this.reposition();
   }
 
@@ -48,7 +52,7 @@ export class DialogSettingsComponent implements OnInit {
     this.timeSlotBgPicture = !this.timeSlotBgPicture;
     this._store.dispatch(new SetStatusTimeSlotBgPicture(this.timeSlotBgPicture));
   }
-  
+
   toggleLiveDataUpdate() {
     this.liveDataUpdate = !this.liveDataUpdate;
     this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
