@@ -97,10 +97,10 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  showDataCellExpanded(timeSlotData) {
+  showDataCellExpanded(timeSlotData, bgColor: string) {
     if (timeSlotData) {
       this.dialog.open(DataCellExpandedComponent, {
-        data: { timeSlotData },
+        data: { timeSlotData, bgColor },
         panelClass: 'data-cell-expanded',
         hasBackdrop: true,
       });

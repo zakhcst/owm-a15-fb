@@ -9,14 +9,11 @@
   fxLayoutAlign="center center"
   *ngIf="dataDaily[timeSlot.hour]"
   class="table-cell_data-background"
-  [ngStyle]="{
-    'background-color': timeSlot.bgColor,
-    'background-image': urlBgImgPath
-  }"
+  [ngStyle]="timeSlotBgStyle"
 >
   <div fxFlex fxFlex.gt-xs="25%" fxLayout="row" fxLayoutAlign="center center">
     <img [src]="iconsOwm + dataDaily[timeSlot.hour].weather[0].icon + '.png'" />
-    <span >
+    <span>
       {{ dataDaily[timeSlot.hour].weather[0].main }}
       {{ dataDaily[timeSlot.hour].main.temp | number: "1.0-0" }}&#176;C
     </span>

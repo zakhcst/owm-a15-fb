@@ -85,7 +85,7 @@
                 class="table-cell_data"
                 [dataDaily]="dataDaily.value"
                 [timeSlot]="timeSlot"
-                (click)="showDataCellExpanded(dataDaily.value[timeSlot.hour])"
+                (click)="showDataCellExpanded(dataDaily.value[timeSlot.hour], timeSlot.bgColor)"
               ></app-data-cell>
             </ng-container>
           </div>

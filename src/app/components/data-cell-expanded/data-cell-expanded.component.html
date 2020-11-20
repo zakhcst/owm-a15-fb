@@ -2,9 +2,7 @@
   fxLayout="column"
   fxLayoutAlign="center center"
   class="container-data-cell-expanded"
-  [ngStyle]="{
-    'background-image': 'url(' + bgImgPath + ')'
-  }"
+  [ngStyle]="timeSlotBgStyle"
   (click)="closeDialog()"
 >
   <div fxFlex="20%" fxLayout="column" fxLayoutAlign="center center" mat-dialog-title>
