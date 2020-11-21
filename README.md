@@ -25,6 +25,7 @@ Featured
   - cloud functions
   - hosting
   - RTDB and functions emulator
+  - continuous deployment from Github
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli). 
 
