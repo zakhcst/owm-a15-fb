@@ -11,10 +11,8 @@ exports.onWriteUpdate = (change, context) => {
 exports.onWriteRead = (change, context) => {
   const ref = change.after.ref.root.child(`stats/r`);
 
-  return ref.transaction(value => {
-    return value ? value + 1 : 1;
-  });
+  return ref
+    .transaction(value => {
+      return value ? value + 1 : 1;
+    });
 };
-
-// shell:
-// onWriteUpdate({before: {'owm': {'cid': { 'updated': false} } }, after: {'owm': {'cid': { 'updated': true} } } }, { params: { cityId : 5}})
