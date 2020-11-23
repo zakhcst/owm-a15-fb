@@ -1,4 +1,4 @@
-FROM node:8.12-slim
+FROM node:10.23-slim
 
 RUN ["mkdir", "firebase"]
 RUN cd firebase
