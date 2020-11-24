@@ -6,11 +6,11 @@ import {
   UrlTree,
   CanLoad,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { interval, merge, Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { ConstantsService } from '../../services/constants.service';
-import { take } from 'rxjs/operators';
+import { debounce, filter, mapTo, take, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,9 @@ export class CanActivateGchart implements CanActivate {
     return this.connectedStatus();
   }
   connectedStatus() {
-    return ConstantsService.views.forecastGChart['disableOnDisconnected'] ? this.connected$.pipe(take(1)) : true;
+    const timeout = interval(1000).pipe(mapTo(false));
+    const connected = this.connected$.pipe(filter(status => status));
+    return ConstantsService.views.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
   }
 }
 
@@ -39,6 +41,8 @@ export class CanLoadGChart implements CanLoad {
     return this.connectedStatus();
   }
   connectedStatus() {
-    return ConstantsService.views.forecastGChart['disableOnDisconnected'] ? this.connected$.pipe(take(1)) : true;
+    const timeout = interval(1000).pipe(mapTo(false));
+    const connected = this.connected$.pipe(filter(status => status));
+    return ConstantsService.views.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
   }
 }
