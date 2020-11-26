@@ -1,11 +1,11 @@
 {
   "name": "owm-a10-fb",
-  "version": "0.10.47",
+  "version": "0.10.50",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4210",
-    "build": "./generate-build-info.js && ng build",
-    "build-prod": "./generate-build-info.js && ng build --prod",
+    "build": "./utils/generate-build-info.js && ng build",
+    "build-prod": "./utils/generate-build-info.js && ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
