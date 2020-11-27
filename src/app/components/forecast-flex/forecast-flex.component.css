@@ -4,7 +4,7 @@
   padding: 5px;
   background: transparent;
   scrollbar-width: none;
-  --hour-slot-min-width: 120px;
+  --hour-slot-min-width: 135px;
   --hour-row-min-height: 15px;
   --column-date-width: 40px;
 }

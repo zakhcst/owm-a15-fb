@@ -12,7 +12,7 @@
   </div>
 
   <div fxFlex="15%" fxLayout="row" fxLayoutAlign="center center">
-    <img [src]="iconsOwm + this.timeSlotData.weather[0].icon + '.png'" />
+    <div class="icons-weather scale" [ngStyle]="conditionStyle"></div>
     <span>
       {{ this.timeSlotData.weather[0].main }}
     </span>

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
 import { SetStatusUpdatesAvailable } from './states/app.actions';
+import { ConstantsService } from './services/constants.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -21,10 +22,19 @@ export class AppComponent implements OnDestroy {
     private _updates: SwUpdate,
     private _store: Store
   ) {
+    this.initCss();
     this.setSubscribeOnRouterEvents();
     this.setSubscribeOnConnected();
     this.startListenerOnAway();
     this.setSubscribeOnUpdates();
+  }
+
+  initCss() {
+    const iconsMeasuresUrl = `url("../../../${ConstantsService.iconsMeasures}")`;
+    document.documentElement.style.setProperty('--iconsMeasuresUrl', iconsMeasuresUrl);
+    const iconsWeatherUrl = `url("../../../${ConstantsService.iconsWeather}")`;
+    document.documentElement.style.setProperty('--iconsWeatherUrl', iconsWeatherUrl);
+
   }
 
   setSubscribeOnConnected() {
@@ -39,13 +49,14 @@ export class AppComponent implements OnDestroy {
 
   setSubscribeOnUpdates() {
     this._store.dispatch(new SetStatusUpdatesAvailable(false));
-    this.subscriptions.add(this._updates.available.subscribe(event => {
-      console.log('current version is', event.current);
-      console.log('available version is', event.available);
-      this._store.dispatch(new SetStatusUpdatesAvailable(true));
-    }));
+    this.subscriptions.add(
+      this._updates.available.subscribe((event) => {
+        console.log('current version is', event.current);
+        console.log('available version is', event.available);
+        this._store.dispatch(new SetStatusUpdatesAvailable(true));
+      })
+    );
   }
-
 
   setSubscribeOnRouterEvents() {
     this.subscriptions = this._router.events.subscribe((routerEvent: Event) => {

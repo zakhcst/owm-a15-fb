@@ -12,7 +12,7 @@
   [ngStyle]="timeSlotBgStyle"
 >
   <div fxFlex fxFlex.gt-xs="25%" fxLayout="row" fxLayoutAlign="center center">
-    <img [src]="iconsOwm + dataDaily[timeSlot.hour].weather[0].icon + '.png'" />
+    <div class="icons-weather" [ngStyle]="conditionStyle"></div>
     <span>
       {{ dataDaily[timeSlot.hour].weather[0].main }}
       {{ dataDaily[timeSlot.hour].main.temp | number: "1.0-0" }}&#176;C
@@ -25,7 +25,7 @@
       fxLayoutAlign="start end"
       class="table-secondary_data_line"
     >
-      <img [src]="iconPressure" />
+      <div class="icons-measures pressure"></div>
       <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
           &nbsp;{{ dataDaily[timeSlot.hour].main.pressure | number: "1.0-0" }}
@@ -40,7 +40,7 @@
       fxLayoutAlign="start end"
       class="table-secondary_data_line"
     >
-      <img [src]="iconWind" />
+      <div class="icons-measures wind"></div>
       <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
           <span
@@ -70,7 +70,7 @@
       fxLayoutAlign="start end"
       class="table-secondary_data_line"
     >
-      <img [src]="iconHumidity" />
+      <div class="icons-measures humidity"></div>
       <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
           &nbsp;{{ dataDaily[timeSlot.hour].main.humidity | number: "1.0-0" }}

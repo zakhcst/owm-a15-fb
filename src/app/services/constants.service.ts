@@ -55,15 +55,36 @@ export class ConstantsService {
   );
   public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly iconsOwm = 'assets/icons-list/';
-  public static readonly iconWind = 'assets/icons8-windsock-16.png';
-  public static readonly iconPressure = 'assets/icons8-atmospheric-pressure-16.png';
-  public static readonly iconHumidity = 'assets/icons8-hygrometer-16.png';
-  public static readonly iconGithub = 'assets/icon32-github.svg';
-  public static readonly iconSettings = 'assets/settings-black-48dp.svg';
-  public static readonly iconExtLink = 'assets/icon24-external-link.svg';
+  public static readonly iconsMeasures = 'assets/icons-measures/icons16x16-measures.png';
+  public static readonly iconsWeather = 'assets/icons-weather/icons-weather.png';
+  public static readonly iconGithub = 'assets/icons-logo/icon32-github.svg';
+  public static readonly iconSettings = 'assets/icons-links/settings-black-48dp.svg';
+  public static readonly iconExtLink = 'assets/icons-links/icon24-external-link.svg';
   public static readonly arrow000Deg = String.fromCodePoint(8593);
   public static readonly snackbarDuration = 2500;
   public static readonly redirectDelay = 5;
+
+  public static readonly iconsWeatherSize2 = 50;
+  public static readonly iconsWeatherMap = {
+    '01d': 0,
+    '01n': 1,
+    '02d': 2,
+    '02n': 3,
+    '03d': 4,
+    '03n': 5,
+    '04d': 6,
+    '04n': 7,
+    '09d': 8,
+    '09n': 9,
+    '10d': 10,
+    '10n': 11,
+    '11d': 12,
+    '11n': 13,
+    '13d': 14,
+    '13n': 15,
+    '50d': 16,
+    '50n': 17,
+  };
 
   public static readonly weatherParams = {
     temperature: {

@@ -1,9 +1,9 @@
 .table-cell_data_empty-background {
-  min-width: 120px;
+  min-width: var(--hour-slot-min-width);
 }
 
 .table-cell_data-background {
-  min-width: 120px;
+  min-width: var(--hour-slot-min-width);
   padding: 2px 0 2px 0;
   box-sizing: border-box;
   overflow: hidden;
@@ -53,4 +53,30 @@
     width: 30%;
     height: auto;
   }
+}
+
+.icons-measures {
+  display: block;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  background: var(--iconsMeasuresUrl) no-repeat 0px 0px;
+}
+
+.pressure {
+  background-position: 0 0;
+}
+.wind {
+  background-position: 0 -16px;
+}
+.humidity {
+  background-position: 0 -32px;
+}
+
+.icons-weather {
+  display: block;
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  background: var(--iconsWeatherUrl) no-repeat 0px 0px;
 }

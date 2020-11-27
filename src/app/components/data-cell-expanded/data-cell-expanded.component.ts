@@ -2,9 +2,8 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from '../../services/constants.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { AppStatusState } from 'src/app/states/app.state';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-data-cell-expanded',
@@ -17,6 +16,7 @@ export class DataCellExpandedComponent {
   timeSlotData: IOwmDataModelTimeSlotUnit;
   dateTime: number;
   timeSlotBgStyle: {};
+  conditionStyle = {};
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -28,6 +28,12 @@ export class DataCellExpandedComponent {
   }
 
   ngOnInit() {
+    const iconCode = this.timeSlotData.weather[0].icon;
+    const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
+    const iconSize = ConstantsService.iconsWeatherSize2;
+    this.conditionStyle = {
+      'background-position': '0 -' + iconIndex * iconSize + 'px',
+    };
     const showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
     this.setBackground(showTimeSlotBgPicture);
   }

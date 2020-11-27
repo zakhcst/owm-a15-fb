@@ -17,22 +17,31 @@ export class DataCellComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
   iconsOwm: string = ConstantsService.iconsOwm;
-  iconWind: string = ConstantsService.iconWind;
-  iconHumidity: string = ConstantsService.iconHumidity;
-  iconPressure: string = ConstantsService.iconPressure;
   arrow000Deg: string = ConstantsService.arrow000Deg;
   timeSlotBgStyle = {};
+  conditionStyle = {};
 
   @Select(AppStatusState.timeSlotBgPicture) timeSlotBgPicture$: Observable<boolean>;
 
   constructor() {}
 
   ngOnInit() {
+    this.setIcons();
     this.subscription = this.timeSlotBgPicture$.subscribe((showTimeSlotBgPicture) => {
       this.setBackground(showTimeSlotBgPicture);
     });
   }
 
+  setIcons() {
+    if (this.dataDaily[this.timeSlot.hour]) {
+      const iconCode = this.dataDaily[this.timeSlot.hour].weather[0].icon;
+      const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
+      const iconSize = ConstantsService.iconsWeatherSize2;
+      this.conditionStyle = {
+        'background-position': '0 -' + iconIndex * iconSize + 'px',
+      };
+    }
+  }
   setBackground(showTimeSlotBgPicture: boolean) {
     if (this.dataDaily[this.timeSlot.hour] && showTimeSlotBgPicture) {
       const bgImgPath = ConstantsService.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]);
@@ -50,6 +59,5 @@ export class DataCellComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-
   }
 }
