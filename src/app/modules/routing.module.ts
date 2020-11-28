@@ -52,13 +52,13 @@ export const appRoutes: Routes = [
   {
     path: 'error',
     component: ErrorPageComponent,
-    data: { errorMessage: ' Error Page', redirectPage: 'home' },
+    data: { errorMessage: ' Error Page', redirectPage: '' },
   },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/v1/' + ConstantsService.views.forecastFlex.path, pathMatch: 'full' },
   {
     path: '**',
     component: ErrorPageComponent,
-    data: { errorMessage: ' Page Not Found', redirectPage: 'home' },
+    data: { errorMessage: ' Page Not Found', redirectPage: '' },
   },
 ];
 
@@ -67,10 +67,9 @@ export const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(appRoutes, {
       preloadingStrategy: PreloadAllModules,
-      // ,  enableTracing: true // debugging only
+      // enableTracing: true // debugging only
     }),
     HeaderToolbarModule,
-    HomeModule,
   ],
   exports: [SharedModule, RouterModule],
   providers: [CanActivateGchart, CanLoadGChart],
