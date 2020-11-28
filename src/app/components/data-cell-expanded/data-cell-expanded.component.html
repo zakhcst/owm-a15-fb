@@ -14,13 +14,11 @@
   <div fxFlex="15%" fxLayout="row" fxLayoutAlign="center center">
     <div class="icons-weather scale" [ngStyle]="conditionStyle"></div>
     <span>
-      {{ this.timeSlotData.weather[0].main }}
+      {{ this.timeSlotData.weather[0].description | titlecase}}
     </span>
   </div>
 
   <div fxFlex="50%" class="data-table-grid" mat-dialog-content>
-    <span class="">Description</span>
-    <span class="grid-col-23">{{ this.timeSlotData.weather[0].description | titlecase}}</span>
     <span class="red">Temperature</span>
     <span class="red right">{{ this.timeSlotData.main.temp | number: "1.0-0" }}</span>
     <span class="red">&#176;C</span>
