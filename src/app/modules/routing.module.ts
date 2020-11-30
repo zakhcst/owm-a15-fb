@@ -66,9 +66,9 @@ export const appRoutes: Routes = [
   declarations: [ErrorPageComponent],
   imports: [
     RouterModule.forRoot(appRoutes, {
-      preloadingStrategy: PreloadAllModules,
-      // enableTracing: true // debugging only
-    }),
+    preloadingStrategy: PreloadAllModules,
+    relativeLinkResolution: 'legacy'
+}),
     HeaderToolbarModule,
   ],
   exports: [SharedModule, RouterModule],

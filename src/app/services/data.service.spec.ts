@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 import { DataService } from './data.service';
 import { MockAngularFireService } from './testing.services.mocks';
@@ -18,7 +18,7 @@ describe('DataService', () => {
   const testData: IOwmDataModel = getNewDataObject();
   let serviceFB: any;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     TestBed.configureTestingModule({
       imports: [
@@ -39,14 +39,14 @@ describe('DataService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call setData', async(() => {
+  it('should call setData', waitForAsync(() => {
     service.setData(testIP, testData).then(response => {
       expect(serviceFB.fbdata).toEqual(testData);
       expect(<string>(<any>response)).toBe('Resolved');
     });
   }));
 
-  it('should call getData', async(() => {
+  it('should call getData', waitForAsync(() => {
     service.setData(testIP, testData).then(responseSet => {
       expect(serviceFB.fbdata).toEqual(testData);
       expect(<string>(<any>responseSet)).toBe('Resolved');

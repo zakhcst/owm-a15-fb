@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AppSnackBarInnerComponent } from './app-snack-bar-inner.component';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
@@ -7,7 +7,7 @@ describe('SnackBarInnerComponent', () => {
   let component: AppSnackBarInnerComponent;
   let fixture: ComponentFixture<AppSnackBarInnerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AppSnackBarInnerComponent],
       providers: [

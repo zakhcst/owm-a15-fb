@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 
 import { NgxsModule, Store } from '@ngxs/store';
@@ -26,7 +26,7 @@ describe('ErrorsService', () => {
   let mockAngularFireService: MockAngularFireService;
   let service: ErrorsService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     mockAngularFireService = new MockAngularFireService();
 
     TestBed.configureTestingModule({
@@ -51,7 +51,7 @@ describe('ErrorsService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call AngularFireDatabase set', async(() => {
+  it('should call AngularFireDatabase set', waitForAsync(() => {
     const serviceFB = TestBed.get(AngularFireDatabase);
     const afsObject = spyOn(serviceFB, 'object').and.callThrough();
 

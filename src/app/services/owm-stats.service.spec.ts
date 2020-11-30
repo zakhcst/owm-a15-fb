@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { OwmStatsService } from './owm-stats.service';
 import { RequiredModules } from '../modules/required.module';
 import {
@@ -18,7 +18,7 @@ describe('OwmStatsService', () => {
   const mockErrorsService = new MockErrorsService();
   const mockAngularFireService = new MockAngularFireService();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RequiredModules,
@@ -39,7 +39,7 @@ describe('OwmStatsService', () => {
   });
 
   // it('should fail when no data is received', (done: DoneFn) => {
-  it('should fail when no data is received', async(() => {
+  it('should fail when no data is received', waitForAsync(() => {
     mockErrorsService.messages = [];
     service.getData().subscribe(
       () => {
@@ -54,7 +54,7 @@ describe('OwmStatsService', () => {
   }));
 
   // it('it should get data', (done: DoneFn) => {
-  it('it should get data', async(() => {
+  it('it should get data', waitForAsync(() => {
     mockErrorsService.messages = [];
     mockAngularFireService.fbdata = 'test data';
     service.getData().subscribe(

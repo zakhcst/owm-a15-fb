@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 
 import { OwmDataManagerService } from './owm-data-manager.service';
@@ -26,7 +26,7 @@ describe('OwmDataManagerService', () => {
   let mockErrorsService: MockErrorsService;
   let dataService: DataService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     mockOwmService = new MockOwmService();
     mockDataService = new MockDataService();
     mockCitiesService = new MockCitiesService();
@@ -62,13 +62,13 @@ describe('OwmDataManagerService', () => {
     dataService = TestBed.get(DataService);
   }));
 
-  it('should be created', async(() => {
+  it('should be created', waitForAsync(() => {
     expect(service).toBeTruthy();
     expect(dataService).toBeTruthy();
   }));
 
   // it('getData: should return data with new listByDate and reads++', (done: DoneFn) => {
-  it('getData: should return data with new listByDate and reads++', async(() => {
+  it('getData: should return data with new listByDate and reads++', waitForAsync(() => {
     const reads = mockCitiesService.reads;
     mockDataService.dbData = null;
     service.getData('citiId').subscribe(
@@ -85,7 +85,7 @@ describe('OwmDataManagerService', () => {
   }));
 
   // it('getData: should return new data when expired', (done: DoneFn) => {
-  it('getData: should return new data when expired', async(() => {
+  it('getData: should return new data when expired', waitForAsync(() => {
     const reads = mockCitiesService.reads;
     mockErrorsService.messages = [];
     const spyDataServiceGetData = spyOn(
@@ -111,7 +111,7 @@ describe('OwmDataManagerService', () => {
   }));
 
   // it('getData: should return _owmFallback data when _cities.updateReads fails', (done: DoneFn) => {
-  it('getData: should return _owmFallback data when _cities.updateReads fails', async(() => {
+  it('getData: should return _owmFallback data when _cities.updateReads fails', waitForAsync(() => {
     const reads = mockCitiesService.reads;
     mockErrorsService.messages = [];
     const spyFallBackDataServiceGetData = spyOn(mockOwmFallbackDataService, 'getData').and.callThrough();
@@ -130,7 +130,7 @@ describe('OwmDataManagerService', () => {
   }));
 
   // it('requestNewOwmData: should requestNewOwmData', (done: DoneFn) => {
-  it('requestNewOwmData: should requestNewOwmData', async(() => {
+  it('requestNewOwmData: should requestNewOwmData', waitForAsync(() => {
     mockDataService.dbData = null;
     service.requestNewOwmData('citiId').subscribe(
       _ => {
@@ -145,7 +145,7 @@ describe('OwmDataManagerService', () => {
   }));
 
   // it('requestNewOwmData: should fail requestNewOwmData when no cityId is supplied', (done: DoneFn) => {
-  it('requestNewOwmData: should fail requestNewOwmData when no cityId is supplied', async(() => {
+  it('requestNewOwmData: should fail requestNewOwmData when no cityId is supplied', waitForAsync(() => {
     mockDataService.dbData = null;
     service.requestNewOwmData(null).subscribe(
       _ => {

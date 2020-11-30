@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RequiredModules } from '../../modules/required.module';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -53,7 +53,7 @@ describe('ForecastComponent services', () => {
     localStorage.removeItem('mockIp');
   }
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     mockOwmDataService = new MockOwmDataService();
     // mockGetBrowserIpService = new MockGetBrowserIpService();
     // mockOwmStatsService = new MockOwmStatsService();
@@ -85,7 +85,7 @@ describe('ForecastComponent services', () => {
       .compileComponents();
   }));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(ForecastFlexComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
@@ -96,7 +96,7 @@ describe('ForecastComponent services', () => {
     resetLocalStorage();
   });
 
-  it('should have all async data', async(() => {
+  it('should have all async data', waitForAsync(() => {
     owmDataService = debugElement.injector.get(OwmDataManagerService);
     historyService = debugElement.injector.get(HistoryService);
     errorsService = debugElement.injector.get(ErrorsService);
@@ -116,7 +116,7 @@ describe('ForecastComponent services', () => {
     });
   }));
 
-  it('should get stats from OwmStatsService', async(() => {
+  it('should get stats from OwmStatsService', waitForAsync(() => {
     const stats = { r: 1000, u: 1000 };
     localStorage.setItem('mockOwmStatsService', JSON.stringify(stats));
     fixture.detectChanges();
@@ -126,7 +126,7 @@ describe('ForecastComponent services', () => {
     });
   }));
 
-  it('should add error on failing service OwmStatsService', async(() => {
+  it('should add error on failing service OwmStatsService', waitForAsync(() => {
     expect(mockHistoryService.messages.length).toBe(0);
     expect(mockErrorsService.messages.length).toBe(0);
     localStorage.setItem('mockOwmStatsServiceError', 'true');
@@ -137,7 +137,7 @@ describe('ForecastComponent services', () => {
     });
   }));
 
-  it('should get cities from CitiesService', async(() => {
+  it('should get cities from CitiesService', waitForAsync(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
     expect(component.loadingError).toBe(false);
@@ -150,7 +150,7 @@ describe('ForecastComponent services', () => {
     });
   }));
 
-  it('should add error on failing service CitiesService', async(() => {
+  it('should add error on failing service CitiesService', waitForAsync(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
     expect(component.loadingError).toBe(false);
@@ -163,7 +163,7 @@ describe('ForecastComponent services', () => {
     });
   }));
 
-  it('should get data from OwmDataService', async(() => {
+  it('should get data from OwmDataService', waitForAsync(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
     expect(component.loadingError).toBe(false);
@@ -176,7 +176,7 @@ describe('ForecastComponent services', () => {
     });
   }));
 
-  it('should add error on failing service OwmDataService', async(() => {
+  it('should add error on failing service OwmDataService', waitForAsync(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     expect(mockHistoryService.messages.length).toBe(0);
     expect(component.loadingError).toBe(false);

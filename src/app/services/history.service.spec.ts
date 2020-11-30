@@ -6,7 +6,7 @@ import {
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../../environments/environment.prod';
 
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 
 import { HistoryService } from './history.service';
@@ -31,7 +31,7 @@ describe('HistoryService', () => {
   let mockAngularFireService: MockAngularFireService;
   let store: Store;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     mockAngularFireService = new MockAngularFireService();
 
     TestBed.configureTestingModule({
@@ -57,7 +57,7 @@ describe('HistoryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call AngularFireDatabase set', async(() => {
+  it('should call AngularFireDatabase set', waitForAsync(() => {
     const serviceFB = TestBed.get(AngularFireDatabase);
     service.setDataToFB(testIP, testData).then(response => {
       expect(<string>(<any>response)).toBe('Resolved');

@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 import { GetBrowserIpService } from './get-browser-ip.service';
 import { of, asyncScheduler } from 'rxjs';
@@ -47,7 +47,7 @@ describe('GetBrowserIpService', () => {
     httpTestingController.verify();
   });
 
-  it('should getIP', async(() => {
+  it('should getIP', waitForAsync(() => {
     const validIP = '1.1.1.1';
     spyOn(service, 'requestIP').and.returnValue(of(validIP, asyncScheduler));
     service.getIP().subscribe(ip => {
@@ -55,7 +55,7 @@ describe('GetBrowserIpService', () => {
     });
   }));
 
-  it('should return null on getIP failure', async(() => {
+  it('should return null on getIP failure', waitForAsync(() => {
     const invalidIP = '1.1.1.Z';
     spyOn(service, 'requestIP').and.returnValue(of(invalidIP, asyncScheduler));
     service.getIP().subscribe(

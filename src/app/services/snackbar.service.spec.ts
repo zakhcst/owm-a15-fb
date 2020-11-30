@@ -1,4 +1,4 @@
-import { TestBed, tick, fakeAsync, async } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { SnackbarService } from './snackbar.service';
 import { RequiredModules } from '../modules/required.module';
@@ -26,7 +26,7 @@ describe('SnackbarService', () => {
     };
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AppSnackBarInnerComponent],
       imports: [RequiredModules, AngularMaterialModule],
@@ -40,7 +40,7 @@ describe('SnackbarService', () => {
       .compileComponents();
   }));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     service = TestBed.get(SnackbarService);
   }));
 

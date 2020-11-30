@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 import { OwmService } from './owm.service';
 import {
@@ -66,7 +66,7 @@ describe('OwmService', () => {
   });
 
   // it('should return value', (done: DoneFn) => {
-  it('should return value', async(() => {
+  it('should return value', waitForAsync(() => {
     spyOn(service, 'getData').and.returnValue(
       of(getNewDataObject(), asyncScheduler)
     );
@@ -80,7 +80,7 @@ describe('OwmService', () => {
   }));
 
   // it('should catch, log and re-throw network error', (done: DoneFn) => {
-  it('should catch, log and re-throw network error', async(() => {
+  it('should catch, log and re-throw network error', waitForAsync(() => {
     const errorMessage = 'Error message';
     const mockError = new ErrorEvent('Network error', {
       message: errorMessage
@@ -117,7 +117,7 @@ describe('OwmService', () => {
   }));
 
   // it('should catch, log and re-throw server error', (done: DoneFn) => {
-  it('should catch, log and re-throw server error', async(() => {
+  it('should catch, log and re-throw server error', waitForAsync(() => {
     const errorMessage = 'Error message';
     const spyMockErrorsServiceAdd = spyOn(
       mockErrorsService,

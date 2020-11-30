@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 import { MockAngularFireService } from './testing.services.mocks';
 import { CitiesService } from './cities.service';
@@ -19,7 +19,7 @@ describe('CitiesService', () => {
     iso2: 'testData: ICity: iso2String'
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RequiredModules,
@@ -39,7 +39,7 @@ describe('CitiesService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update reads', async(() => {
+  it('should update reads', waitForAsync(() => {
     angularFireService.fbdata = testData;
     service.updateReads('cityId').subscribe(response1 => {
       expect(<string>(<any>response1)).toBe('Resolved');
@@ -51,7 +51,7 @@ describe('CitiesService', () => {
     });
   }));
 
-  it('should get reads', async(() => {
+  it('should get reads', waitForAsync(() => {
     angularFireService.fbdata = testData;
     service.updateReads('cityId').subscribe(response1 => {
       expect(<string>(<any>response1)).toBe('Resolved');

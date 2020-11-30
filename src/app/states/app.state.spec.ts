@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
@@ -35,7 +35,7 @@ describe('State store', () => {
     logMessage: 'mockErrorData: AppErrorPayloadModel: value: logMessage',
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     mockSnackbarService = new MockSnackbarService();
     mockAngularFireService = new MockAngularFireService();
     mockGetBrowserIpService = new MockGetBrowserIpService();
