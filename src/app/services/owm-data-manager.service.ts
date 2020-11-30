@@ -38,18 +38,16 @@ export class OwmDataManagerService {
     private _store: Store,
     private _snackbar: SnackbarService
   ) {
+    const that = this;
     this.selectedCityId$
       .pipe(
-        tap(() => {
-          this.getDataOnCityChangeInProgress = true;
-        }),
-        switchMap((selectedCityId) => this.getDataMemoryOnCityChange(selectedCityId))
+        tap((_) => (this.getDataOnCityChangeInProgress = true)),
+        switchMap((selectedCityId) => this.getDataMemoryOnCityChange(selectedCityId)),
+        filter((data) => (this.getDataOnCityChangeInProgress = !!data))
       )
       .subscribe((data) => {
+        this._store.dispatch(new SetDataState(data));
         this.getDataOnCityChangeInProgress = false;
-        if (data) {
-          this._store.dispatch(new SetDataState(data));
-        }
       });
 
     this.connected$
@@ -59,8 +57,8 @@ export class OwmDataManagerService {
             (this.getDataOnConnectedInProgress =
               connected && !this.getDataOnCityChangeInProgress && !this.getDataOnBackFromAwayInProgress)
         ),
-        switchMap(() => this.getDataMemoryOnConnected()),
-        filter((data) => !!data)
+        switchMap(that.getDataMemoryOnConnected.bind(that)),
+        filter((data) => (this.getDataOnConnectedInProgress = !!data))
       )
       .subscribe((data) => {
         this._store.dispatch(new SetDataState(data));
@@ -74,8 +72,8 @@ export class OwmDataManagerService {
             (this.getDataOnBackFromAwayInProgress =
               !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress)
         ),
-        switchMap(() => this.getDataMemoryOnAway()),
-        filter((data) => !!data)
+        switchMap(that.getDataMemoryOnAway.bind(that)),
+        filter((data) => (this.getDataOnBackFromAwayInProgress = !!data))
       )
       .subscribe((data) => {
         this._store.dispatch(new SetDataState(data));
@@ -105,7 +103,6 @@ export class OwmDataManagerService {
 
   getDataMemoryOnCityChange(cityId: string): Observable<IOwmDataModel> {
     const lastOwmData = this._store.selectSnapshot(AppHistoryState.selectSelectedCityHistoryLast);
-
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory' });
     if (lastOwmData && this.isNotExpired(lastOwmData)) {
       return of(lastOwmData);
@@ -193,10 +190,6 @@ export class OwmDataManagerService {
   }
 }
 
-
-
-
-
 /*
 @Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$
 @Select(AppStatusState.connected) connected$
@@ -220,12 +213,3 @@ getDataDB ----------- (updateDBReads)                                           
 |    |                                                                          |
 getFallbackData ----------------------------------------------------------------/
 */
-
-
-
-
-
-
-
-
-
