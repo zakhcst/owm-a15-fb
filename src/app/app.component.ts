@@ -12,7 +12,7 @@ import { ConstantsService } from './services/constants.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnDestroy {
-  title = 'owm-a10-fb';
+  title = 'owm-a11-fb';
   loading = false;
   subscriptions: Subscription;
 

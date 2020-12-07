@@ -1,4 +1,4 @@
-export eval echo $(cat ../../owm-a10-fb-credentials/fb_token) && \
+export eval echo $(cat ../../owm-a11-fb-credentials/fb_token) && \
 docker run \
   -it \
   -e "FB_TOKEN=$FB_TOKEN" \
