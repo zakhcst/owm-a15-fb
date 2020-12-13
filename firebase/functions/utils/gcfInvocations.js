@@ -9,16 +9,14 @@ exports.gcfInvocationsMonitorFactory = (func) => (...args) => {
   const secondNow = parseInt(now.valueOf() / 1000);
   const ref = db.ref("invocations-log/" + secondNow);
   return ref
-    .transaction(value => {
+    .transaction((value) => {
       value = value || 0;
       return value + 1;
     })
-    .then(invocationsSnap => {
+    .then((invocationsSnap) => {
       const invocations = invocationsSnap.snapshot.val();
       // 'retry' calls - in case first fails, otherwise rest are confirmation for disabled billing
-      if (
-        limitPerSecond < invocations && invocations <= limitPerSecond + retry
-      ) {
+      if (limitPerSecond + retry < invocations) {
         console.log(
           `Limit Per Second ${limitPerSecond} gcf invocations exceeded ${invocations}`
         );

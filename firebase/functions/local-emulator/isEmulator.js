@@ -1,3 +1,3 @@
 exports.isEmulator = function () {
-    return process.env['FUNCTIONS_EMULATOR'];
+    return process.env['FIREBASE_EMULATOR'] === 'true';
 }

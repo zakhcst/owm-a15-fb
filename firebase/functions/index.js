@@ -1,9 +1,16 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const isEmulator = require('./local-emulator/isEmulator');
 
+let env;
+if (isEmulator.isEmulator()) {
+  env = { databaseURL: "http://localhost:9000/?ns=owm-a11-fb", ssl: false };
+} else {
+  env = { databaseURL: "https://owm-a7-fb.firebaseio.com" };
+}
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
-  databaseURL: "https://owm-a7-fb.firebaseio.com"
+  ...env,
 });
 
 const { gcfInvocationsMonitorFactory } = require("./utils/gcfInvocations");
@@ -32,4 +39,6 @@ exports.citiesOnWriteRead = functions.database
   .onWrite(gcfInvocationsMonitorFactory(cities.onWriteRead));
 
 // Pub Sub
-exports.checkBudgetPubSub = functions.pubsub.topic('budget_alert_owm-a7-fb').onPublish(checkBudgetPubSub);
+exports.checkBudgetPubSub = functions.pubsub
+  .topic("budget_alert_owm-a7-fb")
+  .onPublish(checkBudgetPubSub);

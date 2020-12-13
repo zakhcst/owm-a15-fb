@@ -17,7 +17,9 @@ Featured
   - custom pipes
   - rxjs
   - ngxs
+  - interceptors
   - pwa
+  - responsive web app
 
 - Firebase
 
@@ -25,6 +27,7 @@ Featured
   - cloud functions
   - hosting
   - RTDB and functions emulator
+  - emulators in vscode remote-container 
   - continuous deployment from Github
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli). 

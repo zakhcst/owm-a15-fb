@@ -2,8 +2,19 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// This file supports 3 development setups:
+// 1. Firebase cloud servers
+// 2. Firebase emulator run in local environment (eg ip 192.168.1.15 as in virtual machine or host os)
+// 3. Firebase emulator run in docker container (eg ip localhost, started as vscode remote development container) 
+//
+// 'emulator' and 'container' constants have to be set according to the environment,
+// along with in 'firebase/firebase.json' the 'emulators' section.
+
+
 const emulator = true;
-const firebaseConfig = {
+const container = true;
+
+const firebaseConfigDevEnv = {
   apiKey: 'AIzaSyCT-Uab-tDlXLBKzWdv7rq4exZchMDRyR8',
   authDomain: 'owm-a7-fb.firebaseapp.com',
   databaseURL: 'https://owm-a7-fb.firebaseio.com',
@@ -11,19 +22,27 @@ const firebaseConfig = {
   storageBucket: 'owm-a7-fb.appspot.com',
   messagingSenderId: '1062734348256'
 };
+const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
+
+
 const firebaseEmulator = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=emulator',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a11-fb',
   ssl: false,
 };
-const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a10-fb/us-central1';
-const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
+const firebaseEmulatorContainer = {
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a11-fb',
+  ssl: false,
+};
+
+const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a11-fb/us-central1';
+const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a11-fb/us-central1';
 
 export const environment = {
   production: false,
   name: 'dev',
   emulator,
-  firebase: emulator ? firebaseEmulator : firebaseConfig,
-  'functions': emulator ? localEmulatorFunctionsUrl : firebaseFunctionsUrl,
+  firebase: emulator ? (container ? firebaseEmulatorContainer : firebaseEmulator) : firebaseConfigDevEnv,
+  'functions': emulator ? (container ? localEmulatorFunctionsUrlContainer : localEmulatorFunctionsUrl) : firebaseFunctionsUrl,
 };
 
 /*
