@@ -12,12 +12,12 @@
 
   <div class="grid-container">
     <span class="flex-justify-center">
-      <img src="favicon.ico" />
+      <img src="favicon.ico" alt="Angular"/>
     </span>
     <div>Database</div>
     <div>Hosted</div>
     <div class="flex-justify-center">
-      <img src="{{ constants.iconGithub }}" />
+      <img src="{{ constants.iconGithub }}" alt="Github"/>
     </div>
 
     <ng-container *ngFor="let version of data">
@@ -29,7 +29,7 @@
         [routerLink]="[version.routedLink]"
         routerLinkActive="active"
         >{{ version.hosted }}
-        <img src="{{ constants.iconExtLink }}" />
+        <img src="{{ constants.iconExtLink }}" alt="Link to site"/>
       </a>
       <a
         *ngIf="!version.routedLink"
@@ -37,7 +37,7 @@
         href="{{ version.hostedLink }}"
         routerLinkActive="active"
         >{{ version.hosted }}
-        <img src="{{ constants.iconExtLink }}" />
+        <img src="{{ constants.iconExtLink }}" alt="Link to host"/>
       </a>
 
       <a
@@ -45,7 +45,7 @@
         href="{{ version.sourceLink }}"
         routerLinkActive="active"
       >
-        <img src="{{ constants.iconExtLink }}" />
+        <img src="{{ constants.iconExtLink }}" alt="Link to source"/>
       </a>
     </ng-container>
   </div>

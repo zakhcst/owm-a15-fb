@@ -1,0 +1,14 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://owm-a11-fb.web.app/home</loc>
+</url>
+<url>
+<loc>https://owm-a11-fb.web.app/v1/forecast-detail</loc>
+</url>
+<url>
+<loc>https://owm-a11-fb.web.app/v1//forecast-gchart</loc>
+</url>
+<url>
+<loc>https://owm-a11-fb.web.app/v1/stats</loc>
+</url>
+</urlset>
