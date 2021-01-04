@@ -24,18 +24,18 @@ export const appRoutes: Routes = [
     },
     children: [
       {
-        path: ConstantsService.views.stats.path,
+        path: ConstantsService.toolbarElements.stats.path,
         loadChildren: () => import('src/app/components/stats/stats.module').then((m) => m.StatsModule),
         pathMatch: 'full',
       },
       {
-        path: ConstantsService.views.forecastFlex.path,
+        path: ConstantsService.toolbarElements.forecastFlex.path,
         loadChildren: () =>
           import('src/app/components/forecast-flex/forecast-flex.module').then((m) => m.ForecastFlexModule),
         pathMatch: 'full',
       },
       {
-        path: ConstantsService.views.forecastGChart.path,
+        path: ConstantsService.toolbarElements.forecastGChart.path,
         canActivate: [CanActivateGchart],
         canLoad: [CanLoadGChart],
         loadChildren: () =>
@@ -54,7 +54,7 @@ export const appRoutes: Routes = [
     component: ErrorPageComponent,
     data: { errorMessage: ' Error Page', redirectPage: '' },
   },
-  { path: '', redirectTo: '/v1/' + ConstantsService.views.forecastFlex.path, pathMatch: 'full' },
+  { path: '', redirectTo: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path, pathMatch: 'full' },
   {
     path: '**',
     component: ErrorPageComponent,

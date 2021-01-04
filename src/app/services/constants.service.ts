@@ -4,36 +4,69 @@ import { IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConstantsService {
-  constructor() { }
+  constructor() {}
 
-  public static readonly views = {
-    stats: { path: 'stats', title: 'Stats', type: 'button' },
-    forecastGChart: { path: 'forecast-gchart', title: 'Chart', type: 'button', disableOnDisconnected: true },
+  public static readonly toolbarElements = {
+    selectCities: { path: '', title: 'selectCities', type: 'selectCities' },
     forecastFlex: { path: 'forecast-detail', title: 'Detail', type: 'button' },
-    selectCities: { path: '', title: 'selectCities', type: 'selectCities' }
+    forecastGChart: { path: 'forecast-gchart', title: 'Chart', type: 'button', disableOnDisconnected: true },
+    stats: { path: 'stats', title: 'Stats', type: 'button' },
   };
 
-  public static readonly toolbarActions = {
-    stats: [
-      ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGChart,
-      ConstantsService.views.stats,
-    ],
-    'forecast-detail': [
-      ConstantsService.views.selectCities,
-      ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGChart,
-      ConstantsService.views.stats,
-    ],
-    'forecast-gchart': [
-      ConstantsService.views.selectCities,
-      ConstantsService.views.forecastFlex,
-      ConstantsService.views.forecastGChart,
-      ConstantsService.views.stats,
-    ]
+  public static readonly toolbar = {
+    'forecast-detail': {
+      actions: [
+        ConstantsService.toolbarElements.selectCities,
+        ConstantsService.toolbarElements.forecastFlex,
+        ConstantsService.toolbarElements.forecastGChart,
+        ConstantsService.toolbarElements.stats,
+      ],
+      settingsOptions: {
+        liveDataUpdate: true,
+        daysForecast: true,
+        slotsBackground: true,
+        pressure: true,
+        wind: true,
+        humidity: true,
+        dialogMaxHeight: 470,
+      },
+    },
+    'forecast-gchart': {
+      actions: [
+        ConstantsService.toolbarElements.selectCities,
+        ConstantsService.toolbarElements.forecastFlex,
+        ConstantsService.toolbarElements.forecastGChart,
+        ConstantsService.toolbarElements.stats,
+      ],
+      settingsOptions: {
+        liveDataUpdate: true,
+        daysForecast: true,
+        slotsBackground: false,
+        pressure: false,
+        wind: false,
+        humidity: false,
+        dialogMaxHeight: 195,
+      },
+    },
+    stats: {
+      actions: [
+        ConstantsService.toolbarElements.forecastFlex,
+        ConstantsService.toolbarElements.forecastGChart,
+        ConstantsService.toolbarElements.stats,
+      ],
+      settingsOptions: {
+        liveDataUpdate: true,
+        daysForecast: false,
+        slotsBackground: false,
+        pressure: false,
+        wind: false,
+        humidity: false,
+        dialogMaxHeight: 122,
+      },
+    },
   };
 
   public static readonly owmData = 'owm';
@@ -91,23 +124,23 @@ export class ConstantsService {
     temperature: {
       title: 'Temperature',
       lineColor: '#ff0000',
-      icon: 'assets/icons-list/'
+      icon: 'assets/icons-list/',
     },
     wind: {
       title: 'Wind',
       lineColor: '#0000ff',
-      icon: 'assets/icons8-windsock-16.png'
+      icon: 'assets/icons8-windsock-16.png',
     },
     humidity: {
       title: 'Humidity',
       lineColor: '#eeee33',
-      icon: 'assets/icons8-hygrometer-16.png'
+      icon: 'assets/icons8-hygrometer-16.png',
     },
     pressure: {
       title: 'Pressure',
       lineColor: '#00ff00',
-      icon: 'assets/icons8-atmospheric-pressure-16.png'
-    }
+      icon: 'assets/icons8-atmospheric-pressure-16.png',
+    },
   };
 
   public static readonly timeTemplate: ITimeTemplate[] = [
@@ -118,13 +151,14 @@ export class ConstantsService {
     { hour: 12, bgColor: '#90c0ff50', textColor: 'white' },
     { hour: 15, bgColor: '#a0d0ff50', textColor: 'white' },
     { hour: 18, bgColor: '#70c0ff50', textColor: 'white' },
-    { hour: 21, bgColor: '#5080dd50', textColor: 'white' }
+    { hour: 21, bgColor: '#5080dd50', textColor: 'white' },
   ];
 
   public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');
   public static readonly weatherDefaultBgImgFileName = 'default.jpg';
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
-  public static readonly getWeatherDefaultBgImg = () => ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName;
+  public static readonly getWeatherDefaultBgImg = () =>
+    ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName;
 
   public static readonly getWeatherBgImg = (dataListHour: IOwmDataModelTimeSlotUnit) => {
     const main = dataListHour.weather[0].main;
@@ -136,15 +170,9 @@ export class ConstantsService {
       ConstantsService.bgImgTypes.includes(main.toLocaleLowerCase()) &&
       (syspod === 'd' || syspod === 'n')
     ) {
-      return (
-        ConstantsService.weatherBgImgPath +
-        main.toLocaleLowerCase() +
-        '_' +
-        syspod +
-        '.jpg'
-      );
+      return ConstantsService.weatherBgImgPath + main.toLocaleLowerCase() + '_' + syspod + '.jpg';
     } else {
       return ConstantsService.getWeatherDefaultBgImg();
     }
-  }
+  };
 }

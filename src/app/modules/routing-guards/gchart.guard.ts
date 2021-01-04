@@ -27,7 +27,7 @@ export class CanActivateGchart implements CanActivate {
   connectedStatus() {
     const timeout = interval(1000).pipe(mapTo(false));
     const connected = this.connected$.pipe(filter(status => status));
-    return ConstantsService.views.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
+    return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
   }
 }
 
@@ -43,6 +43,6 @@ export class CanLoadGChart implements CanLoad {
   connectedStatus() {
     const timeout = interval(1000).pipe(mapTo(false));
     const connected = this.connected$.pipe(filter(status => status));
-    return ConstantsService.views.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
+    return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
   }
 }

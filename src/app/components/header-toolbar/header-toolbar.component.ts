@@ -44,6 +44,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   toolbarActions: [] = [];
+  settingsOptions: {} = {};
   toolbarShow = true;
   loaded = false;
   selectedCityId: string = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId) || ConstantsService.defaultCityId;
@@ -84,9 +85,10 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
       )
       .subscribe(
         (eventPathEndSegment) => {
-          if (eventPathEndSegment in ConstantsService.toolbarActions) {
-            if (this.toolbarActions !== ConstantsService.toolbarActions[eventPathEndSegment]) {
-              this.toolbarActions = ConstantsService.toolbarActions[eventPathEndSegment];
+          if (eventPathEndSegment in ConstantsService.toolbar) {
+            if (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]) {
+              this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions;
+              this.settingsOptions = ConstantsService.toolbar[eventPathEndSegment].settingsOptions;
               this.toolbarShow = true;
             }
           } else {
@@ -159,25 +161,28 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   showSettings(settingsButton, isXs: boolean) {
     const dialogWidth = 300;
-    const dialogHeight = 250;
+    const dialogPositionTop = 60;
+    const dialogMargin = 75;
     const settingsButtonLeft = settingsButton._elementRef.nativeElement.offsetLeft;
-    const settingsButtonTop = settingsButton._elementRef.nativeElement.offsetTop;
-    const settingsButtonHeight = settingsButton._elementRef.nativeElement.clientHeight;
     const settingsButtonoffsetWidth = settingsButton._elementRef.nativeElement.offsetWidth;
-    const dialogPositionTop = settingsButtonTop + settingsButtonHeight;
-    const dialogPositionLeft = settingsButtonLeft + (this.isXs() ? settingsButtonoffsetWidth : -dialogWidth);
-
-    this.dialog.open(DialogSettingsComponent, {
+    const dialogPositionLeft = settingsButtonLeft + (this.isXs() ? settingsButtonoffsetWidth + 10 : - (dialogWidth + 10));
+    const config = {
       panelClass: 'dialog-settings',
       position: {
         top: dialogPositionTop + 'px',
         left: dialogPositionLeft + 'px',
       },
       width: dialogWidth + 'px',
-      height: dialogHeight + 'px',
-      data: { settingsButton, dialogWidth, dialogHeight, mediaObserver: this.mediaObserver },
+      data: { settingsButton, dialogPositionTop, dialogWidth, dialogMargin, mediaObserver: this.mediaObserver },
       hasBackdrop: true,
-    });
+    };
+
+    const windowHeight = window.innerHeight;
+    if (windowHeight < this.settingsOptions['dialogMaxHeight']) {
+      config['height'] = (windowHeight - dialogMargin) + 'px';
+    }
+
+    this.dialog.open(DialogSettingsComponent, config);
   }
 
   selectedCityChange() {

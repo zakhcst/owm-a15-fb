@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
       version: 11,
       db: 'Firebase RTDB',
       hosted: 'Firebase',
-      routedLink: '/v1/' + ConstantsService.views.forecastFlex.path,
+      routedLink: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path,
       sourceLink: 'https://github.com/zakhcst/owm-a11-fb'
     },
     {

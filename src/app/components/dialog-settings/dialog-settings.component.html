@@ -1,67 +1,79 @@
 <div class="dialog-settings-container" (click)="closeDialog()">
   <div class="grid">
-    Live Data Update
-    <mat-slide-toggle
-      style="transform: rotate(180deg)"
-      [color]="'primary'"
-      [checked]="liveDataUpdate"
-      (toggleChange)="toggleLiveDataUpdate()"
-      (click)="$event.stopPropagation()"
-    >
-    </mat-slide-toggle>
+    <ng-container *ngIf="settingsOptions['liveDataUpdate']">
+      Live Data Update
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="liveDataUpdate"
+        (toggleChange)="toggleLiveDataUpdate()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
 
-    Days forecast
-    <mat-slider
-      thumbLabel
-      [color]="'primary'"
-      [(ngModel)]="daysForecast"
-      (change)="updateDaysForecast()"
-      (click)="$event.stopPropagation()"
-      tickInterval="1"
-      min="1"
-      max="5"
-    >
-    </mat-slider>
+    <ng-container *ngIf="settingsOptions['daysForecast']">
+      Days forecast
+      <mat-slider
+        thumbLabel
+        [color]="'primary'"
+        [(ngModel)]="daysForecast"
+        (change)="updateDaysForecast()"
+        (click)="$event.stopPropagation()"
+        tickInterval="1"
+        min="1"
+        max="5"
+      >
+      </mat-slider>
+    </ng-container>
 
-    Slots background
-    <mat-slide-toggle
-      style="transform: rotate(180deg)"
-      [color]="'primary'"
-      [checked]="timeSlotBgPicture"
-      (toggleChange)="toggleTimeSlotBgPicture()"
-      (click)="$event.stopPropagation()"
-    >
-    </mat-slide-toggle>
+    <ng-container *ngIf="settingsOptions['slotsBackground']">
+      Slots background
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="timeSlotBgPicture"
+        (toggleChange)="toggleTimeSlotBgPicture()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
 
-    Pressure
-    <mat-slide-toggle
-      style="transform: rotate(180deg)"
-      [color]="'primary'"
-      [checked]="showDetailPressure"
-      (toggleChange)="toggleShowPressure()"
-      (click)="$event.stopPropagation()"
-    >
-    </mat-slide-toggle>
+    <ng-container *ngIf="settingsOptions['pressure']">
+      Pressure
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="showDetailPressure"
+        (toggleChange)="toggleShowPressure()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
 
-    Wind
-    <mat-slide-toggle
-      style="transform: rotate(180deg)"
-      [color]="'primary'"
-      [checked]="showDetailWind"
-      (toggleChange)="toggleShowWind()"
-      (click)="$event.stopPropagation()"
-    >
-    </mat-slide-toggle>
+    <ng-container *ngIf="settingsOptions['wind']">
+      Wind
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="showDetailWind"
+        (toggleChange)="toggleShowWind()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
 
-    Humidity
-    <mat-slide-toggle
-      style="transform: rotate(180deg)"
-      [color]="'primary'"
-      [checked]="showDetailHumidity"
-      (toggleChange)="toggleShowHumidity()"
-      (click)="$event.stopPropagation()"
-    >
-    </mat-slide-toggle>
+    <ng-container *ngIf="settingsOptions['humidity']">
+      Humidity
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="showDetailHumidity"
+        (toggleChange)="toggleShowHumidity()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
   </div>
   <div class="update-message" *ngIf="updatesAvailable$ | async">
     <div>New release is available</div>

@@ -6,6 +6,8 @@ import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { buildInfo } from '../../../build-info';
+import { RouterState } from '@ngxs/router-plugin';
+import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
   selector: 'app-dialog-settings',
@@ -24,6 +26,8 @@ export class DialogSettingsComponent implements OnInit {
   showDetailPressure: boolean;
   showDetailWind: boolean;
   showDetailHumidity: boolean;
+  settingsOptions: {};
+
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
@@ -34,9 +38,9 @@ export class DialogSettingsComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogSettingsComponent>,
-    private _store: Store
-  ) {}
-
+    private _store: Store,
+  ) { }
+  
   ngOnInit(): void {
     this.timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
     this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
@@ -44,6 +48,8 @@ export class DialogSettingsComponent implements OnInit {
     this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
     this.showDetailWind = this._store.selectSnapshot(AppStatusState.showDetailWind);
     this.showDetailHumidity = this._store.selectSnapshot(AppStatusState.showDetailHumidity);
+    const routePathEndSegment = this._store.selectSnapshot(RouterState.url).split('/').pop() || ConstantsService.toolbarElements.forecastFlex.path;
+    this.settingsOptions = ConstantsService.toolbar[routePathEndSegment].settingsOptions;
 
     this.daysForecastOld = this.daysForecast;
     this.reposition();
@@ -83,20 +89,20 @@ export class DialogSettingsComponent implements OnInit {
   }
 
   reposition() {
-    const settingsButtonLeft =
-      this.data.settingsButton._elementRef.nativeElement.offsetLeft || document.body.clientWidth;
     const settingsButtonTop = this.data.settingsButton._elementRef.nativeElement.offsetTop;
     if (!settingsButtonTop) {
       this.closeDialog();
     }
-    const settingsButtonHeight = this.data.settingsButton._elementRef.nativeElement.clientHeight;
-    const settingsButtonoffsetWidth = this.data.settingsButton._elementRef.nativeElement.offsetWidth;
+    const settingsButtonLeft = this.data.settingsButton._elementRef.nativeElement.offsetLeft || document.body.clientWidth;
     const isXs = this.isXs();
-    const dialogPositionTop =
-      settingsButtonTop + settingsButtonHeight - (isXs ? this.data.dialogHeight - settingsButtonHeight : 0);
-    const dialogPositionLeft = settingsButtonLeft + (isXs ? settingsButtonoffsetWidth : -this.data.dialogWidth);
+    const settingsButtonoffsetWidth = this.data.settingsButton._elementRef.nativeElement.offsetWidth;
+    const dialogPositionLeft = settingsButtonLeft + (isXs ? settingsButtonoffsetWidth + 10  : - (this.data.dialogWidth + 10));
+    const windowHeight = window.innerHeight;
+    if (windowHeight < this.settingsOptions['dialogMaxHeight']) {
+      this.dialogRef.updateSize(this.data.dialogWidth + 'px', (windowHeight - this.data.dialogMargin) + 'px');
+    }
     this.dialogRef.updatePosition({
-      top: dialogPositionTop + 'px',
+      top: this.data.dialogPositionTop + 'px',
       left: dialogPositionLeft + 'px',
     });
   }
