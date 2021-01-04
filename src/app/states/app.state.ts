@@ -14,8 +14,12 @@ import {
   SetStatusAway,
   SetFallbackDataState,
   SetStatusUpdatesAvailable,
-  SetStatusLiveDataUpdate, 
+  SetStatusLiveDataUpdate,
   SetStatusDaysForecast,
+  SetStatusShowDetailPressure,
+  SetStatusShowDetailHumidity,
+  SetStatusShowDetailWind,
+  SetStatusShowDetailSecondary,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -42,6 +46,10 @@ import { IHistoryLog } from '../models/history-log.model';
     updatesAvailable: false,
     liveDataUpdate: false,
     daysForecast: 5,
+    showDetailPressure: true,
+    showDetailWind: true,
+    showDetailHumidity: true,
+    showDetailSecondary: true,
   },
 })
 @Injectable()
@@ -92,6 +100,23 @@ export class AppStatusState {
     return state.daysForecast;
   }
 
+  @Selector()
+  static showDetailPressure(state: AppStatusModel) {
+    return state.showDetailPressure;
+  }
+  @Selector()
+  static showDetailWind(state: AppStatusModel) {
+    return state.showDetailWind;
+  }
+  @Selector()
+  static showDetailHumidity(state: AppStatusModel) {
+    return state.showDetailHumidity;
+  }
+  @Selector()
+  static showDetailSecondary(state: AppStatusModel) {
+    return state.showDetailSecondary;
+  }
+
   @Action(SetStatusIpState)
   setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
     const ip = action.payload;
@@ -134,6 +159,32 @@ export class AppStatusState {
   @Action(SetStatusLiveDataUpdate)
   setStatusLiveDataUpdate(context: StateContext<AppStatusModel>, action: SetStatusLiveDataUpdate) {
     context.patchState({ liveDataUpdate: action.payload });
+  }
+  @Action(SetStatusShowDetailPressure)
+  setStatusShowDetailPressure(context: StateContext<AppStatusModel>, action: SetStatusShowDetailPressure) {
+    context.patchState({ showDetailPressure: action.payload });
+    context.dispatch(new SetStatusShowDetailSecondary('showDetailPressure'));
+  }
+  @Action(SetStatusShowDetailWind)
+  setStatusShowDetailWind(context: StateContext<AppStatusModel>, action: SetStatusShowDetailWind) {
+    context.patchState({ showDetailWind: action.payload });
+    context.dispatch(new SetStatusShowDetailSecondary('showDetailWind'));
+  }
+  @Action(SetStatusShowDetailHumidity)
+  setStatusShowSetStatusShowDetailHumidity(context: StateContext<AppStatusModel>, action: SetStatusShowDetailHumidity) {
+    context.patchState({ showDetailHumidity: action.payload });
+    context.dispatch(new SetStatusShowDetailSecondary('showDetailHumidity'));
+  }
+  @Action(SetStatusShowDetailSecondary)
+  setStatusShowSetStatusShowDetailSecondary(
+    context: StateContext<AppStatusModel>,
+    action: SetStatusShowDetailSecondary
+  ) {
+    const state = context.getState();
+    const display = state.showDetailPressure || state.showDetailWind || state.showDetailHumidity;
+    context.patchState({ showDetailSecondary: display });
+    document.documentElement.style.setProperty('--' + action.payload, state[action.payload] ? 'flex' : 'none');
+    document.documentElement.style.setProperty('--showDetailSecondary', display ? 'flex' : 'none');
   }
 }
 

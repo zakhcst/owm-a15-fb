@@ -6,6 +6,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
 import { SetStatusUpdatesAvailable } from './states/app.actions';
 import { ConstantsService } from './services/constants.service';
+import { AppStatusState } from './states/app.state';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -34,6 +35,10 @@ export class AppComponent implements OnDestroy {
     document.documentElement.style.setProperty('--iconsMeasuresUrl', iconsMeasuresUrl);
     const iconsWeatherUrl = `url("../../../${ConstantsService.iconsWeather}")`;
     document.documentElement.style.setProperty('--iconsWeatherUrl', iconsWeatherUrl);
+    document.documentElement.style.setProperty('--showDetailPressure', this._store.selectSnapshot(AppStatusState.showDetailPressure) ? 'flex' : 'none');
+    document.documentElement.style.setProperty('--showDetailWind', this._store.selectSnapshot(AppStatusState.showDetailWind) ? 'flex' : 'none');
+    document.documentElement.style.setProperty('--showDetailHumidity', this._store.selectSnapshot(AppStatusState.showDetailHumidity) ? 'flex' : 'none');
+    document.documentElement.style.setProperty('--showDetailSecondary', this._store.selectSnapshot(AppStatusState.showDetailSecondary) ? 'flex' : 'none');
 
   }
 

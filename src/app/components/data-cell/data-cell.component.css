@@ -13,13 +13,35 @@
   border: 1px solid black;
 }
 
+.table-secondary_data {
+  display: var(--showDetailSecondary) !important;
+}
+
 .table-secondary_data_line {
   margin: 2px 0 2px 0;
+
+  flex: 1 1 100%;
+  box-sizing: border-box;
+  flex-direction: row;
+  display: flex;
+  place-content: flex-end flex-start;
+  align-items: flex-end;
+  max-height: 25%;
 }
 
 .table-secondary_data_icon img {
   width: 60%;
   height: auto;
+}
+
+.pressure {
+  display: var(--showDetailPressure);
+}
+.wind {
+  display: var(--showDetailWind);
+}
+.humidity {
+  display: var(--showDetailHumidity);
 }
 
 @media only screen and (max-height: 599px) {
@@ -63,13 +85,13 @@
   background: var(--iconsMeasuresUrl) no-repeat 0px 0px;
 }
 
-.pressure {
+.icon-pressure {
   background-position: 0 0;
 }
-.wind {
+.icon-wind {
   background-position: 0 -16px;
 }
-.humidity {
+.icon-humidity {
   background-position: 0 -32px;
 }
 

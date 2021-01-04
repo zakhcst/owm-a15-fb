@@ -20,6 +20,10 @@ export interface AppStatusModel {
   updatesAvailable: boolean;
   liveDataUpdate: boolean;
   daysForecast: number;
+  showDetailPressure: boolean;
+  showDetailHumidity: boolean;
+  showDetailWind: boolean;
+  showDetailSecondary: boolean;
 }
 
 export interface AppHistoryPayloadModel {

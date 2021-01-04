@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SetStatusTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast } from 'src/app/states/app.actions';
+import { SetStatusTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast, SetStatusShowDetailHumidity, SetStatusShowDetailWind, SetStatusShowDetailPressure } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
@@ -21,6 +21,9 @@ export class DialogSettingsComponent implements OnInit {
   liveDataUpdate: boolean;
   daysForecast: number;
   daysForecastOld: number;
+  showDetailPressure: boolean;
+  showDetailWind: boolean;
+  showDetailHumidity: boolean;
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
 
   @HostListener('window:resize', ['$event'])
@@ -31,13 +34,17 @@ export class DialogSettingsComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogSettingsComponent>,
-    private _store: Store,
-  ) { }
+    private _store: Store
+  ) {}
 
   ngOnInit(): void {
     this.timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
     this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
     this.daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
+    this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
+    this.showDetailWind = this._store.selectSnapshot(AppStatusState.showDetailWind);
+    this.showDetailHumidity = this._store.selectSnapshot(AppStatusState.showDetailHumidity);
+
     this.daysForecastOld = this.daysForecast;
     this.reposition();
   }
@@ -56,6 +63,19 @@ export class DialogSettingsComponent implements OnInit {
   toggleLiveDataUpdate() {
     this.liveDataUpdate = !this.liveDataUpdate;
     this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
+  }
+
+  toggleShowPressure() {
+    this.showDetailPressure = !this.showDetailPressure;
+    this._store.dispatch(new SetStatusShowDetailPressure(this.showDetailPressure));
+  }
+  toggleShowWind() {
+    this.showDetailWind = !this.showDetailWind;
+    this._store.dispatch(new SetStatusShowDetailWind(this.showDetailWind));
+  }
+  toggleShowHumidity() {
+    this.showDetailHumidity = !this.showDetailHumidity;
+    this._store.dispatch(new SetStatusShowDetailHumidity(this.showDetailHumidity));
   }
 
   isXs() {

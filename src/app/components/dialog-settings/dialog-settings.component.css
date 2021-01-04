@@ -1,7 +1,7 @@
 .dialog-settings-container {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding-bottom: 10px;
   color: white;
   display: flex;
   flex-direction: column;
@@ -16,7 +16,22 @@
   column-gap: 10px;
   row-gap: 25px;
   align-items: center;
-  margin: 5px;
+  padding: 10px;
+  overflow-y: auto;
+}
+.grid::-webkit-scrollbar {
+  width: 5px;
+}
+.grid::-webkit-scrollbar-thumb:hover {
+  background: rgb(200, 200, 200);
+}
+.grid::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+}
+.grid::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
 }
 
 .build-text {

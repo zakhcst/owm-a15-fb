@@ -1,15 +1,15 @@
 <div class="dialog-settings-container" (click)="closeDialog()">
   <div class="grid">
-    Slots background
+    Live Data Update
     <mat-slide-toggle
       style="transform: rotate(180deg)"
       [color]="'primary'"
-      [checked]="timeSlotBgPicture"
-      (toggleChange)="toggleTimeSlotBgPicture()"
+      [checked]="liveDataUpdate"
+      (toggleChange)="toggleLiveDataUpdate()"
       (click)="$event.stopPropagation()"
     >
     </mat-slide-toggle>
-    
+
     Days forecast
     <mat-slider
       thumbLabel
@@ -23,12 +23,42 @@
     >
     </mat-slider>
 
-    Live Data Update
+    Slots background
     <mat-slide-toggle
       style="transform: rotate(180deg)"
       [color]="'primary'"
-      [checked]="liveDataUpdate"
-      (toggleChange)="toggleLiveDataUpdate()"
+      [checked]="timeSlotBgPicture"
+      (toggleChange)="toggleTimeSlotBgPicture()"
+      (click)="$event.stopPropagation()"
+    >
+    </mat-slide-toggle>
+
+    Pressure
+    <mat-slide-toggle
+      style="transform: rotate(180deg)"
+      [color]="'primary'"
+      [checked]="showDetailPressure"
+      (toggleChange)="toggleShowPressure()"
+      (click)="$event.stopPropagation()"
+    >
+    </mat-slide-toggle>
+
+    Wind
+    <mat-slide-toggle
+      style="transform: rotate(180deg)"
+      [color]="'primary'"
+      [checked]="showDetailWind"
+      (toggleChange)="toggleShowWind()"
+      (click)="$event.stopPropagation()"
+    >
+    </mat-slide-toggle>
+
+    Humidity
+    <mat-slide-toggle
+      style="transform: rotate(180deg)"
+      [color]="'primary'"
+      [checked]="showDetailHumidity"
+      (toggleChange)="toggleShowHumidity()"
       (click)="$event.stopPropagation()"
     >
     </mat-slide-toggle>
