@@ -1,6 +1,6 @@
 import { IOwmDataModel } from '../models/owm-data.model';
 
-export interface HistoryRecordModel {
+export interface HistoryLogModel {
   cityId: string;
   time: number;
 }

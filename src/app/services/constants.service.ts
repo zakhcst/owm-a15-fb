@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ConstantsService {
-  constructor() {}
+  constructor() { }
 
   public static readonly toolbarElements = {
     selectCities: { path: '', title: 'selectCities', type: 'selectCities' },
@@ -73,6 +73,7 @@ export class ConstantsService {
   public static readonly stats = 'stats';
   public static readonly historyLog = 'history-log';
   public static readonly errorsLog = 'errors-log';
+  public static readonly reservedIps = ['0-0-0-0', '255-255-255-255', '--ip'];
 
   public static readonly default5DayForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
   public static readonly defaultUnits = 'metric';

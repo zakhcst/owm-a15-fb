@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { AppHistoryLogState, AppStatusState } from '../states/app.state';
 import { SetHistoryLogState } from '../states/app.actions';
+import { HistoryLogModel } from '../states/app.models';
 @Injectable({
   providedIn: 'root',
 })
@@ -32,8 +33,8 @@ export class HistoryLogService {
           this.dispatch(logs);
         });
       } else {
-        const cities = this._store.selectSnapshot(AppHistoryLogState.selectHistoryLog);
-        if (!cities) {
+        const ipHistoryLog = this._store.selectSnapshot(AppHistoryLogState.selectHistoryLog);
+        if (!ipHistoryLog) {
           this.getData()
             .pipe(take(1))
             .subscribe((logs) => this.dispatch(logs));

@@ -7,6 +7,7 @@ import { Select } from '@ngxs/store';
 import { AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState } from 'src/app/states/app.state';
 import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ConstantsService } from '../../services/constants.service';
 
 @Component({
   selector: 'app-stats',
@@ -37,7 +38,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   @Select(AppHistoryLogState) historyLogState$: Observable<IHistoryLog>;
   @Select(AppStatsState) stats$: Observable<IStats>;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.subscriptions = this.stats$.subscribe((stats) => {
@@ -59,7 +60,9 @@ export class StatsComponent implements OnInit, OnDestroy {
       switchMap((historyLog: IHistoryLog) => {
         return of(
           Object.entries(historyLog)
+            .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
             .map((ent: any[]) => {
+              console.log(ent);
               ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
               ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
               return ent;

@@ -21,9 +21,9 @@ import {
   SetStatusShowDetailWind,
   SetStatusShowDetailSecondary,
 } from './app.actions';
-import { AppStatusModel, AppErrorsStateModel, HistoryRecordModel, ErrorRecordModel, IHistoryModel } from './app.models';
+import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
-import { HistoryService } from '../services/history.service';
+import { HistoryLogUpdateService } from '../services/history-log-update.service';
 import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from '../services/constants.service';
@@ -196,7 +196,7 @@ export class AppStatusState {
 export class AppHistoryState {
   constructor(
     private _store: Store,
-    private _history: HistoryService,
+    private _historyLogUpdate: HistoryLogUpdateService,
     private _snackbar: SnackbarService,
     private _fb: DataService
   ) {}
@@ -208,32 +208,30 @@ export class AppHistoryState {
 
   @Action(SetHistoryState)
   setHistoryState(context: StateContext<IHistoryModel>, action: SetHistoryState) {
-    const owmData = action.payload.owmData;
-
-    // const selectedCityId = owmData.city.id.toString();
-    const cityName = owmData.city.name;
-    const countryISO2 = owmData.city.country;
+    const updatesPromiseArray = [];
     const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
     const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
-
-    const newEntry: HistoryRecordModel = {
+    const newEntry: HistoryLogModel = {
       cityId: selectedCityId,
       time: new Date().valueOf(),
     };
+    updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
 
+    const owmData = action.payload.owmData;
     const existingSnapshot = context.getState()[selectedCityId];
-    let updateOwmDataToFB;
     if (owmData.updated && (!existingSnapshot || existingSnapshot.updated !== owmData.updated)) {
       const update = { ...context.getState(), [selectedCityId]: owmData };
       context.setState(update);
-      updateOwmDataToFB = this._fb.setData(selectedCityId, owmData);
+      updatesPromiseArray.push(this._fb.setData(selectedCityId, owmData));
     }
 
+    const cityName = owmData.city.name;
+    const countryISO2 = owmData.city.country;
     this._snackbar.show({
       message: `Selected: ${cityName}, ${countryISO2}`,
       class: 'snackbar__info',
     });
-    return Promise.all([this._history.setDataToFB(normalizedIp, newEntry), updateOwmDataToFB]);
+    return Promise.all(updatesPromiseArray);
   }
 }
 
