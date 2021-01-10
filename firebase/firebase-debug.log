@@ -1,0 +1,243 @@
+[debug] [2021-01-10T03:32:00.517Z] ----------------------------------------------------------------------
+[debug] [2021-01-10T03:32:00.518Z] Command:       /home/sdr/.nvm/versions/node/v12.20.1/bin/node /home/sdr/.nvm/versions/node/v12.20.1/bin/firebase emulators:start --only functions,database --import=./owm-a11-fb --token 1//03TdSGQD-p19-CgYIARAAGAMSNwF-L9IrczC8Pb0-boF87CWDBaLRhxiG_mU4UDqQs45RBc0d0pNSEaw34KWmzVJnSPGLrLbslEo
+[debug] [2021-01-10T03:32:00.519Z] CLI Version:   9.1.2
+[debug] [2021-01-10T03:32:00.519Z] Platform:      linux
+[debug] [2021-01-10T03:32:00.519Z] Node Version:  v12.20.1
+[debug] [2021-01-10T03:32:00.519Z] Time:          Sun Jan 10 2021 03:32:00 GMT+0000 (Greenwich Mean Time)
+[debug] [2021-01-10T03:32:00.519Z] ----------------------------------------------------------------------
+[debug] [2021-01-10T03:32:00.520Z] 
+[debug] [2021-01-10T03:32:00.525Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-01-10T03:32:00.526Z] > authorizing via --token option
+[info] i  emulators: Starting emulators: functions, database {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, database"}}
+[debug] [2021-01-10T03:32:00.542Z] [hub] writing locator at /tmp/hub-owm-a11-fb.json
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: auth, firestore, hosting, pubsub {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mauth, firestore, hosting, pubsub\u001b[22m"}}
+[info] ✔  functions: Using node@12 from host. {"metadata":{"emulator":{"name":"functions"},"message":"Using node@12 from host."}}
+[debug] [2021-01-10T03:32:00.585Z] defaultcredentials: writing to file /home/sdr/.config/firebase/ztchernev_gmail_com_application_default_credentials.json
+[debug] [2021-01-10T03:32:00.589Z] Setting GAC to /home/sdr/.config/firebase/ztchernev_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /home/sdr/.config/firebase/ztchernev_gmail_com_application_default_credentials.json"}}
+[debug] [2021-01-10T03:32:00.591Z] > refreshing access token with scopes: []
+[debug] [2021-01-10T03:32:00.593Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-01-10T03:32:00.688Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Sun, 10 Jan 2021 03:32:00 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-01-10T03:32:00.690Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/owm-a11-fb/adminSdkConfig [none]
+[debug] [2021-01-10T03:32:00.987Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/owm-a11-fb/adminSdkConfig 200
+[debug] [2021-01-10T03:32:00.988Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/owm-a11-fb/adminSdkConfig {"projectId":"owm-a11-fb","storageBucket":"owm-a11-fb.appspot.com"}
+[debug] [2021-01-10T03:32:01.000Z] database rules config:  [{"instance":"owm-a11-fb","rules":"/home/sdr/projects/owm-a11-fb/firebase/database.rules.json"}]
+[debug] [2021-01-10T03:32:01.003Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2021-01-10T03:32:01.003Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2021-01-10T03:32:01.003Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2021-01-10T03:32:01.003Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","/home/sdr/.cache/firebase/emulators/firebase-database-emulator-v4.7.2.jar","--host","192.168.1.15","--port",9000,"--functions_emulator_host","192.168.1.15","--functions_emulator_port",5001],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"/home/sdr/.cache/firebase/emulators/firebase-database-emulator-v4.7.2.jar\",\"--host\",\"192.168.1.15\",\"--port\",9000,\"--functions_emulator_host\",\"192.168.1.15\",\"--functions_emulator_port\",5001],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2021-01-10T03:32:02.422Z] 03:32:02.420 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+ {"metadata":{"emulator":{"name":"database"},"message":"03:32:02.420 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started\n"}}
+[debug] [2021-01-10T03:32:02.590Z] 03:32:02.590 [main] INFO com.firebase.server.forge.App$ - Listening at 192.168.1.15:9000
+ {"metadata":{"emulator":{"name":"database"},"message":"03:32:02.590 [main] INFO com.firebase.server.forge.App$ - Listening at 192.168.1.15:9000\n"}}
+[info] i  database: Importing data from /home/sdr/projects/owm-a11-fb/firebase/owm-a11-fb/database_export/owm-a11-fb.json {"metadata":{"emulator":{"name":"database"},"message":"Importing data from /home/sdr/projects/owm-a11-fb/firebase/owm-a11-fb/database_export/owm-a11-fb.json"}}
+[debug] [2021-01-10T03:32:03.394Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.395Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2021-01-10T03:32:03.425Z] [work-queue] {"queueLength":0,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.443Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.443Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2021-01-10T03:32:03.444Z] [work-queue] {"queueLength":0,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.513Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.513Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2021-01-10T03:32:03.514Z] [work-queue] {"queueLength":0,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.546Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2021-01-10T03:32:03.547Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2021-01-10T03:32:03.548Z] [work-queue] {"queueLength":0,"workRunningCount":0}
+[debug] [2021-01-10T03:32:04.395Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2021-01-10T03:32:04.397Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2021-01-10T03:32:04.397Z] Starting Emulator UI with command {"binary":"node","args":["/home/sdr/.cache/firebase/emulators/ui-v1.4.1/server.bundle.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/home/sdr/.cache/firebase/emulators/ui-v1.4.1/server.bundle.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2021-01-10T03:32:04.546Z] Web / API server started at http://localhost:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at http://localhost:4000\n"}}
+[info] i  functions: Watching "/home/sdr/projects/owm-a11-fb/firebase/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/home/sdr/projects/owm-a11-fb/firebase/functions\" for Cloud Functions..."}}
+[debug] [2021-01-10T03:32:04.702Z] [worker-pool] addWorker(~diagnostic~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~diagnostic~)"}}
+[debug] [2021-01-10T03:32:04.702Z] [worker-pool] Adding worker with key ~diagnostic~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~diagnostic~, total=1"}}
+[debug] [2021-01-10T03:32:04.703Z] [worker-pool] submitWork(triggerId=) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitWork(triggerId=)"}}
+[debug] [2021-01-10T03:32:04.703Z] [worker-~diagnostic~-1211d1f7-98dd-431b-8a57-27363408eca7]: Assigning socketPath: /tmp/fire_emu_52107.sock {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-1211d1f7-98dd-431b-8a57-27363408eca7]: Assigning socketPath: /tmp/fire_emu_52107.sock"}}
+[debug] [2021-01-10T03:32:04.704Z] [worker-~diagnostic~-1211d1f7-98dd-431b-8a57-27363408eca7]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-1211d1f7-98dd-431b-8a57-27363408eca7]: BUSY"}}
+[debug] [2021-01-10T03:32:04.864Z] [runtime-status] [52107] Functions runtime initialized. {"cwd":"/home/sdr/projects/owm-a11-fb/firebase/functions","node_version":"12.20.1"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Functions runtime initialized. {\"cwd\":\"/home/sdr/projects/owm-a11-fb/firebase/functions\",\"node_version\":\"12.20.1\"}"}}
+[debug] [2021-01-10T03:32:04.864Z] [runtime-status] [52107] Disabled runtime features: undefined {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Disabled runtime features: undefined"}}
+[debug] [2021-01-10T03:32:04.865Z] [runtime-status] [52107] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.4.2","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"9.4.2\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.866Z] [runtime-status] [52107] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.867Z] [runtime-status] [52107] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.868Z] [runtime-status] [52107] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2021-01-10T03:32:04.869Z] [runtime-status] [52107] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.899Z] [runtime-status] [52107] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Checked functions.config() {\"config\":{}}"}}
+[debug] [2021-01-10T03:32:04.899Z] [runtime-status] [52107] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}}"}}
+[debug] [2021-01-10T03:32:04.900Z] [runtime-status] [52107] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.900Z] [runtime-status] [52107] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.4.2","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"9.4.2\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.901Z] [runtime-status] [52107] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:04.901Z] [runtime-status] [52107] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"9.4.2","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"9.4.2\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2021-01-10T03:32:04.903Z] [runtime-status] [52107] initializeApp(DEFAULT) {"credential":{"implicit":true,"refreshToken":{"clientId":"563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com","clientSecret":"j9iVZfS8kkCEFUPaAeJV0sAi","refreshToken":"1//03hf6-SlbWidiCgYIARAAGAMSNwF-L9IrVOkAfbbcfENaPD_cIR0HYpWOmxWPg_CbHV4eJYM-_pp7XUDIdPCBmQIbtyMFRzl8INE","type":"authorized_user"},"httpClient":{"retry":{"maxRetries":4,"statusCodes":[503],"ioErrorCodes":["ECONNRESET","ETIMEDOUT"],"backOffFactor":0.5,"maxDelayInMillis":60000}}},"databaseURL":"http://localhost:9000/?ns=owm-a11-fb","ssl":false} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [52107] initializeApp(DEFAULT) {\"credential\":{\"implicit\":true,\"refreshToken\":{\"clientId\":\"563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com\",\"clientSecret\":\"j9iVZfS8kkCEFUPaAeJV0sAi\",\"refreshToken\":\"1//03hf6-SlbWidiCgYIARAAGAMSNwF-L9IrVOkAfbbcfENaPD_cIR0HYpWOmxWPg_CbHV4eJYM-_pp7XUDIdPCBmQIbtyMFRzl8INE\",\"type\":\"authorized_user\"},\"httpClient\":{\"retry\":{\"maxRetries\":4,\"statusCodes\":[503],\"ioErrorCodes\":[\"ECONNRESET\",\"ETIMEDOUT\"],\"backOffFactor\":0.5,\"maxDelayInMillis\":60000}}},\"databaseURL\":\"http://localhost:9000/?ns=owm-a11-fb\",\"ssl\":false}"}}
+[info] ✔  functions[test]: http function initialized (http://192.168.1.15:5001/owm-a11-fb/us-central1/test). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://192.168.1.15:5001/owm-a11-fb/us-central1/test)."}}
+[info] ✔  functions[getip]: http function initialized (http://192.168.1.15:5001/owm-a11-fb/us-central1/getip). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://192.168.1.15:5001/owm-a11-fb/us-central1/getip)."}}
+[debug] [2021-01-10T03:32:05.374Z] addRealtimeDatabaseTrigger[owm-a11-fb] "{\"name\":\"projects/owm-a11-fb/locations/_/functions/owmOnWrite-0\",\"path\":\"/owm/{cityId}/updated\",\"event\":\"providers/google.firebase.database/eventTypes/ref.write\",\"topic\":\"projects/owm-a11-fb/topics/owmOnWrite-0\"}"
+[debug] [2021-01-10T03:32:05.374Z] >>> HTTP REQUEST POST http://192.168.1.15:9000/.settings/functionTriggers.json?ns=owm-a11-fb  
+ {"name":"projects/owm-a11-fb/locations/_/functions/owmOnWrite-0","path":"/owm/{cityId}/updated","event":"providers/google.firebase.database/eventTypes/ref.write","topic":"projects/owm-a11-fb/topics/owmOnWrite-0"}
+[debug] [2021-01-10T03:32:05.376Z] [worker-~diagnostic~-1211d1f7-98dd-431b-8a57-27363408eca7]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-1211d1f7-98dd-431b-8a57-27363408eca7]: IDLE"}}
+[debug] [2021-01-10T03:32:05.456Z] <<< HTTP RESPONSE 200 {"content-length":"15","content-type":"application/json; charset=utf-8","access-control-allow-origin":"*","cache-control":"no-cache","x-firebase-project-id":"owm-a11-fb","x-firebase-project-number":"123456789","x-firebase-uuid":"e9ce7326-ce7b-48d1-b47e-a0cbc83c5492"}
+[info] ✔  functions[owmOnWrite]: database function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mdatabase\u001b[22m function initialized."}}
+[debug] [2021-01-10T03:32:05.457Z] addRealtimeDatabaseTrigger[owm-a11-fb] "{\"name\":\"projects/owm-a11-fb/locations/_/functions/onWriteToStatsCityUpdatesIncAll-0\",\"path\":\"/stats/{cityId}/u\",\"event\":\"providers/google.firebase.database/eventTypes/ref.write\",\"topic\":\"projects/owm-a11-fb/topics/onWriteToStatsCityUpdatesIncAll-0\"}"
+[debug] [2021-01-10T03:32:05.457Z] >>> HTTP REQUEST POST http://192.168.1.15:9000/.settings/functionTriggers.json?ns=owm-a11-fb  
+ {"name":"projects/owm-a11-fb/locations/_/functions/onWriteToStatsCityUpdatesIncAll-0","path":"/stats/{cityId}/u","event":"providers/google.firebase.database/eventTypes/ref.write","topic":"projects/owm-a11-fb/topics/onWriteToStatsCityUpdatesIncAll-0"}
+[debug] [2021-01-10T03:32:05.464Z] <<< HTTP RESPONSE 200 {"content-length":"15","content-type":"application/json; charset=utf-8","access-control-allow-origin":"*","cache-control":"no-cache","x-firebase-project-id":"owm-a11-fb","x-firebase-project-number":"123456789","x-firebase-uuid":"e9ce7326-ce7b-48d1-b47e-a0cbc83c5492"}
+[info] ✔  functions[onWriteToStatsCityUpdatesIncAll]: database function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mdatabase\u001b[22m function initialized."}}
+[debug] [2021-01-10T03:32:05.465Z] addRealtimeDatabaseTrigger[owm-a11-fb] "{\"name\":\"projects/owm-a11-fb/locations/_/functions/onWriteToStatsCityReadsIncAll-0\",\"path\":\"/stats/{cityId}/r\",\"event\":\"providers/google.firebase.database/eventTypes/ref.write\",\"topic\":\"projects/owm-a11-fb/topics/onWriteToStatsCityReadsIncAll-0\"}"
+[debug] [2021-01-10T03:32:05.466Z] >>> HTTP REQUEST POST http://192.168.1.15:9000/.settings/functionTriggers.json?ns=owm-a11-fb  
+ {"name":"projects/owm-a11-fb/locations/_/functions/onWriteToStatsCityReadsIncAll-0","path":"/stats/{cityId}/r","event":"providers/google.firebase.database/eventTypes/ref.write","topic":"projects/owm-a11-fb/topics/onWriteToStatsCityReadsIncAll-0"}
+[debug] [2021-01-10T03:32:05.473Z] <<< HTTP RESPONSE 200 {"content-length":"15","content-type":"application/json; charset=utf-8","access-control-allow-origin":"*","cache-control":"no-cache","x-firebase-project-id":"owm-a11-fb","x-firebase-project-number":"123456789","x-firebase-uuid":"e9ce7326-ce7b-48d1-b47e-a0cbc83c5492"}
+[info] ✔  functions[onWriteToStatsCityReadsIncAll]: database function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mdatabase\u001b[22m function initialized."}}
+[info] i  functions[checkBudgetPubSub]: function ignored because the pubsub emulator does not exist or is not running. {"metadata":{"emulator":{"name":"functions"},"message":"function ignored because the pubsub emulator does not exist or is not running."}}
+[debug] [2021-01-10T03:32:05.475Z] >>> HTTP REQUEST PUT http://192.168.1.15:9000/.settings/rules.json?ns=owm-a11-fb  
+ {
+  "rules": {
+    "owm": {
+      ".read": true,
+      "$owm": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['listByDate', 'updated', 'cnt']) && newData.child('updated').isNumber() && newData.child('cnt').isNumber()"
+      }
+    },
+    "cities": {
+      ".read": true,
+      "$city": {
+        "r": {
+          ".write": true,
+          ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        },
+        "u": {
+          ".write": true,
+          ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        }
+      }
+    },
+    "stats": {
+      ".read": true,
+      "r": {
+        ".write": true,
+        ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+      },
+      "u": {
+        ".write": true,
+        ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+      },
+      "$cityId": {
+        "reads": {
+          ".write": true,
+          ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        },
+        "u": {
+          ".write": false,
+          ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        },
+        "r": {
+          ".write": true,
+          ".validate": "newData.isNumber() && (newData.val() === (data.exists() ? (data.val() + 1): 1))"
+        }
+      }
+    },
+    "history-log": {
+      ".read": true,
+      "$ip": {
+        "$time": {
+          ".write": true,
+          ".validate": "newData.isString() && root.child('cities').child(newData.val()).exists()"
+        }
+      }
+    },
+    "errors-log": {
+      ".read": true,
+      "$ip": {
+        "$time": {
+          ".write": true,
+          ".validate": "newData.isString()"
+        }
+      }
+    },
+    "invocations-log": {
+      ".read": false,
+      ".write": false
+    },
+    "$other": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}
+
+[debug] [2021-01-10T03:32:05.586Z] <<< HTTP RESPONSE 200 {"content-length":"15","content-type":"application/json; charset=utf-8","access-control-allow-origin":"*","cache-control":"no-cache","x-firebase-project-id":"owm-a11-fb","x-firebase-project-number":"123456789","x-firebase-uuid":"e9ce7326-ce7b-48d1-b47e-a0cbc83c5492"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://localhost:4000                │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬───────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port         │ View in Emulator UI             │
+├───────────┼───────────────────┼─────────────────────────────────┤
+│ Functions │ 192.168.1.15:5001 │ http://localhost:4000/functions │
+├───────────┼───────────────────┼─────────────────────────────────┤
+│ Database  │ 192.168.1.15:9000 │ http://localhost:4000/database  │
+└───────────┴───────────────────┴─────────────────────────────────┘
+  Emulator Hub running at localhost:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2021-01-10T03:32:36.587Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2021-01-10T03:32:36.588Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2021-01-10T03:32:36.589Z] Accepted request GET /owm-a11-fb/us-central1/getip --> getip
+[debug] [2021-01-10T03:32:36.621Z] [worker-pool] addWorker(getip) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(getip)"}}
+[debug] [2021-01-10T03:32:36.622Z] [worker-pool] Adding worker with key getip, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key getip, total=1"}}
+[debug] [2021-01-10T03:32:36.624Z] [worker-pool] submitWork(triggerId=getip) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitWork(triggerId=getip)"}}
+[debug] [2021-01-10T03:32:36.625Z] [worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: Assigning socketPath: /tmp/fire_emu_52159.sock {"metadata":{"emulator":{"name":"functions"},"message":"[worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: Assigning socketPath: /tmp/fire_emu_52159.sock"}}
+[debug] [2021-01-10T03:32:36.625Z] [worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: BUSY"}}
+[debug] [2021-01-10T03:32:36.713Z] 03:32:36.710 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO akka.actor.LocalActorRef - Message [com.firebase.core.namespace.client.DataPush] to Actor[akka://NamespaceSystem/user/owm-a11-fb/$b#1041214377] was not delivered. [1] dead letters encountered. If this is not an expected behavior then Actor[akka://NamespaceSystem/user/owm-a11-fb/$b#1041214377] may have terminated unexpectedly. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+ {"metadata":{"emulator":{"name":"database"},"message":"03:32:36.710 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO akka.actor.LocalActorRef - Message [com.firebase.core.namespace.client.DataPush] to Actor[akka://NamespaceSystem/user/owm-a11-fb/$b#1041214377] was not delivered. [1] dead letters encountered. If this is not an expected behavior then Actor[akka://NamespaceSystem/user/owm-a11-fb/$b#1041214377] may have terminated unexpectedly. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.\n"}}
+[debug] [2021-01-10T03:32:36.725Z] 03:32:36.724 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO akka.actor.DeadLetterActorRef - Message [com.firebase.core.namespace.TooManyRequestsWithDelay] from Actor[akka://NamespaceSystem/user/$a#1279084841] to Actor[akka://NamespaceSystem/deadLetters] was not delivered. [2] dead letters encountered. If this is not an expected behavior then Actor[akka://NamespaceSystem/deadLetters] may have terminated unexpectedly. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+ {"metadata":{"emulator":{"name":"database"},"message":"03:32:36.724 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO akka.actor.DeadLetterActorRef - Message [com.firebase.core.namespace.TooManyRequestsWithDelay] from Actor[akka://NamespaceSystem/user/$a#1279084841] to Actor[akka://NamespaceSystem/deadLetters] was not delivered. [2] dead letters encountered. If this is not an expected behavior then Actor[akka://NamespaceSystem/deadLetters] may have terminated unexpectedly. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.\n"}}
+[debug] [2021-01-10T03:32:37.018Z] [runtime-status] [52159] Functions runtime initialized. {"cwd":"/home/sdr/projects/owm-a11-fb/firebase/functions","node_version":"12.20.1"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Functions runtime initialized. {\"cwd\":\"/home/sdr/projects/owm-a11-fb/firebase/functions\",\"node_version\":\"12.20.1\"}"}}
+[debug] [2021-01-10T03:32:37.019Z] [runtime-status] [52159] Disabled runtime features: undefined {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Disabled runtime features: undefined"}}
+[debug] [2021-01-10T03:32:37.019Z] [runtime-status] [52159] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.4.2","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"9.4.2\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.020Z] [runtime-status] [52159] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.020Z] [runtime-status] [52159] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.021Z] [runtime-status] [52159] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2021-01-10T03:32:37.021Z] [runtime-status] [52159] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.106Z] [runtime-status] [52159] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Checked functions.config() {\"config\":{}}"}}
+[debug] [2021-01-10T03:32:37.106Z] [runtime-status] [52159] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}}"}}
+[debug] [2021-01-10T03:32:37.107Z] [runtime-status] [52159] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.107Z] [runtime-status] [52159] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.4.2","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"9.4.2\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.108Z] [runtime-status] [52159] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.13.0","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.13.0\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2021-01-10T03:32:37.108Z] [runtime-status] [52159] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"9.4.2","resolution":"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"9.4.2\",\"resolution\":\"/home/sdr/projects/owm-a11-fb/firebase/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2021-01-10T03:32:37.111Z] [runtime-status] [52159] initializeApp(DEFAULT) {"credential":{"implicit":true,"refreshToken":{"clientId":"563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com","clientSecret":"j9iVZfS8kkCEFUPaAeJV0sAi","refreshToken":"1//03hf6-SlbWidiCgYIARAAGAMSNwF-L9IrVOkAfbbcfENaPD_cIR0HYpWOmxWPg_CbHV4eJYM-_pp7XUDIdPCBmQIbtyMFRzl8INE","type":"authorized_user"},"httpClient":{"retry":{"maxRetries":4,"statusCodes":[503],"ioErrorCodes":["ECONNRESET","ETIMEDOUT"],"backOffFactor":0.5,"maxDelayInMillis":60000}}},"databaseURL":"http://localhost:9000/?ns=owm-a11-fb","ssl":false} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] initializeApp(DEFAULT) {\"credential\":{\"implicit\":true,\"refreshToken\":{\"clientId\":\"563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com\",\"clientSecret\":\"j9iVZfS8kkCEFUPaAeJV0sAi\",\"refreshToken\":\"1//03hf6-SlbWidiCgYIARAAGAMSNwF-L9IrVOkAfbbcfENaPD_cIR0HYpWOmxWPg_CbHV4eJYM-_pp7XUDIdPCBmQIbtyMFRzl8INE\",\"type\":\"authorized_user\"},\"httpClient\":{\"retry\":{\"maxRetries\":4,\"statusCodes\":[503],\"ioErrorCodes\":[\"ECONNRESET\",\"ETIMEDOUT\"],\"backOffFactor\":0.5,\"maxDelayInMillis\":60000}}},\"databaseURL\":\"http://localhost:9000/?ns=owm-a11-fb\",\"ssl\":false}"}}
+[debug] [2021-01-10T03:32:37.814Z] [runtime-status] [52159] Trigger "getip" has been found, beginning invocation! {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Trigger \"getip\" has been found, beginning invocation!"}}
+[info] i  functions: Beginning execution of "getip" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"Beginning execution of \"getip\""}}
+[debug] [2021-01-10T03:32:37.816Z] [runtime-status] [52159] triggerDefinition {"httpsTrigger":{},"name":"getip","entryPoint":"getip"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] triggerDefinition {\"httpsTrigger\":{},\"name\":\"getip\",\"entryPoint\":\"getip\"}"}}
+[debug] [2021-01-10T03:32:37.816Z] [runtime-status] [52159] Running getip in mode HTTPS {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Running getip in mode HTTPS"}}
+[debug] [2021-01-10T03:32:37.825Z] [runtime-status] [52159] Attempting to listen to socketPath: /tmp/fire_emu_52159.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Attempting to listen to socketPath: /tmp/fire_emu_52159.sock"}}
+[debug] [2021-01-10T03:32:37.830Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2021-01-10T03:32:37.840Z] [runtime-status] [52159] Ephemeral server handling GET request {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Ephemeral server handling GET request"}}
+[info] >  Local emulator external ip address: 192.168.1.15 {"user":"Local emulator external ip address: 192.168.1.15","metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"\u001b[90m> \u001b[39m Local emulator external ip address: 192.168.1.15"}}
+[debug] [2021-01-10T03:32:37.924Z] [runtime-status] [52159] Ephemeral server survived. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Ephemeral server survived."}}
+[info] i  functions: Finished "getip" in ~1s {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"Finished \"getip\" in ~1s"}}
+[debug] [2021-01-10T03:32:37.936Z] [worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: IDLE"}}
+[debug] [2021-01-10T03:32:37.936Z] [work-queue] {"queueLength":0,"workRunningCount":0}
+[debug] [2021-01-10T03:32:38.925Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2021-01-10T03:32:38.925Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2021-01-10T03:32:38.925Z] Accepted request GET /owm-a11-fb/us-central1/getip --> getip
+[debug] [2021-01-10T03:32:38.925Z] [worker-pool] submitWork(triggerId=getip) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitWork(triggerId=getip)"}}
+[debug] [2021-01-10T03:32:38.926Z] [worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: Assigning socketPath: /tmp/fire_emu_52159.sock {"metadata":{"emulator":{"name":"functions"},"message":"[worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: Assigning socketPath: /tmp/fire_emu_52159.sock"}}
+[debug] [2021-01-10T03:32:38.926Z] [worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: BUSY"}}
+[debug] [2021-01-10T03:32:38.928Z] [runtime-status] [52159] Trigger "getip" has been found, beginning invocation! {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Trigger \"getip\" has been found, beginning invocation!"}}
+[info] i  functions: Beginning execution of "getip" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"Beginning execution of \"getip\""}}
+[debug] [2021-01-10T03:32:38.929Z] [runtime-status] [52159] triggerDefinition {"httpsTrigger":{},"name":"getip","entryPoint":"getip"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] triggerDefinition {\"httpsTrigger\":{},\"name\":\"getip\",\"entryPoint\":\"getip\"}"}}
+[debug] [2021-01-10T03:32:38.929Z] [runtime-status] [52159] Running getip in mode HTTPS {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Running getip in mode HTTPS"}}
+[debug] [2021-01-10T03:32:38.931Z] [runtime-status] [52159] Attempting to listen to socketPath: /tmp/fire_emu_52159.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Attempting to listen to socketPath: /tmp/fire_emu_52159.sock"}}
+[debug] [2021-01-10T03:32:38.931Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2021-01-10T03:32:38.935Z] [runtime-status] [52159] Ephemeral server handling GET request {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Ephemeral server handling GET request"}}
+[info] >  Local emulator external ip address: 192.168.1.15 {"user":"Local emulator external ip address: 192.168.1.15","metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"\u001b[90m> \u001b[39m Local emulator external ip address: 192.168.1.15"}}
+[debug] [2021-01-10T03:32:38.991Z] [runtime-status] [52159] Ephemeral server survived. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"[runtime-status] [52159] Ephemeral server survived."}}
+[info] i  functions: Finished "getip" in ~1s {"metadata":{"emulator":{"name":"functions"},"function":{"name":"getip"},"message":"Finished \"getip\" in ~1s"}}
+[debug] [2021-01-10T03:32:38.991Z] [worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-getip-56d9732a-d92b-404a-b6cc-f7a72bb29d4b]: IDLE"}}
+[debug] [2021-01-10T03:32:38.992Z] [work-queue] {"queueLength":0,"workRunningCount":0}

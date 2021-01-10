@@ -34,7 +34,7 @@ const firebaseEmulatorContainer = {
   ssl: false,
 };
 
-const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a7-fb/us-central1';
+const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a11-fb/us-central1';
 const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a11-fb/us-central1';
 
 export const environment = {
