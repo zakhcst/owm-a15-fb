@@ -1,7 +1,7 @@
-// On OWM data update increments counter 'u' updates to cities
+// On OWM data update increments the city counter 'u' in stats
 exports.onWrite = (change, context) => {
   const cityId = context.params.cityId;
-  const ref = change.after.ref.root.child(`cities/${cityId}/u`);
+  const ref = change.after.ref.root.child(`stats/${cityId}/u`);
 
   return ref.transaction(value => {
     return value ? value + 1 : 1;

@@ -70,6 +70,7 @@ export class ConstantsService {
   };
 
   public static readonly owmData = 'owm';
+  public static readonly stats = 'stats';
   public static readonly historyLog = 'history-log';
   public static readonly errorsLog = 'errors-log';
 

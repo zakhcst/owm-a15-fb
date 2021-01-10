@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { Observable, Subscription } from 'rxjs';
-import { IOwmStats } from '../models/owm-stats.model';
+import { from, Observable, Subscription, throwError } from 'rxjs';
+import { IStats } from '../models/stats.model';
 import { Select, Store } from '@ngxs/store';
 import { SetStatsState } from '../states/app.actions';
 import { AppStatsState, AppStatusState } from '../states/app.state';
-import { take } from 'rxjs/operators';
+import { catchError, switchMap, take } from 'rxjs/operators';
+import { ConstantsService } from './constants.service';
 @Injectable({
   providedIn: 'root',
 })
-export class OwmStatsService {
+export class StatsService {
   subscription: Subscription;
   @Select(AppStatusState.liveDataUpdate) liveDataUpdate$: Observable<boolean>;
 
@@ -17,8 +18,8 @@ export class OwmStatsService {
     this.activateLiveDataUpdatesStats();
   }
 
-  getData(): Observable<IOwmStats> {
-    return this._db.object('/stats').valueChanges();
+  getData(): Observable<IStats> {
+    return this._db.object(ConstantsService.stats).valueChanges();
   }
 
   activateLiveDataUpdatesStats() {
@@ -42,4 +43,22 @@ export class OwmStatsService {
   dispatch(stats) {
     this._store.dispatch(new SetStatsState(stats));
   }
+
+  updateStatsDBRequests(cityId: string) {
+    if (!cityId) {
+      return throwError('CitiesService: updateReads: CityId not provided');
+    }
+    const ref = this._db.object(ConstantsService.stats + '/' + cityId);
+    return ref.valueChanges().pipe(
+      take(1),
+      switchMap((city: any) => {
+        return from(ref.update({ r: ((city && city.r) || 0) + 1 }));
+      }),
+      catchError((err) => {
+        console.log(err);
+        return throwError('CitiesService: updateReads: ' + err);
+      })
+    ).subscribe();
+  }
+
 }

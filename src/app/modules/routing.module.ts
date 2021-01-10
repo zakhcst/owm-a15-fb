@@ -4,7 +4,6 @@ import { SharedModule } from './shared.module';
 import { HeaderToolbarComponent } from '../components/header-toolbar/header-toolbar.component';
 import { HeaderToolbarModule } from '../components/header-toolbar/header-toolbar.module';
 import { ErrorPageComponent } from '../components/error-page/error-page.component';
-import { HomeModule } from '../components/home/home.module';
 import { ConstantsService } from '../services/constants.service';
 import { ResolverCitiesService } from './routing-resolvers/resolver-cities.service';
 import { ResolverRegisterIconsService } from './routing-resolvers/resolver-register-icons.service';

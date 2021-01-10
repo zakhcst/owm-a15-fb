@@ -3,8 +3,6 @@ import { of, Observable } from 'rxjs';
 import { switchMap, catchError, tap, take, filter } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
-import { CitiesService } from './cities.service';
-import { OwmFallbackDataService } from './owm-fallback-data.service';
 import { ErrorsService } from './errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { Store, Select } from '@ngxs/store';
@@ -12,6 +10,7 @@ import { SetDataState } from '../states/app.actions';
 import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
 import { AppStatusState, AppHistoryState, AppOwmDataState, AppFallbackDataState } from '../states/app.state';
+import { StatsService } from './stats.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,8 +31,7 @@ export class OwmDataManagerService {
   constructor(
     private _owm: OwmService,
     private _fb: DataService,
-    private _cities: CitiesService,
-    private _owmFallback: OwmFallbackDataService,
+    private _stats: StatsService,
     private _errors: ErrorsService,
     private _store: Store,
     private _snackbar: SnackbarService
@@ -116,7 +114,7 @@ export class OwmDataManagerService {
       this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
       return this._fb.getData(cityId).pipe(
         take(1),
-        tap(() => this.updateDBReads(cityId)),
+        tap(() => this.updateStatsDBRequests(cityId)),
         switchMap((fbdata: IOwmDataModel) => {
           if (fbdata !== null && this.isNotExpired(fbdata)) {
             return of(fbdata);
@@ -130,8 +128,8 @@ export class OwmDataManagerService {
     }
   }
 
-  updateDBReads(cityId: string) {
-    this._cities.updateReads(cityId);
+  updateStatsDBRequests(cityId: string) {
+    this._stats.updateStatsDBRequests(cityId);
   }
 
   getDataOWM(cityId: string): Observable<IOwmDataModel> {
@@ -205,7 +203,7 @@ getDataMemoryOnCityChange  getDataMemoryOnConnected   getDataMemoryOnAway       
 |                         \                         \                     \     |
 |                          \----------------------------------------------------|
 |                                                                               |
-getDataDB ----------- (updateDBReads)                                           |
+getDataDB ----------- (updateStatsDBRequests)                                   |
 |  |    \                                                                       |
 |  |     \----------------------------------------------------------------------|
 |   \                                                                           |

@@ -1,16 +1,15 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const isEmulator = require('./local-emulator/isEmulator');
+const isEmulator = require('./local-emulator/emulator').isEmulator;
 
-let env;
-if (isEmulator.isEmulator()) {
-  env = { databaseURL: "http://localhost:9000/?ns=owm-a11-fb", ssl: false };
+let options;
+if (isEmulator() === true) {
+  options = { databaseURL: "http://localhost:9000/?ns=owm-a11-fb", ssl: false };
 } else {
-  env = { databaseURL: "https://owm-a7-fb.firebaseio.com" };
+  options = { databaseURL: "https://owm-a7-fb.firebaseio.com" };
 }
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  ...env,
+  credential: admin.credential.applicationDefault(), ...options,
 });
 
 const { gcfInvocationsMonitorFactory } = require("./utils/gcfInvocations");
@@ -19,24 +18,22 @@ const { getip } = require("./http/get-ip");
 const { checkBudgetPubSub } = require("./pub-sub/check-budget-pubsub");
 
 const owm = require("./rtbd/owm");
-const cities = require("./rtbd/cities");
+const stats = require("./rtbd/stats");
 
 // Http triggers
-exports.test = functions.https.onRequest(
-  gcfInvocationsMonitorFactory(httpTest)
-);
+exports.test = functions.https.onRequest(gcfInvocationsMonitorFactory(httpTest));
 exports.getip = functions.https.onRequest(gcfInvocationsMonitorFactory(getip));
 
 // RTBD triggers
 exports.owmOnWrite = functions.database
   .ref("/owm/{cityId}/updated")
   .onWrite(gcfInvocationsMonitorFactory(owm.onWrite));
-exports.citiesOnWriteUpdate = functions.database
-  .ref("/cities/{cityId}/u")
-  .onWrite(gcfInvocationsMonitorFactory(cities.onWriteUpdate));
-exports.citiesOnWriteRead = functions.database
-  .ref("/cities/{cityId}/r")
-  .onWrite(gcfInvocationsMonitorFactory(cities.onWriteRead));
+exports.onWriteToStatsCityUpdatesIncAll = functions.database
+  .ref("/stats/{cityId}/u")
+  .onWrite(gcfInvocationsMonitorFactory(stats.onWriteToStatsCityUpdatesIncAll));
+exports.onWriteToStatsCityReadsIncAll = functions.database
+  .ref("/stats/{cityId}/r")
+  .onWrite(gcfInvocationsMonitorFactory(stats.onWriteToStatsCityReadsIncAll));
 
 // Pub Sub
 exports.checkBudgetPubSub = functions.pubsub

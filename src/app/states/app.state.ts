@@ -4,15 +4,15 @@ import {
   SetHistoryState,
   SetErrorsState,
   SetDataState,
-  SetStatusSelectedCityIdState,
-  SetStatusIpState,
-  SetStatusTimeSlotBgPicture,
   SetCitiesState,
   SetStatsState,
   SetHistoryLogState,
+  SetFallbackDataState,
+  SetStatusSelectedCityId,
+  SetStatusIp,
+  SetStatusTimeSlotBgPicture,
   SetStatusConnected,
   SetStatusAway,
-  SetFallbackDataState,
   SetStatusUpdatesAvailable,
   SetStatusLiveDataUpdate,
   SetStatusDaysForecast,
@@ -30,7 +30,7 @@ import { ConstantsService } from '../services/constants.service';
 import { DataService } from '../services/data.service';
 import { NormalizeDataService } from '../services/normalize-data.service';
 import { ICities } from '../models/cities.model';
-import { IOwmStats } from '../models/owm-stats.model';
+import { IStats } from '../models/stats.model';
 import { IHistoryLog } from '../models/history-log.model';
 
 @State<AppStatusModel>({
@@ -117,15 +117,15 @@ export class AppStatusState {
     return state.showDetailSecondary;
   }
 
-  @Action(SetStatusIpState)
-  setStatusIpState(context: StateContext<AppStatusModel>, action: SetStatusIpState) {
+  @Action(SetStatusIp)
+  setStatusIp(context: StateContext<AppStatusModel>, action: SetStatusIp) {
     const ip = action.payload;
     const normalizedIp = this.normalizedData.ip(ip);
     return context.patchState({ ip, normalizedIp });
   }
 
-  @Action(SetStatusSelectedCityIdState)
-  setStatusSelectedCityIdState(context: StateContext<AppStatusModel>, action: SetStatusSelectedCityIdState) {
+  @Action(SetStatusSelectedCityId)
+  setStatusSelectedCityId(context: StateContext<AppStatusModel>, action: SetStatusSelectedCityId) {
     const selectedCityId = action.payload || context.getState().selectedCityId;
     localStorage.setItem('selectedCityId', selectedCityId);
     context.patchState({ selectedCityId });
@@ -312,19 +312,19 @@ export class AppCitiesState {
   }
 }
 
-@State<IOwmStats>({
+@State<IStats>({
   name: 'stats',
   defaults: null,
 })
 @Injectable()
 export class AppStatsState {
   @Selector()
-  static selectStats(state: IOwmStats) {
+  static selectStats(state: IStats) {
     return state;
   }
 
   @Action(SetStatsState)
-  setStatsState(context: StateContext<IOwmStats>, action: SetStatsState) {
+  setStatsState(context: StateContext<IStats>, action: SetStatsState) {
     context.setState(action.payload);
   }
 }
@@ -341,7 +341,7 @@ export class AppHistoryLogState {
   }
 
   @Action(SetHistoryLogState)
-  setStatsState(context: StateContext<IHistoryLog>, action: SetHistoryLogState) {
+  setHistoryLogState(context: StateContext<IHistoryLog>, action: SetHistoryLogState) {
     context.setState(action.payload);
   }
 }

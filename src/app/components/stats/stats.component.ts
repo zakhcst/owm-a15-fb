@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IOwmStats } from 'src/app/models/owm-stats.model';
-import { ICities } from 'src/app/models/cities.model';
+import { IStats } from '../../models/stats.model';
+import { ICities } from '../../models/cities.model';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
+import { IHistoryLog } from '../../models/history-log.model';
 import { Select } from '@ngxs/store';
 import { AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState } from 'src/app/states/app.state';
 import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { IHistoryLog } from 'src/app/models/history-log.model';
 
 @Component({
   selector: 'app-stats',
@@ -23,7 +23,7 @@ import { IHistoryLog } from 'src/app/models/history-log.model';
   ],
 })
 export class StatsComponent implements OnInit, OnDestroy {
-  stats: IOwmStats;
+  stats: IStats;
   cities: ICities;
   citiesLength = 0;
   loadingError = false;
@@ -35,19 +35,23 @@ export class StatsComponent implements OnInit, OnDestroy {
   @Select(AppStatusState.selectStatusIp) ip$: Observable<string>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
   @Select(AppHistoryLogState) historyLogState$: Observable<IHistoryLog>;
-  @Select(AppStatsState) stats$: Observable<IOwmStats>;
+  @Select(AppStatsState) stats$: Observable<IStats>;
 
   constructor() {}
 
   ngOnInit() {
     this.subscriptions = this.stats$.subscribe((stats) => {
-      this.stats = stats;
+      if (stats) {
+        this.stats = stats;
+      }
     });
 
     this.subscriptions.add(
       this.cities$.subscribe((cities) => {
-        this.cities = cities;
-        this.citiesLength = Object.keys(this.cities).length;
+        if (cities) {
+          this.cities = cities;
+          this.citiesLength = Object.keys(this.cities).length;
+        }
       })
     );
 

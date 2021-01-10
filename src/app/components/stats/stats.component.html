@@ -90,18 +90,24 @@
     </div>
 
     <div fxFlex fxLayout="column" *ngIf="checkedCities">
-      <div fxFlex="0 0 auto" fxLayout="row">
+      <div fxLayout="row">
+        <span fxFlex class="pl5">Requests</span>
         <span fxFlex></span>
-        <span fxFlex>All clients</span>
-        <span fxFlex>Requests</span>
-        <span fxFlex>Updates</span>
+        <span fxFlex></span>
+        <span class="width-50 right">OWM</span>
+        <span fxFlex></span>
+        <span class="width-50 right">DB</span>
+        <span fxFlex></span>
       </div>
       <hr />
-      <div fxFlex="0 0 auto" fxLayout="row">
-        <span fxFlex>Owm</span>
+      <div fxLayout="row">
+        <span fxFlex class="pl5">All</span>
         <span fxFlex></span>
-        <span fxFlex>{{ stats.r }}</span>
-        <span fxFlex>{{ stats.u }}</span>
+        <span fxFlex></span>
+        <span class="width-50 right">{{ stats.u }}</span>
+        <span fxFlex></span>
+        <span  class="width-50 right">{{ stats.r }}</span>
+        <span fxFlex></span>
       </div>
 
       <hr />
@@ -120,10 +126,13 @@
           [class.odd]="odd"
           class="hovered"
         >
-          <span fxFlex class="truncate">{{ city.value.name }}</span>
+          <span fxFlex class="truncate pl5">{{ city.value.name }}</span>
           <span fxFlex class="truncate">{{ city.value.country }}</span>
-          <span fxFlex>{{ stats[city.key]?.reads || city.value.r }}</span>
-          <span fxFlex>{{ stats[city.key]?.updates || city.value.u }}</span>
+          <span fxFlex></span>
+          <span class="width-50 right">{{ (stats[city.key]?.u ||0) + (city.value?.u || 0)}}</span>
+          <span fxFlex></span>
+          <span class="width-50 right">{{ (stats[city.key]?.r ||0) + (city.value?.r || 0)}}</span>
+          <span fxFlex></span>
         </div>
       </div>
     </div>

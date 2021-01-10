@@ -1,7 +1,7 @@
 import { AppHistoryPayloadModel, AppErrorPayloadModel } from './app.models';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
-import { IOwmStats } from '../models/owm-stats.model';
+import { IStats } from '../models/stats.model';
 import { IHistoryLog } from '../models/history-log.model';
 
 export class SetHistoryState {
@@ -19,7 +19,7 @@ export class SetSelectedCityIdState {
   constructor(public payload?: string) { }
 }
 
-export class SetStatusIpState {
+export class SetStatusIp {
   static readonly type = '[status] set ip';
   constructor(public payload: string) { }
 }
@@ -35,7 +35,7 @@ export class SetStatusDaysForecast {
   constructor(public payload: number) { }
 }
 
-export class SetStatusSelectedCityIdState {
+export class SetStatusSelectedCityId {
   static readonly type = '[status] set SelectedCityId';
   constructor(public payload?: string) { }
 }
@@ -93,7 +93,7 @@ export class SetCitiesState {
 
 export class SetStatsState {
   static readonly type = '[stats] set';
-  constructor(public payload: IOwmStats) { }
+  constructor(public payload: IStats) { }
 }
 
 export class SetHistoryLogState {

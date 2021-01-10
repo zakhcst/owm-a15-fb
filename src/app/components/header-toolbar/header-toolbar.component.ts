@@ -22,7 +22,7 @@ import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
 import { OwmDataManagerService } from '../../services/owm-data-manager.service';
 import { AppOwmDataState, AppCitiesState, AppStatusState } from '../../states/app.state';
-import { SetStatusSelectedCityIdState } from '../../states/app.actions';
+import { SetStatusSelectedCityId } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 
@@ -186,7 +186,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   selectedCityChange() {
-    this._store.dispatch(new SetStatusSelectedCityIdState(this.selectedCityId));
+    this._store.dispatch(new SetStatusSelectedCityId(this.selectedCityId));
   }
 
   addError(custom: string, errorMessage: string) {

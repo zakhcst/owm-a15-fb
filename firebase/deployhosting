@@ -1,1 +1,3 @@
+sed -i 's/owm-a7-fb/owm-a11-fb/' .firebaserc
+firebase use owm-a11-fb
 firebase deploy --only hosting

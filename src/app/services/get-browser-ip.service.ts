@@ -6,7 +6,7 @@ import { switchMap, catchError, take } from 'rxjs/operators';
 import { ErrorsService } from './errors.service';
 import { Select, Store } from '@ngxs/store';
 import { AppStatusState } from '../states/app.state';
-import { SetStatusIpState } from '../states/app.actions';
+import { SetStatusIp } from '../states/app.actions';
 @Injectable({
   providedIn: 'root',
 })
@@ -57,7 +57,7 @@ export class GetBrowserIpService {
     this.connected$
       .subscribe((connected) => {
         if (!connected) {
-          this._store.dispatch([new SetStatusIpState('0.0.0.0')]);
+          this._store.dispatch([new SetStatusIp('0.0.0.0')]);
           return;
         }
 
@@ -65,7 +65,7 @@ export class GetBrowserIpService {
           this.getIPv4Subscription.unsubscribe();
         }
         this.getIPv4Subscription = this.getIPv4().subscribe((ip: string) => {
-          this._store.dispatch([new SetStatusIpState(ip)]);
+          this._store.dispatch([new SetStatusIp(ip)]);
         });
       });
   }

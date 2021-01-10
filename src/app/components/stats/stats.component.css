@@ -20,6 +20,18 @@
   background-color: #888888;
 }
 
+.width-50 {
+  width: 50px;
+}
+.right {
+   text-align: right;
+}
+.pl5 {
+  padding-left: 5px;
+}
+.scrollbar-placeholder {
+  width: 15px;
+}
 .scroll-this::-webkit-scrollbar {
   width: 5px;
 }
