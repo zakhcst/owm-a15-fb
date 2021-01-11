@@ -34,6 +34,8 @@ export class AppComponent implements OnDestroy {
     const iconsMeasuresUrl = `url("../../../${ConstantsService.iconsMeasures}")`;
     document.documentElement.style.setProperty('--iconsMeasuresUrl', iconsMeasuresUrl);
     const iconsWeatherUrl = `url("../../../${ConstantsService.iconsWeather}")`;
+    const iconArrowWindDirection = `url("../../../${ConstantsService.iconArrowWindDirection}")`;
+    document.documentElement.style.setProperty('--iconArrowWindDirection', iconArrowWindDirection);
     document.documentElement.style.setProperty('--iconsWeatherUrl', iconsWeatherUrl);
     document.documentElement.style.setProperty('--showDetailPressure', this._store.selectSnapshot(AppStatusState.showDetailPressure) ? 'flex' : 'none');
     document.documentElement.style.setProperty('--showDetailWind', this._store.selectSnapshot(AppStatusState.showDetailWind) ? 'flex' : 'none');

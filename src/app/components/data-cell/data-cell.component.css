@@ -10,7 +10,7 @@
 }
 
 .table-cell_data-background:hover {
-  border: 1px solid black;
+  border: 1px solid white;
 }
 
 .table-secondary_data {
@@ -83,6 +83,15 @@
   min-width: 16px;
   height: 16px;
   background: var(--iconsMeasuresUrl) no-repeat 0px 0px;
+}
+
+.icon-wind-direction {
+  display: block;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  background: var(--iconArrowWindDirection) no-repeat 0px 0px;
+  transform-origin: 8px 8px;
 }
 
 .icon-pressure {

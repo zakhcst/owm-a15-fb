@@ -93,8 +93,9 @@ export class ConstantsService {
   public static readonly iconsMeasures = 'assets/icons-measures/icons16x16-measures.png';
   public static readonly iconsWeather = 'assets/icons-weather/icons-weather.png';
   public static readonly iconGithub = 'assets/icons-logo/icon32-github.svg';
-  public static readonly iconSettings = 'assets/icons-links/settings-black-48dp.svg';
   public static readonly iconExtLink = 'assets/icons-links/icon24-external-link.svg';
+  public static readonly iconSettings = 'assets/icons-misc/settings-black-48dp.svg';
+  public static readonly iconArrowWindDirection = 'assets/icons-misc/wind-arrow.svg';
   // public static readonly arrow000Deg = String.fromCodePoint(8593);
   public static readonly arrow000Deg = String.fromCodePoint(11165);
   public static readonly snackbarDuration = 2500;

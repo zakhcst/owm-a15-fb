@@ -5,8 +5,11 @@ src/build-info.ts
 /dist
 /tmp
 /out-tsc
+
+firebase-debug.log
 firebase/.firebase/
 firebase/public
+firebase/firebase-debug.log
 
 # dependencies
 /node_modules

@@ -35,15 +35,16 @@
       <div class="icons-measures icon-wind"></div>
       <span fxFill>
         <span fxFlex="50%" fxLayoutAlign="end end">
+          &nbsp;
           <span
-            fxFlex
-            fxLayoutAlign="center center"
             [style.transform]="
-              'rotate(' + dataDaily[timeSlot.hour].wind.deg + 'deg)'
+            'rotate(' + dataDaily[timeSlot.hour].wind.deg + 'deg)'
             "
-          >
-            {{ arrow000Deg }}
+            class="icon-wind-direction"
+            >
           </span>
+          &nbsp;
+
           {{ dataDaily[timeSlot.hour].wind.speed | number: "1.0-0" }}
         </span>
         <span fxFlex fxLayoutAlign="start end">&nbsp;m/s</span>
