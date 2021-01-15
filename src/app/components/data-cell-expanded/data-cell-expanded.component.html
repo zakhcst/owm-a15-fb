@@ -38,7 +38,10 @@
     <span class="blue right">{{ this.timeSlotData.wind.speed | number: "1.0-0" }}</span>
     <span class="blue ">m/s</span>
     <span class="blue">Direction</span>
-    <span class="blue right">{{ this.timeSlotData.wind.deg }}</span>
+    <span class="blue right" style="display: flex;">
+        <span [style.transform]="'rotate(' + this.timeSlotData.wind.deg + 'deg)'" class="icon-wind-direction"></span>
+        &nbsp;{{ this.timeSlotData.wind.deg }}
+    </span>
     <span class="blue">Degrees</span>
     <span class="yellow">Humidity</span>
     <span class="yellow right">{{ this.timeSlotData.main.humidity | number: "1.0-0" }}</span>
