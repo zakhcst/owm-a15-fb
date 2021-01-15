@@ -1,8 +1,7 @@
 const admin = require("firebase-admin");
 const { disableBilling } = require("./disable-billing");
 const db = admin.database();
-const limitPerSecond = 5;
-const retry = 2;
+const constants = require("../utils/constants").constants;
 
 exports.gcfInvocationsMonitorFactory = (func) => (...args) => {
   const now = new Date();
@@ -16,10 +15,8 @@ exports.gcfInvocationsMonitorFactory = (func) => (...args) => {
     .then((invocationsSnap) => {
       const invocations = invocationsSnap.snapshot.val();
       // 'retry' calls - in case first fails, otherwise rest are confirmation for disabled billing
-      if (limitPerSecond + retry < invocations) {
-        console.log(
-          `Limit Per Second ${limitPerSecond} gcf invocations exceeded ${invocations}`
-        );
+      if (constants.MAX_FUNCTIONS_INVOCATIONS_PER_SECOND + constants.MAX_FUNCTIONS_INVOCATIONS_PER_SECOND_RETRY < invocations) {
+        console.log(`Limit Per Second ${constants.MAX_FUNCTIONS_INVOCATIONS_PER_SECOND} gcf invocations exceeded ${invocations}`);
         return disableBilling();
       }
       return func(...args);

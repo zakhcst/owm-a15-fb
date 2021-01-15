@@ -10,6 +10,7 @@ firebase-debug.log
 firebase/.firebase/
 firebase/public
 firebase/firebase-debug.log
+firebase/pubsub-debug.log
 
 # dependencies
 /node_modules

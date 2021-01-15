@@ -64,6 +64,7 @@
       }
     },
     "invocations-log": {
+      ".indexOn": ".value",
       ".read": false,
       ".write": false
     },
