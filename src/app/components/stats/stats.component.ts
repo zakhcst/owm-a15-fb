@@ -62,7 +62,6 @@ export class StatsComponent implements OnInit, OnDestroy {
           Object.entries(historyLog)
             .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
             .map((ent: any[]) => {
-              console.log(ent);
               ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
               ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
               return ent;

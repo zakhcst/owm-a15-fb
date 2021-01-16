@@ -67,6 +67,25 @@
   min-width: 100%;
 }
 
+google-chart:hover {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border-right: 1px solid red;
+  --blink-color: yellow;
+  --blink-bgcolor: transparent;
+  animation-name: blink-animation-graph;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+}
+
+
+@keyframes blink-animation-graph {
+  50% {
+    border-right: 1px solid var(--blink-color);
+  }
+}
+
 @media only screen and (max-width: 800px), (max-height: 800px) {
   .legend,
   .date-column {
@@ -79,4 +98,29 @@
   .date-column {
     font-size: 80%;
   }
+}
+
+.chartWithOverlay {
+  position: relative;
+  /* width: 700px; */
+}
+
+.overlay {
+  /* width: 20px; */
+  /* height: 20px; */
+  position: absolute;
+  /* chartArea top  */
+  top: 60px;   
+  /* chartArea left */
+  left: 170px; 
+  /* background-color: red; */
+}
+
+.icons-weather {
+  display: block;
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  background: var(--iconsWeatherUrl) no-repeat 0px 0px;
+  margin: -15px 0;
 }

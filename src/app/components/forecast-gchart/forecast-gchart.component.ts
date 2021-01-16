@@ -71,7 +71,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
     this.onChange();
   }
-
+  
   ngOnDestroy() {
     if (this.subscriptions) {
       this.subscriptions.unsubscribe();
@@ -108,15 +108,13 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   resizeGraphs(activeDays: string[]) {
     const dateColumn = this.dateColumn.nativeElement;
     const documentBodyWidth = document.body.clientWidth;
-
     if (dateColumn) {
       const activeDaysLength = activeDays.length;
       const activeDaysHeightCoef = activeDaysLength === 1 ? 1 : 0.94;
       const days = activeDaysLength === 1 ? 1 : this.daysForecast;
-      const graphHeight = Math.floor((dateColumn.clientHeight * activeDaysHeightCoef) / days);
-      const graphWidth = Math.floor(
-        documentBodyWidth - this.containerPadding - this.cardPadding - this.dateColumnWidth
-      );
+      const dateColumnClientHeight = dateColumn.clientHeight || (window.innerHeight - 100);
+      const graphHeight = Math.floor((dateColumnClientHeight * activeDaysHeightCoef) / days);
+      const graphWidth = Math.floor(documentBodyWidth - this.containerPadding - this.cardPadding - this.dateColumnWidth);
 
       activeDays.forEach((dayK) => {
         this.chart[dayK].height = graphHeight;
