@@ -7,10 +7,10 @@ import { IOwmDataModelTimeSlotUnit, IListByDateModel } from '../models/owm-data.
 })
 export class PopulateGchartDataService {
   chart = {};
-  textColor: string = '#FFF';
+  textColor = '#FFF';
   weatherParams = ConstantsService.weatherParams;
 
-  constructor() {}
+  constructor() { }
 
   setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]): any {
     Object.entries(weatherDataListByDate).forEach(([dayK, day]) => {
@@ -24,7 +24,17 @@ export class PopulateGchartDataService {
   setGChartDay(dayK: string) {
     this.chart[dayK] = {};
     this.chart[dayK].type = 'LineChart';
-    this.chart[dayK].columnNames = ['Time', 'Temperature', 'Wind', 'Humidity', 'Pressure'];
+    this.chart[dayK].columnNames = [
+      'Time',
+      'Temperature',
+      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      'Wind',
+      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      'Humidity',
+      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      'Pressure',
+      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+    ];
     this.chart[dayK].data = [];
   }
 
@@ -40,6 +50,10 @@ export class PopulateGchartDataService {
         undefined,
         undefined,
         undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
       ]);
     }
 
@@ -47,10 +61,14 @@ export class PopulateGchartDataService {
     Object.entries(day).forEach(([hourK, hour]) => {
       this.chart[dayK].data.push([
         hourK + ':00',
-        Math.floor(hour.main.temp),
-        Math.floor(hour.wind.speed),
+        hour.main.temp,
+        this.formatTooltip(hourK + ':00', 'Temperature', Math.floor(hour.main.temp), 'C' + String.fromCodePoint(176)),
+        hour.wind.speed,
+        this.formatTooltip(hourK + ':00', 'Wind', Math.floor(hour.wind.speed), '&nbsp;m/s'),
         hour.main.humidity,
+        this.formatTooltip(hourK + ':00', 'Humidity', hour.main.humidity, '%'),
         hour.main.pressure,
+        this.formatTooltip(hourK + ':00', 'Pressure', hour.main.pressure, '&nbsp;hPa'),
       ]);
     });
 
@@ -63,7 +81,17 @@ export class PopulateGchartDataService {
       this.chart[dayK].data[1][0] = '3:00';
     }
     while (i < timeTemplate.length && timeTemplate[i].hour > +hoursKeys[hoursKeys.length - 1]) {
-      this.chart[dayK].data.push([timeTemplate[i++].hour + ':00', undefined, undefined, undefined, undefined]);
+      this.chart[dayK].data.push([
+        timeTemplate[i++].hour + ':00',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+      ]);
     }
 
     // add additional row to extend lines for the whole day
@@ -74,10 +102,14 @@ export class PopulateGchartDataService {
       const nextDay0Hour = weatherDataListByDate[weatherDataDateKeys[dayKIndex + 1]]['0'];
       last = [
         '23:59',
-        Math.floor(nextDay0Hour.main.temp),
-        Math.floor(nextDay0Hour.wind.speed),
+        nextDay0Hour.main.temp,
+        this.formatTooltip('23:59', 'Temperature', Math.floor(nextDay0Hour.main.temp), 'C' + String.fromCodePoint(176)),
+        nextDay0Hour.wind.speed,
+        this.formatTooltip('23:59', 'Wind', Math.floor(nextDay0Hour.wind.speed), '&nbsp;m/s'),
         nextDay0Hour.main.humidity,
+        this.formatTooltip('23:59', 'Humidity', nextDay0Hour.main.humidity, '%'),
         nextDay0Hour.main.pressure,
+        this.formatTooltip('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa')
       ];
     } else {
       last = [...this.chart[dayK].data[this.chart[dayK].data.length - 1]];
@@ -140,6 +172,26 @@ export class PopulateGchartDataService {
       legend: 'none',
       pointSize: 2,
       backgroundColor: 'transparent',
+      tooltip: { isHtml: true },
     };
+  }
+
+  formatTooltip(hour: string, type: string, data: number, unit: string) {
+    return `
+    <div style="color: white; padding: 5px; background-color: #33425c; display: flex;">
+      <b>${hour}</b>&nbsp;&nbsp;
+      <svg 
+        style="display:inline" 
+        xmlns="http://www.w3.org/2000/svg" 
+        stroke="none" 
+        fill="${this.weatherParams[type.toLocaleLowerCase()].lineColor}" 
+        viewBox="0 0 10 10" 
+        width="10" 
+        height="10">
+        <circle cx="5" cy="5" r="4"/>
+      </svg>&nbsp;${type}:&nbsp;<b>${data}</b>
+      ${unit}
+    </div>
+    `;
   }
 }
