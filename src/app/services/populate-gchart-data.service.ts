@@ -47,8 +47,8 @@ export class PopulateGchartDataService {
     Object.entries(day).forEach(([hourK, hour]) => {
       this.chart[dayK].data.push([
         hourK + ':00',
-        hour.main.temp,
-        hour.wind.speed,
+        Math.floor(hour.main.temp),
+        Math.floor(hour.wind.speed),
         hour.main.humidity,
         hour.main.pressure,
       ]);
@@ -74,8 +74,8 @@ export class PopulateGchartDataService {
       const nextDay0Hour = weatherDataListByDate[weatherDataDateKeys[dayKIndex + 1]]['0'];
       last = [
         '23:59',
-        nextDay0Hour.main.temp,
-        nextDay0Hour.wind.speed,
+        Math.floor(nextDay0Hour.main.temp),
+        Math.floor(nextDay0Hour.wind.speed),
         nextDay0Hour.main.humidity,
         nextDay0Hour.main.pressure,
       ];
@@ -138,6 +138,7 @@ export class PopulateGchartDataService {
         },
       },
       legend: 'none',
+      pointSize: 2,
       backgroundColor: 'transparent',
     };
   }
