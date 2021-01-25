@@ -16,6 +16,7 @@ export class PopulateGchartDataService {
     Object.entries(weatherDataListByDate).forEach(([dayK, day]) => {
       this.setGChartDay(dayK);
       this.setGChartDayData(dayK, day, weatherDataListByDate, weatherDataDateKeys);
+      this.setGChartDayIcons(dayK, day);
       this.setGChartDayOptions(dayK);
     });
     return this.chart;
@@ -38,7 +39,7 @@ export class PopulateGchartDataService {
     this.chart[dayK].data = [];
   }
 
-  setGChartDayData(dayK: string, day: IOwmDataModelTimeSlotUnit, weatherDataListByDate, weatherDataDateKeys) {
+  setGChartDayData(dayK: string, day: IOwmDataModelTimeSlotUnit, weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]) {
     const hoursKeys = Object.keys(day).sort((a, b) => (a > b ? +a : +b));
 
     // add the missing slots at the begining of the day
@@ -119,6 +120,8 @@ export class PopulateGchartDataService {
     this.chart[dayK].data.push(last);
   }
 
+
+
   setGChartDayOptions(dayK: string) {
     this.chart[dayK].options = {
       curveType: 'function',
@@ -178,7 +181,7 @@ export class PopulateGchartDataService {
 
   formatTooltip(hour: string, type: string, data: number, unit: string) {
     return `
-    <div style="color: white; padding: 5px; background-color: #33425c; display: flex;">
+    <div style="display: flex; color: white; background-color: #33425c; padding: 8px;">
       <b>${hour}</b>&nbsp;&nbsp;
       <svg 
         style="display:inline" 
@@ -194,4 +197,35 @@ export class PopulateGchartDataService {
     </div>
     `;
   }
+
+
+  setGChartDayIcons(dayK: string, day: IOwmDataModelTimeSlotUnit) {
+    const hoursKeys = Object.keys(day).sort((a, b) => (a > b ? +a : +b));
+    this.chart[dayK].icons = [];
+    // add the missing slots at the begining of the day
+    let i = 0;
+    while (ConstantsService.timeTemplate[i].hour < +hoursKeys[0]) {
+      this.chart[dayK].icons.push({
+        hourK : ConstantsService.timeTemplate[i++].hour 
+      });
+    }
+
+    // copy existing slots
+    Object.entries(day).forEach(([hourK, hour]) => {
+      const iconCode = day[hourK].weather[0].icon;
+      const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
+      this.chart[dayK].icons.push({ hourK, iconIndex});
+    });
+
+    // add the missing slots at the end of the day
+    const timeTemplate = ConstantsService.timeTemplate;
+    i = this.chart[dayK].icons.length;
+    
+    while (i < timeTemplate.length && timeTemplate[i].hour > +hoursKeys[hoursKeys.length - 1]) {
+      this.chart[dayK].icons.push({
+        hourK : ConstantsService.timeTemplate[i++].hour 
+      });
+    }
+  }
+
 }

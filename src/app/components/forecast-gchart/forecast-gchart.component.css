@@ -23,8 +23,6 @@
 
 .legend {
   border: solid 1px grey;
-  /* margin: 5px; */
-  /* padding: 5px; */
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -79,17 +77,66 @@ google-chart:hover {
   animation-duration: 1s;
 }
 
-
 @keyframes blink-animation-graph {
   50% {
     border-right: 1px solid var(--blink-color);
   }
 }
 
+.google-chart {
+  width: 100%;
+  height: 100%;
+}
+.chartWithOverlay {
+  position: relative;
+  width: 100%;
+}
+
+.overlay {
+  width: 100%;
+  height: auto;
+  position: absolute;
+}
+
+.overlay-content {
+  display: none;
+}
+
+.icons-weather {
+  display: block;
+  width: 50px;
+  height: 50px;
+  background: var(--iconsWeatherUrl) no-repeat 0px 0px;
+  animation-name: icons-animation;
+  animation-delay: 0s;
+  animation-duration: 1s;
+  transform-origin: top;
+}
+@keyframes icons-animation {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0);
+  }
+}
+
+
 @media only screen and (max-width: 800px), (max-height: 800px) {
   .legend,
   .date-column {
     font-size: 90%;
+  }
+  .icon-weather-container {
+    transform: scale(0.8) ;
+    margin: 0 -5px;
+  }
+}
+
+@media only screen and (max-width: 700px), (max-height: 700px) {
+  .icon-weather-container {
+    transform: scale(0.6);
+    margin: 0 -10px;
   }
 }
 
@@ -98,29 +145,14 @@ google-chart:hover {
   .date-column {
     font-size: 80%;
   }
+  .icon-weather-container {
+    transform: scale(0.5);
+    margin: 0 -13px;
+  }
 }
 
-.chartWithOverlay {
-  position: relative;
-  /* width: 700px; */
-}
-
-.overlay {
-  /* width: 20px; */
-  /* height: 20px; */
-  position: absolute;
-  /* chartArea top  */
-  top: 60px;   
-  /* chartArea left */
-  left: 170px; 
-  /* background-color: red; */
-}
-
-.icons-weather {
-  display: block;
-  width: 50px;
-  min-width: 50px;
-  height: 50px;
-  background: var(--iconsWeatherUrl) no-repeat 0px 0px;
-  margin: -15px 0;
+@media only screen and (max-width: 500px), (max-height: 500px) {
+  .icon-weather-container {
+    display: none;
+  }  
 }

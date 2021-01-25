@@ -24,6 +24,7 @@ export interface AppStatusModel {
   showDetailHumidity: boolean;
   showDetailWind: boolean;
   showDetailSecondary: boolean;
+  showChartIcons: boolean;
 }
 
 export interface AppHistoryPayloadModel {

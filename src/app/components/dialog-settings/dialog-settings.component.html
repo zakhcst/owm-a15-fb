@@ -74,6 +74,18 @@
       >
       </mat-slide-toggle>
     </ng-container>
+
+    <ng-container *ngIf="settingsOptions['chartIcons']">
+      Charts Icons
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="showChartIcons"
+        (toggleChange)="toggleShowChartIcons()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
   </div>
   <div class="update-message" *ngIf="updatesAvailable$ | async">
     <div>New release is available</div>

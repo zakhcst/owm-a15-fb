@@ -13,6 +13,7 @@ import { IOwmDataModel } from '../../models/owm-data.model';
 import { AppOwmDataState, AppStatusState } from '../../states/app.state';
 import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { ChartReadyEvent } from 'angular-google-charts';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -40,6 +41,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
+  @Select(AppStatusState.showChartIcons) showChartIcons$: Observable<boolean>;
 
   constructor(
     private _errors: ErrorsService,
@@ -51,7 +53,9 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.resizeObservable$ = fromEvent(window, 'resize');
     this.subscriptions = this.resizeObservable$.subscribe(() => {
-      if (this.activeDays.length > 0) this.resizeGraphs(this.activeDays);
+      if (this.activeDays.length > 0) {
+        this.resizeGraphs(this.activeDays);
+      }
     });
 
     const layoutChangesOrientation$ = this._breakpointObserver.observe([
@@ -59,19 +63,23 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       '(orientation: landscape)',
     ]);
     const layoutChangesOrientationSubscription = layoutChangesOrientation$.subscribe((result) => {
-      if (this.activeDays.length > 0) this.resizeGraphs(this.activeDays);
+      if (this.activeDays.length > 0) {
+        this.resizeGraphs(this.activeDays);
+      }
     });
     this.subscriptions.add(layoutChangesOrientationSubscription);
 
     const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
       this.daysForecast = daysForecast;
-      if (this.activeDays.length > 0) this.resizeGraphs(this.activeDays);
+      if (this.activeDays.length > 0) {
+        this.resizeGraphs(this.activeDays);
+      }
     });
     this.subscriptions.add(daysForecastSubscription);
 
     this.onChange();
   }
-  
+
   ngOnDestroy() {
     if (this.subscriptions) {
       this.subscriptions.unsubscribe();
@@ -121,6 +129,37 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
         this.chart[dayK].width = graphWidth;
       });
     }
+  }
+
+  setIconStyle(slot) {
+    const iconSize = ConstantsService.iconsWeatherSize2;
+    const iconStyle = {
+      'background-position':
+        '0 ' + (slot.iconIndex ? '-' : '') + (slot.iconIndex === undefined ? 1 : slot.iconIndex) * iconSize + 'px',
+    };
+    return iconStyle;
+  }
+  onReady($event: ChartReadyEvent, gc, overlay, overlayContent) {
+    if (!gc || !overlay || !overlayContent) return;
+    const scaleFactor = 0.87;
+    const cli = gc.chart.getChartLayoutInterface();
+    const chartArea = cli.getChartAreaBoundingBox();
+    const overlayTop = gc.height/2;
+    const offsetLeft = chartArea.left + chartArea.width * (1 - scaleFactor) / 2;
+    const iconsWidth = chartArea.width * scaleFactor;
+    overlayContent.setAttribute('style', 'display: none;');
+    
+    window.setTimeout(() => {
+      console.log('setTimeout')
+      overlay.setAttribute('style', `top: ${overlayTop}px;`);
+      overlayContent.setAttribute('style', 
+      `left: ${offsetLeft}px; 
+      width: ${iconsWidth}px; 
+      height: 50px; 
+      display: flex;
+      `);
+    }, 1200);
+    
   }
 
   addError(custom: string, errorMessage: string) {

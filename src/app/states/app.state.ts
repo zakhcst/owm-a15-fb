@@ -20,6 +20,7 @@ import {
   SetStatusShowDetailHumidity,
   SetStatusShowDetailWind,
   SetStatusShowDetailSecondary,
+  SetStatusShowChartIcons,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -50,6 +51,7 @@ import { IHistoryLog } from '../models/history-log.model';
     showDetailWind: true,
     showDetailHumidity: true,
     showDetailSecondary: true,
+    showChartIcons: true,
   },
 })
 @Injectable()
@@ -116,6 +118,10 @@ export class AppStatusState {
   static showDetailSecondary(state: AppStatusModel) {
     return state.showDetailSecondary;
   }
+  @Selector()
+  static showChartIcons(state: AppStatusModel) {
+    return state.showChartIcons;
+  }
 
   @Action(SetStatusIp)
   setStatusIp(context: StateContext<AppStatusModel>, action: SetStatusIp) {
@@ -160,6 +166,12 @@ export class AppStatusState {
   setStatusLiveDataUpdate(context: StateContext<AppStatusModel>, action: SetStatusLiveDataUpdate) {
     context.patchState({ liveDataUpdate: action.payload });
   }
+
+  @Action(SetStatusShowChartIcons)
+  setStatusShowChartIcons(context: StateContext<AppStatusModel>, action: SetStatusShowChartIcons) {
+    context.patchState({ showChartIcons: action.payload });
+  }
+  
   @Action(SetStatusShowDetailPressure)
   setStatusShowDetailPressure(context: StateContext<AppStatusModel>, action: SetStatusShowDetailPressure) {
     context.patchState({ showDetailPressure: action.payload });

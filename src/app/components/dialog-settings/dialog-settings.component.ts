@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SetStatusTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast, SetStatusShowDetailHumidity, SetStatusShowDetailWind, SetStatusShowDetailPressure } from 'src/app/states/app.actions';
+import { SetStatusTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast, SetStatusShowDetailHumidity, SetStatusShowDetailWind, SetStatusShowDetailPressure, SetStatusShowChartIcons } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
@@ -26,6 +26,7 @@ export class DialogSettingsComponent implements OnInit {
   showDetailPressure: boolean;
   showDetailWind: boolean;
   showDetailHumidity: boolean;
+  showChartIcons: boolean;
   settingsOptions: {};
 
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
@@ -50,6 +51,7 @@ export class DialogSettingsComponent implements OnInit {
     this.showDetailHumidity = this._store.selectSnapshot(AppStatusState.showDetailHumidity);
     const routePathEndSegment = this._store.selectSnapshot(RouterState.url).split('/').pop() || ConstantsService.toolbarElements.forecastFlex.path;
     this.settingsOptions = ConstantsService.toolbar[routePathEndSegment].settingsOptions;
+    this.showChartIcons = this._store.selectSnapshot(AppStatusState.showChartIcons);
 
     this.daysForecastOld = this.daysForecast;
     this.reposition();
@@ -82,6 +84,10 @@ export class DialogSettingsComponent implements OnInit {
   toggleShowHumidity() {
     this.showDetailHumidity = !this.showDetailHumidity;
     this._store.dispatch(new SetStatusShowDetailHumidity(this.showDetailHumidity));
+  }
+  toggleShowChartIcons() {
+    this.showChartIcons = !this.showChartIcons;
+    this._store.dispatch(new SetStatusShowChartIcons(this.showChartIcons));
   }
 
   isXs() {

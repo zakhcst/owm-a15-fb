@@ -19,7 +19,7 @@
           class="flex flex-row flex-align-items-stretch"
           *ngFor="let dayK of activeDays | sliceArray: daysForecast"
           (click)="clickedDay(dayK)"
-          >
+        >
           <div
             class="date-column flex flex-column flex-justify-content-center flex-align-items-center"
           >
@@ -34,18 +34,33 @@
           class="flex flex-row flex-justify-content-stretch"
           *ngFor="let dayK of activeDays | sliceArray: daysForecast"
           (click)="clickedDay(dayK)"
-          >
-          <google-chart
-            class="flex flex-column flex-justify-content-center"
-            [dynamicResize]="true"
-            [width]="chart[dayK].width"
-            [height]="chart[dayK].height"
-            [type]="chart[dayK].type"
-            [data]="chart[dayK].data"
-            [columns]="chart[dayK].columnNames"
-            [options]="chart[dayK].options"
-          >
-          </google-chart>
+        >
+          <div class="chartWithOverlay" #chartWithOverlay>
+            <google-chart #googleChart
+              class="flex flex-column flex-justify-content-center google-chart"
+              [dynamicResize]="true"
+              [width]="chart[dayK].width"
+              [height]="chart[dayK].height"
+              [type]="chart[dayK].type"
+              [data]="chart[dayK].data"
+              [columns]="chart[dayK].columnNames"
+              [options]="chart[dayK].options"
+              (ready)="onReady($event, googleChart, overlay, overlayContent)"
+            >
+            </google-chart>
+            
+            <div class="overlay flex flex-row flex-justify-content-center" #overlay>
+              <div class="overlay-content flex-justify-content-stretch" #overlayContent>
+                  <ng-container *ngFor="let slot of chart[dayK].icons">
+                    <span class="flex flex-justify-content-center">
+                      <span class="icon-weather-container">
+                        <span class="icons-weather" [ngStyle]="setIconStyle(slot)" *ngIf="showChartIcons$ | async"></span>
+                      </span>
+                    </span>
+                  </ng-container>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
