@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
-import { Observable, Subscription, fromEvent } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, Subscription, fromEvent, BehaviorSubject } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 
 import { Select, Store } from '@ngxs/store';
 import { AppErrorPayloadModel } from '../../states/app.models';
@@ -38,6 +38,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   containerPadding = 20;
   cardPadding = 10;
   dateColumnWidth = 40;
+  overlaySubjecs = [];
 
   @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
@@ -76,6 +77,21 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.add(daysForecastSubscription);
+
+    // helper BehaviorSubjects array for each chart to debouce and delay icons redraws
+    [...Array(6)].forEach(() => {
+      const behaviorSubject = new BehaviorSubject(null);
+      const overlaySubscription = behaviorSubject
+        .pipe(
+          filter((data) => !!data),
+          debounceTime(1000)
+        )
+        .subscribe((data) => {
+          this.redrawOverlay(data);
+        });
+      this.overlaySubjecs.push(behaviorSubject);
+      this.subscriptions.add(overlaySubscription);
+    });
 
     this.onChange();
   }
@@ -120,9 +136,11 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       const activeDaysLength = activeDays.length;
       const activeDaysHeightCoef = activeDaysLength === 1 ? 1 : 0.94;
       const days = activeDaysLength === 1 ? 1 : this.daysForecast;
-      const dateColumnClientHeight = dateColumn.clientHeight || (window.innerHeight - 100);
+      const dateColumnClientHeight = dateColumn.clientHeight || window.innerHeight - 100;
       const graphHeight = Math.floor((dateColumnClientHeight * activeDaysHeightCoef) / days);
-      const graphWidth = Math.floor(documentBodyWidth - this.containerPadding - this.cardPadding - this.dateColumnWidth);
+      const graphWidth = Math.floor(
+        documentBodyWidth - this.containerPadding - this.cardPadding - this.dateColumnWidth
+      );
 
       activeDays.forEach((dayK) => {
         this.chart[dayK].height = graphHeight;
@@ -139,27 +157,40 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     };
     return iconStyle;
   }
-  onReady($event: ChartReadyEvent, gc, overlay, overlayContent) {
+
+  onReady($event: ChartReadyEvent, gc, overlay, overlayContent, ind) {
     if (!gc || !overlay || !overlayContent) return;
+    overlayContent.setAttribute('style', 'display: none;');
+    const extendedIndex = this.activeDays.length === 1 ? 5 : ind;
+    const params = { gc, overlay, overlayContent, extendedIndex };
+    this.overlaySubjecs[extendedIndex].next(params);
+    // on debounce crashes use:
+    // this.redrawOverlay({ gc, overlay, overlayContent, extendedIndex });
+  }
+
+  redrawOverlay({ gc, overlay, overlayContent, extendedIndex }) {
     const scaleFactor = 0.87;
     const cli = gc.chart.getChartLayoutInterface();
-    const chartArea = cli.getChartAreaBoundingBox();
-    const overlayTop = gc.height/2;
-    const offsetLeft = chartArea.left + chartArea.width * (1 - scaleFactor) / 2;
-    const iconsWidth = chartArea.width * scaleFactor;
-    overlayContent.setAttribute('style', 'display: none;');
-    
-    window.setTimeout(() => {
-      console.log('setTimeout')
+    const overlayTop = gc.height / 2 - 10;
+    setTimeout(() => {
       overlay.setAttribute('style', `top: ${overlayTop}px;`);
-      overlayContent.setAttribute('style', 
-      `left: ${offsetLeft}px; 
-      width: ${iconsWidth}px; 
-      height: 50px; 
-      display: flex;
-      `);
-    }, 1200);
-    
+      let chartArea;
+      try {
+        chartArea = cli.getChartAreaBoundingBox();
+      } catch {
+        console.log('Chart Refresh Error', extendedIndex, gc);
+        chartArea = { left: gc.width * 0.65, width: gc.width * 0.75};
+      }
+      const offsetLeft = chartArea.left + (chartArea.width * (1 - scaleFactor)) / 2;
+      const overlayContentWidth = chartArea.width * scaleFactor;
+      overlayContent.setAttribute(
+        'style',
+        `left: ${offsetLeft}px; 
+        width: ${overlayContentWidth}px; 
+        display: flex;
+        `
+      );
+    }, 500);
   }
 
   addError(custom: string, errorMessage: string) {

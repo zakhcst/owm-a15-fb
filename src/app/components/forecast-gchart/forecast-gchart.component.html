@@ -32,7 +32,7 @@
       <div class="flex flex-column flex-align-items-stretch">
         <div
           class="flex flex-row flex-justify-content-stretch"
-          *ngFor="let dayK of activeDays | sliceArray: daysForecast"
+          *ngFor="let dayK of activeDays | sliceArray: daysForecast; index as ind"
           (click)="clickedDay(dayK)"
         >
           <div class="chartWithOverlay" #chartWithOverlay>
@@ -45,7 +45,7 @@
               [data]="chart[dayK].data"
               [columns]="chart[dayK].columnNames"
               [options]="chart[dayK].options"
-              (ready)="onReady($event, googleChart, overlay, overlayContent)"
+              (ready)="onReady($event, googleChart, overlay, overlayContent, ind)"
             >
             </google-chart>
             

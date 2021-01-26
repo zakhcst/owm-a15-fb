@@ -113,20 +113,19 @@ export class PopulateGchartDataService {
         this.formatTooltip('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa')
       ];
     } else {
-      last = [...this.chart[dayK].data[this.chart[dayK].data.length - 1]];
-      last[0] = '23:59';
+      last = JSON.parse(JSON.stringify([...this.chart[dayK].data[this.chart[dayK].data.length - 1]]).replace(/21:00/g, '23:59'));
     }
 
     this.chart[dayK].data.push(last);
   }
-
+  
 
 
   setGChartDayOptions(dayK: string) {
     this.chart[dayK].options = {
       curveType: 'function',
       animation: {
-        duration: 1000,
+        duration: 1500,
         easing: 'out',
         startup: true,
       },

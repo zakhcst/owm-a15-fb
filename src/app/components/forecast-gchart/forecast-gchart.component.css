@@ -129,14 +129,14 @@ google-chart:hover {
   }
   .icon-weather-container {
     transform: scale(0.8) ;
-    margin: 0 -5px;
+    margin: -5px;
   }
 }
 
 @media only screen and (max-width: 700px), (max-height: 700px) {
   .icon-weather-container {
     transform: scale(0.6);
-    margin: 0 -10px;
+    margin: -10px;
   }
 }
 
@@ -147,7 +147,7 @@ google-chart:hover {
   }
   .icon-weather-container {
     transform: scale(0.5);
-    margin: 0 -13px;
+    margin: -13px;
   }
 }
 
