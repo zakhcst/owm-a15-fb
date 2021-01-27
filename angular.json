@@ -24,6 +24,7 @@
               "src/assets",
               "src/robots.txt",
               "src/sitemap.xml",
+              "src/google09dec6cc6a77bcd1.html",
               {
                 "glob": "**/**",
                 "input": "node_modules/default-passive-events/dist/",
