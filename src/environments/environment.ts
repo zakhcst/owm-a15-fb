@@ -20,7 +20,8 @@ const firebaseConfigDevEnv = {
   databaseURL: 'https://owm-a7-fb.firebaseio.com',
   projectId: 'owm-a7-fb',
   storageBucket: 'owm-a7-fb.appspot.com',
-  messagingSenderId: '1062734348256'
+  messagingSenderId: '1062734348256',
+  appId: "1:1062734348256:web:2dc7c01ad7a90d0ab23585"
 };
 const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
 
