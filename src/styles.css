@@ -7,6 +7,17 @@
   box-sizing: border-box;
 }
 
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(91, 134, 174);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("/assets/backgrounds/default.jpg");
+  transition: background-image 1s ease-in-out;
+}
+
 .snackbar__info {
   color: greenyellow;
   background: rgb(59, 59, 59);

@@ -59,7 +59,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   connected = true;
   updatesAvailable = false;
 
-  @Select(AppOwmDataState.selectOwmData) owmDataSelectedCityLast$: Observable<IOwmDataModel>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
@@ -71,7 +70,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _router: Router,
-    private _data: OwmDataManagerService, // Instantiate service to start listener
+    private _data: OwmDataManagerService, // Instantiate service to start listeners
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
@@ -106,9 +105,12 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   ngOnInit() {
     this.isXs();
-    const subscriptionBgImg: Subscription = this.owmDataSelectedCityLast$
+    this.subscribeOwmData();
+  }
+
+  subscribeOwmData() {
+    const subscriptionOwmData = this._data.getOwmData$( { showLoading: false })
       .pipe(
-        filter((data) => !!data),
         tap((data: IOwmDataModel) => {
           this.owmData = data;
           this.owmDataExpired = !this._data.isNotExpired(data);
@@ -133,7 +135,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
       this.connected = connected;
     })
 
-    this.subscriptions.add(subscriptionBgImg);
+    this.subscriptions.add(subscriptionOwmData);
   }
 
   ngAfterViewInit() {

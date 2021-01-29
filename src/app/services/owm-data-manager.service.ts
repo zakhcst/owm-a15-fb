@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { of, Observable } from 'rxjs';
-import { switchMap, catchError, tap, take, filter } from 'rxjs/operators';
+import { of, Observable, timer } from 'rxjs';
+import { switchMap, catchError, tap, take, filter, debounce } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { ErrorsService } from './errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { Store, Select } from '@ngxs/store';
-import { SetDataState } from '../states/app.actions';
+import { SetDataState, SetStatusShowLoading } from '../states/app.actions';
 import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
 import { AppStatusState, AppHistoryState, AppOwmDataState, AppFallbackDataState } from '../states/app.state';
@@ -27,6 +27,7 @@ export class OwmDataManagerService {
   @Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$: Observable<string>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
   @Select(AppStatusState.away) away$: Observable<boolean>;
+  @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
 
   constructor(
     private _owm: OwmService,
@@ -185,6 +186,26 @@ export class OwmDataManagerService {
     const firstDateTime = data.list && data.list.length > 0 && data.list[0].dt ? data.list[0].dt * 1000 : 0;
     const diff = now - (data.updated || firstDateTime || 0);
     return diff < 3 * 3600 * 1000; // < 3 hours
+  }
+
+  getOwmData$({ showLoading }) {
+    if (showLoading) {
+      this._store.dispatch(new SetStatusShowLoading(true));
+    }
+    return this.owmData$.pipe(
+      tap(() => {
+        if (showLoading) {
+          this._store.dispatch(new SetStatusShowLoading(true));
+        }
+      }),
+      filter((data) => !!data),
+      debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(1000))),
+      tap(() => {
+        if (showLoading) {
+          this._store.dispatch(new SetStatusShowLoading(false));
+        }
+      })
+    );
   }
 }
 

@@ -38,15 +38,29 @@ export class StatsComponent implements OnInit, OnDestroy {
   @Select(AppHistoryLogState) historyLogState$: Observable<IHistoryLog>;
   @Select(AppStatsState) stats$: Observable<IStats>;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
+    this.subscribeStats();
+    this.subscribeHistory();
+    this.subscribeCities();
+  }
+  
+  ngOnDestroy() {
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
+  }
+
+  subscribeStats() {
     this.subscriptions = this.stats$.subscribe((stats) => {
       if (stats) {
         this.stats = stats;
       }
     });
+  }
 
+  subscribeCities() {
     this.subscriptions.add(
       this.cities$.subscribe((cities) => {
         if (cities) {
@@ -55,7 +69,9 @@ export class StatsComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
 
+  subscribeHistory() {
     this.historyLog$ = this.historyLogState$.pipe(
       switchMap((historyLog: IHistoryLog) => {
         return of(
@@ -70,11 +86,5 @@ export class StatsComponent implements OnInit, OnDestroy {
         );
       })
     );
-  }
-
-  ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.unsubscribe();
-    }
   }
 }

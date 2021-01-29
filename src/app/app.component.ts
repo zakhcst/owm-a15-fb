@@ -1,12 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { PresenceService } from './services/presence.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SwUpdate } from '@angular/service-worker';
-import { Store } from '@ngxs/store';
-import { SetStatusUpdatesAvailable } from './states/app.actions';
+import { Select, Store } from '@ngxs/store';
+import { SetStatusShowLoading, SetStatusUpdatesAvailable } from './states/app.actions';
 import { ConstantsService } from './services/constants.service';
 import { AppStatusState } from './states/app.state';
+import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -16,6 +17,7 @@ export class AppComponent implements OnDestroy {
   title = 'owm-a11-fb';
   loading = false;
   subscriptions: Subscription;
+  @Select(AppStatusState.showLoading) showLoading$: Observable<boolean>;
 
   constructor(
     private _router: Router,
@@ -73,7 +75,7 @@ export class AppComponent implements OnDestroy {
 
   checkRouterEvent(routerEvent: Event) {
     if (routerEvent instanceof NavigationStart) {
-      this.loading = true;
+      this._store.dispatch(new SetStatusShowLoading(true));
     }
 
     if (
@@ -81,7 +83,7 @@ export class AppComponent implements OnDestroy {
       routerEvent instanceof NavigationCancel ||
       routerEvent instanceof NavigationError
     ) {
-      this.loading = false;
+      this._store.dispatch(new SetStatusShowLoading(false));
     }
   }
 

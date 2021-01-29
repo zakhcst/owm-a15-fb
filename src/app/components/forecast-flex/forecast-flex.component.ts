@@ -13,6 +13,7 @@ import { AppOwmDataState, AppStatusState } from 'src/app/states/app.state';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
+import { OwmDataManagerService } from 'src/app/services/owm-data-manager.service';
 
 @Component({
   selector: 'app-forecast-flex',
@@ -44,10 +45,14 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
   subscriptions: Subscription;
 
-  @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
-  constructor(private _errors: ErrorsService, public dialog: MatDialog, private _store: Store) {}
+  constructor(
+    private _errors: ErrorsService,
+    public dialog: MatDialog,
+    private _store: Store,
+    private _data: OwmDataManagerService
+  ) {}
 
   ngOnInit() {
     this.onInit();
@@ -61,24 +66,22 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   onInit() {
     this.loadingOwmData = true;
-    this.subscriptions = this.owmData$
-      .pipe(
-        tap(() => (this.loadingOwmData = true)),
-        filter((data) => !!data),
-        debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(1000)))
-      )
-      .subscribe(
-        (data) => {
-          this.weatherData = data;
-          this.listByDate = data.listByDate;
-          this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
-          this.loadingOwmData = false;
-        },
-        (err) => {
-          this.loadingOwmData = false;
-          this.addError('ngOnInit: onChange: subscribe', err.message);
-        }
-      );
+    this.subscribeOwmData();
+  }
+
+  subscribeOwmData() {
+    this.subscriptions = this._data.getOwmData$({ showLoading: true }).subscribe(
+      (data) => {
+        this.weatherData = data;
+        this.listByDate = data.listByDate;
+        this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
+        this.loadingOwmData = false;
+      },
+      (err) => {
+        this.loadingOwmData = false;
+        this.addError('ngOnInit: onChange: subscribe', err.message);
+      }
+    );
 
     const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
       this.daysForecast = daysForecast;

@@ -1,4 +1,4 @@
 <router-outlet></router-outlet>
-<div *ngIf="loading" class="routing-spinner">
+<div *ngIf="(showLoading$ | async)" class="routing-spinner">
   <mat-spinner diameter="50"></mat-spinner>
 </div>

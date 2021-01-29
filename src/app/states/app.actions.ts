@@ -59,6 +59,10 @@ export class SetStatusLiveDataUpdate {
   static readonly type = '[status] set Live Data Update';
   constructor(public payload: boolean) { }
 }
+export class SetStatusShowLoading {
+  static readonly type = '[status] set Show Loading';
+  constructor(public payload: boolean) { }
+}
 export class SetStatusShowChartIcons {
   static readonly type = '[status] set Show Chart Icons';
   constructor(public payload: boolean) { }

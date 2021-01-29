@@ -10,10 +10,11 @@ import { ITimeTemplate } from '../../models/hours.model';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { IOwmDataModel } from '../../models/owm-data.model';
-import { AppOwmDataState, AppStatusState } from '../../states/app.state';
+import { AppStatusState } from '../../states/app.state';
 import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ChartReadyEvent } from 'angular-google-charts';
+import { OwmDataManagerService } from 'src/app/services/owm-data-manager.service';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -40,7 +41,6 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   dateColumnWidth = 40;
   overlaySubjecs = [];
 
-  @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
   @Select(AppStatusState.showChartIcons) showChartIcons$: Observable<boolean>;
 
@@ -48,17 +48,34 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     private _errors: ErrorsService,
     private _populateGchartData: PopulateGchartDataService,
     private _breakpointObserver: BreakpointObserver,
-    private _store: Store
+    private _store: Store,
+    private _data: OwmDataManagerService
   ) {}
 
   ngOnInit() {
+    this.subscribeResizeObservable();
+    this.subscribeLayoutChangesOrientation();
+    this.subscribeDaysForecast();
+    this.subscribeOwmData();
+    this.setDebounceIconsDraws();
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
+  }
+
+  subscribeResizeObservable() {
     this.resizeObservable$ = fromEvent(window, 'resize');
     this.subscriptions = this.resizeObservable$.subscribe(() => {
       if (this.activeDays.length > 0) {
         this.resizeGraphs(this.activeDays);
       }
     });
+  }
 
+  subscribeLayoutChangesOrientation() {
     const layoutChangesOrientation$ = this._breakpointObserver.observe([
       '(orientation: portrait)',
       '(orientation: landscape)',
@@ -69,7 +86,9 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.add(layoutChangesOrientationSubscription);
+  }
 
+  subscribeDaysForecast() {
     const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
       this.daysForecast = daysForecast;
       if (this.activeDays.length > 0) {
@@ -77,8 +96,10 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.add(daysForecastSubscription);
+  }
 
-    // helper BehaviorSubjects array for each chart to debouce and delay icons redraws
+  setDebounceIconsDraws() {
+    // helper BehaviorSubjects array for each chart to debounce and delay icons redraws
     [...Array(6)].forEach(() => {
       const behaviorSubject = new BehaviorSubject(null);
       const overlaySubscription = behaviorSubject
@@ -92,19 +113,11 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       this.overlaySubjecs.push(behaviorSubject);
       this.subscriptions.add(overlaySubscription);
     });
-
-    this.onChange();
   }
 
-  ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.unsubscribe();
-    }
-  }
-
-  onChange() {
+  subscribeOwmData() {
     this.loadingOwmData = true;
-    const weatherDataSubscription = this.owmData$.pipe(filter((data) => !!data)).subscribe(
+    const weatherDataSubscription = this._data.getOwmData$({ showLoading: true }).subscribe(
       (data) => {
         this.weatherData = data;
         this.activeDays = Object.keys(this.weatherData.listByDate).sort();
@@ -179,7 +192,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
         chartArea = cli.getChartAreaBoundingBox();
       } catch {
         console.log('Chart Refresh Error', extendedIndex, gc);
-        chartArea = { left: gc.width * 0.65, width: gc.width * 0.75};
+        chartArea = { left: gc.width * 0.65, width: gc.width * 0.75 };
       }
       const offsetLeft = chartArea.left + (chartArea.width * (1 - scaleFactor)) / 2;
       const overlayContentWidth = chartArea.width * scaleFactor;

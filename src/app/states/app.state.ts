@@ -21,6 +21,7 @@ import {
   SetStatusShowDetailWind,
   SetStatusShowDetailSecondary,
   SetStatusShowChartIcons,
+  SetStatusShowLoading,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -47,6 +48,7 @@ import { IHistoryLog } from '../models/history-log.model';
     updatesAvailable: false,
     liveDataUpdate: false,
     daysForecast: 5,
+    showLoading: false,
     showDetailPressure: true,
     showDetailWind: true,
     showDetailHumidity: true,
@@ -102,6 +104,10 @@ export class AppStatusState {
     return state.daysForecast;
   }
 
+  @Selector()
+  static showLoading(state: AppStatusModel) {
+    return state.showLoading;
+  }
   @Selector()
   static showDetailPressure(state: AppStatusModel) {
     return state.showDetailPressure;
@@ -167,6 +173,11 @@ export class AppStatusState {
     context.patchState({ liveDataUpdate: action.payload });
   }
 
+  @Action(SetStatusShowLoading)
+  setStatusShowLoading(context: StateContext<AppStatusModel>, action: SetStatusShowLoading) {
+    context.patchState({ showLoading: action.payload });
+  }
+  
   @Action(SetStatusShowChartIcons)
   setStatusShowChartIcons(context: StateContext<AppStatusModel>, action: SetStatusShowChartIcons) {
     context.patchState({ showChartIcons: action.payload });
