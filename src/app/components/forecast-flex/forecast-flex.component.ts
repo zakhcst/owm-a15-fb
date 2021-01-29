@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
-import { Observable, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, of, Subscription, timer } from 'rxjs';
+import { debounce, filter, tap } from 'rxjs/operators';
 
 import { ConstantsService } from '../../services/constants.service';
 import { ITimeTemplate } from '../../models/hours.model';
@@ -61,18 +61,24 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   onInit() {
     this.loadingOwmData = true;
-    this.subscriptions = this.owmData$.pipe(filter((data) => !!data)).subscribe(
-      (data) => {
-        this.weatherData = data;
-        this.listByDate = data.listByDate;
-        this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
-        this.loadingOwmData = false;
-      },
-      (err) => {
-        this.loadingOwmData = false;
-        this.addError('ngOnInit: onChange: subscribe', err.message);
-      }
-    );
+    this.subscriptions = this.owmData$
+      .pipe(
+        tap(() => (this.loadingOwmData = true)),
+        filter((data) => !!data),
+        debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(1000)))
+      )
+      .subscribe(
+        (data) => {
+          this.weatherData = data;
+          this.listByDate = data.listByDate;
+          this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
+          this.loadingOwmData = false;
+        },
+        (err) => {
+          this.loadingOwmData = false;
+          this.addError('ngOnInit: onChange: subscribe', err.message);
+        }
+      );
 
     const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
       this.daysForecast = daysForecast;
@@ -84,11 +90,13 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   onMouseWheel(event: any) {
     if (this.gridContainer && !event.shiftKey) {
       const frames = 20;
-      const step = event.deltaY/frames;
+      const step = event.deltaY / frames;
       let count = 0;
       const interval = setInterval(() => {
         this.gridContainer.nativeElement.scrollLeft += step;
-        if (++count >= frames) { clearInterval(interval); }
+        if (++count >= frames) {
+          clearInterval(interval);
+        }
       }, 10);
     }
   }
