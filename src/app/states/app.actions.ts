@@ -24,8 +24,8 @@ export class SetStatusIp {
   constructor(public payload: string) { }
 }
 
-export class SetStatusTimeSlotBgPicture {
-  static readonly type = '[status] set timeSlotBgPicture';
+export class SetStatusShowTimeSlotBgPicture {
+  static readonly type = '[status] set showTimeSlotBgPicture';
   constructor(public payload: boolean) { }
 }
 

@@ -34,7 +34,7 @@ export class DataCellExpandedComponent {
     this.conditionStyle = {
       'background-position': '0 -' + iconIndex * iconSize + 'px',
     };
-    const showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
+    const showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showTimeSlotBgPicture);
     this.setBackground(showTimeSlotBgPicture);
   }
 

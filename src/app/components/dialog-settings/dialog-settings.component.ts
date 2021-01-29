@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SetStatusTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast, SetStatusShowDetailHumidity, SetStatusShowDetailWind, SetStatusShowDetailPressure, SetStatusShowChartIcons } from 'src/app/states/app.actions';
+import { SetStatusShowTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast, SetStatusShowDetailHumidity, SetStatusShowDetailWind, SetStatusShowDetailPressure, SetStatusShowChartIcons } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
@@ -19,7 +19,7 @@ export class DialogSettingsComponent implements OnInit {
   buildTime = buildInfo.timeStamp;
   buildHash = buildInfo.hash;
   buildVersion = buildInfo.version;
-  timeSlotBgPicture: boolean;
+  showTimeSlotBgPicture: boolean;
   liveDataUpdate: boolean;
   daysForecast: number;
   daysForecastOld: number;
@@ -43,7 +43,7 @@ export class DialogSettingsComponent implements OnInit {
   ) { }
   
   ngOnInit(): void {
-    this.timeSlotBgPicture = this._store.selectSnapshot(AppStatusState.timeSlotBgPicture);
+    this.showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showTimeSlotBgPicture);
     this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
     this.daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
     this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
@@ -63,9 +63,9 @@ export class DialogSettingsComponent implements OnInit {
     this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
   }
 
-  toggleTimeSlotBgPicture() {
-    this.timeSlotBgPicture = !this.timeSlotBgPicture;
-    this._store.dispatch(new SetStatusTimeSlotBgPicture(this.timeSlotBgPicture));
+  toggleShowTimeSlotBgPicture() {
+    this.showTimeSlotBgPicture = !this.showTimeSlotBgPicture;
+    this._store.dispatch(new SetStatusShowTimeSlotBgPicture(this.showTimeSlotBgPicture));
   }
 
   toggleLiveDataUpdate() {

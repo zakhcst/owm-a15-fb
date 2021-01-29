@@ -10,7 +10,7 @@ import {
   SetFallbackDataState,
   SetStatusSelectedCityId,
   SetStatusIp,
-  SetStatusTimeSlotBgPicture,
+  SetStatusShowTimeSlotBgPicture,
   SetStatusConnected,
   SetStatusAway,
   SetStatusUpdatesAvailable,
@@ -41,7 +41,7 @@ import { IHistoryLog } from '../models/history-log.model';
     normalizedIp: '--ip',
     sessionStartTime: new Date().valueOf(),
     selectedCityId: ConstantsService.defaultCityId,
-    timeSlotBgPicture: false,
+    showTimeSlotBgPicture: true,
     connected: true,
     away: false,
     updatesAvailable: false,
@@ -73,8 +73,8 @@ export class AppStatusState {
   }
 
   @Selector()
-  static timeSlotBgPicture(state: AppStatusModel) {
-    return state.timeSlotBgPicture;
+  static showTimeSlotBgPicture(state: AppStatusModel) {
+    return state.showTimeSlotBgPicture;
   }
 
   @Selector()
@@ -137,9 +137,9 @@ export class AppStatusState {
     context.patchState({ selectedCityId });
   }
 
-  @Action(SetStatusTimeSlotBgPicture)
-  setStatusTimeSlotBgPicture(context: StateContext<AppStatusModel>, action: SetStatusTimeSlotBgPicture) {
-    context.patchState({ timeSlotBgPicture: action.payload });
+  @Action(SetStatusShowTimeSlotBgPicture)
+  setStatusShowTimeSlotBgPicture(context: StateContext<AppStatusModel>, action: SetStatusShowTimeSlotBgPicture) {
+    context.patchState({ showTimeSlotBgPicture: action.payload });
   }
 
   @Action(SetStatusDaysForecast)

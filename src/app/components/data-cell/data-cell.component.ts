@@ -21,13 +21,13 @@ export class DataCellComponent implements OnInit, OnDestroy {
   timeSlotBgStyle = {};
   conditionStyle = {};
 
-  @Select(AppStatusState.timeSlotBgPicture) timeSlotBgPicture$: Observable<boolean>;
+  @Select(AppStatusState.showTimeSlotBgPicture) showTimeSlotBgPicture$: Observable<boolean>;
 
   constructor() {}
 
   ngOnInit() {
     this.setIcons();
-    this.subscription = this.timeSlotBgPicture$.subscribe((showTimeSlotBgPicture) => {
+    this.subscription = this.showTimeSlotBgPicture$.subscribe((showTimeSlotBgPicture) => {
       this.setBackground(showTimeSlotBgPicture);
     });
   }
