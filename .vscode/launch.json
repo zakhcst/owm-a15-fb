@@ -7,6 +7,14 @@
     {
       "type": "chrome",
       "request": "launch",
+      "name": "Launch Chrome 4211",
+      "runtimeExecutable": "/usr/bin/google-chrome-stable",
+      "url": "http://localhost:4211",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
       "name": "Launch Chrome 8080",
       "runtimeExecutable": "/usr/bin/google-chrome-stable",
       "url": "http://localhost:8080",
