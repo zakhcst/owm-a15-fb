@@ -8,7 +8,7 @@ Libraries
 - Angular Material
 - AngularFire2
 
-Featured
+Features
 
 - Angular
 
@@ -30,43 +30,38 @@ Featured
   - emulators in vscode remote-container 
   - continuous deployment from Github
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli). 
+
 
 ### Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4211/`. The app will automatically reload if you change any of the source files.
 
+### Running firebase emulator
+
+Run `. set-emu-env.sh` and in `firebase` `./start-emulator`
+
 ### Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-### Link
+### Live instance
 
 Development build is depolyed at: https://owm-a11-fb.web.app
 
 ### Preview
 
-![preview1](/misc/Screenshot_20201117_150111.png)
+![preview1](/misc/Screenshot_20210130_020819.jpg)
 
-![preview2](/misc/Screenshot_20201117_150415.png)
+![preview2](/misc/Screenshot_20210130_020518.jpg)
 
-![preview3](/misc/Screenshot_20201117_150453.png)
+![preview3](/misc/Screenshot_20210130_020621.jpg)
 
-![preview4](/misc/Screenshot_20201117_150541.png)
+![preview4](/misc/Screenshot_20210130_020732.jpg)
 
-![preview5](/misc/Screenshot_20201117_150612.png)
+![preview5](/misc/Screenshot_20210130_020800.jpg)
 
-![preview6](/misc/Screenshot_20201117_150647.png)
+![preview6](/misc/Screenshot_20210130_020912.jpg)
 
-![preview7](/misc/Screenshot_20201117_150726.png)
-
-![preview8](/misc/Screenshot_20201117_151050.png)
-
-![preview9](/misc/Screenshot_20201117_151134.png)
-
-![preview10](/misc/Screenshot_20201117_151404.png)
-
-![preview11](/misc/Screenshot_20201117_151523.png)
 
 ### Coverage
 
