@@ -1,3 +1,6 @@
 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-    <polyline points="8,0 13,13 8,9 3,13 8,0" fill="none" stroke="white" stroke-width="1px"/>
+    <!-- north -->
+    <!-- <polyline points="8,2 12,13 8,10 4,13 8,2" fill="white" stroke="white" stroke-width="1px"/> -->
+    <!-- south -->
+    <polyline points="8,13 12,2 8,5 4,2 8,13" fill="white" stroke="white" stroke-width="1px"/>
 </svg>
