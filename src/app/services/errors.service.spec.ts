@@ -11,9 +11,9 @@ import { environment } from '../../environments/environment.prod';
 
 
 import { ErrorsService } from './errors.service';
-import { AppErrorsState } from '../states/app.state';
 import { MockAngularFireService } from './testing.services.mocks';
 import { ErrorRecordModel, AppErrorPayloadModel } from '../states/app.models';
+import { AppModule } from '../app.module';
 
 describe('ErrorsService', () => {
 
@@ -31,20 +31,15 @@ describe('ErrorsService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        RequiredModules,
-        NgxsModule.forRoot([AppErrorsState], {
-          developmentMode: !environment.production
-        }),
-        AngularFireModule.initializeApp(environment.firebase),
-        AngularFireDatabaseModule
+        AppModule,
       ],
       providers: [
         ErrorsService,
         { provide: AngularFireDatabase, useValue: mockAngularFireService },
-        Store,
+        Store
       ]
     });
-    service = TestBed.get(ErrorsService);
+    service = TestBed.inject(ErrorsService);
   }));
 
   it('should be created', () => {
@@ -52,7 +47,7 @@ describe('ErrorsService', () => {
   });
 
   it('should call AngularFireDatabase set', waitForAsync(() => {
-    const serviceFB = TestBed.get(AngularFireDatabase);
+    const serviceFB = TestBed.inject(AngularFireDatabase);
     const afsObject = spyOn(serviceFB, 'object').and.callThrough();
 
     service.setDataToFB(testIP, testData).then(response => {
@@ -63,7 +58,7 @@ describe('ErrorsService', () => {
   }));
 
   it('should dispatch error', () => {
-    const store = TestBed.get(Store);
+    const store = TestBed.inject(Store);
     const spyDispatch = spyOn(store, 'dispatch');
     service.add(appErrorPayload);
     expect(spyDispatch).toHaveBeenCalledTimes(1);

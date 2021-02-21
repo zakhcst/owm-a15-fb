@@ -1,26 +1,36 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
 import { GetBrowserIpService } from './get-browser-ip.service';
-import { of, asyncScheduler } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
-import { ConstantsService } from './constants.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { SharedModule } from '../modules/shared.module';
+import { ErrorsService } from './errors.service';
+import { MockErrorsService } from './testing.services.mocks';
 
 describe('GetBrowserIpService', () => {
   let service: GetBrowserIpService;
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RequiredModules]
-    });
-    httpClient = TestBed.get(HttpClient);
-    httpTestingController = TestBed.get(HttpTestingController);
+  let mockErrorsService: MockErrorsService;
 
-    service = TestBed.get(GetBrowserIpService);
+  beforeEach(() => {
+    mockErrorsService = new MockErrorsService();
+
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, RequiredModules, SharedModule],
+      providers: [
+        {
+          provide: ErrorsService,
+          useValue: mockErrorsService,
+        },
+      ],
+    });
+
+    httpClient = TestBed.inject(HttpClient);
+    httpTestingController = TestBed.inject(HttpTestingController);
+
+    service = TestBed.inject(GetBrowserIpService);
   });
 
   it('should be created', () => {
@@ -29,42 +39,59 @@ describe('GetBrowserIpService', () => {
 
   it('should validate ip ', () => {
     const ipv4 = '0.0.0.0';
-    expect(service.validateIP(ipv4)).toBe(true, 'ipv4 failed to validate');
+    service.validateIPv4(ipv4).subscribe((result) => {
+      expect(result).toBe(ipv4, 'ipv4 failed to validate');
+    });
     const ipv4fail = 'x.x.x.x';
-    expect(service.validateIP(ipv4fail)).toBe(false, 'ipv4 failed to fail');
-  });
-
-  it('should receive http request data', () => {
-    const validIP = '1.1.1.1';
-
-    httpClient
-      .get(ConstantsService.getIpUrl, { responseType: 'text' })
-      .subscribe(data => expect(data).toEqual(validIP));
-    const req = httpTestingController.expectOne(ConstantsService.getIpUrl);
-    expect(req.request.method).toEqual('GET');
-
-    req.flush(validIP);
-    httpTestingController.verify();
+    service.validateIPv4(ipv4).subscribe(
+      (result) => {
+        expect(result).toBe(result, 'ipv4 failed to fail validate');
+      },
+      (error) => {
+        expect(error).toBe('--ip-error-validation', 'ipv4 failed to validate ok');
+      }
+    );
   });
 
   it('should getIP', waitForAsync(() => {
-    const validIP = '1.1.1.1';
-    spyOn(service, 'requestIP').and.returnValue(of(validIP, asyncScheduler));
-    service.getIP().subscribe(ip => {
-      expect(ip).toBe(validIP);
-    });
-  }));
+      const validIP = '1.1.1.1';
+      spyOn(service, 'requestIPv4').and.returnValue(of(validIP));
+      service.getIPv4().subscribe((ip) => {
+        expect(ip).toBe(validIP);
+      });
+    })
+  );
 
-  it('should return null on getIP failure', waitForAsync(() => {
+  it('should return 255.255.255.255 on receiving invalid ipv4', () => {
+    const errorMessage = 'IPv4 validation error';
+    mockErrorsService.messages = [];
     const invalidIP = '1.1.1.Z';
-    spyOn(service, 'requestIP').and.returnValue(of(invalidIP, asyncScheduler));
-    service.getIP().subscribe(
-      ip => {
-        expect(ip).toBe('ip-error');
+    spyOn(service, 'requestIPv4').and.returnValue(of(invalidIP));
+    service.getIPv4().subscribe(
+      (ip) => {
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(mockErrorsService.messages[0].logMessage).toContain(errorMessage);
+        expect(ip).toBe('255.255.255.255');
       },
       () => {
-        fail();
+        fail('On receiving invalid ipv4, failed to catch error');
       }
     );
-  }));
+  });
+
+  it('should return 255.255.255.255 on network or server error', () => {
+    const errorMessage = 'Network or Server error';
+    mockErrorsService.messages = [];
+    spyOn(httpClient, 'get').and.returnValue(throwError(errorMessage));
+    service.getIPv4().subscribe(
+      (ip) => {
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(mockErrorsService.messages[0].logMessage).toContain(errorMessage);
+        expect(ip).toBe('255.255.255.255');
+      },
+      () => {
+        fail('On network or server error, failed to catch error');
+      }
+    );
+  });
 });

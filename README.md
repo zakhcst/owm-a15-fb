@@ -1,12 +1,13 @@
 ## Open Weather Maps(OWM) 5 Day Forecast
 
-### Angular 11, Angular Material and Firebase based project.
+### Angular 11, Angular Material and Firebase based sample project.
 
 Libraries
 
 - FlexLayout
 - Angular Material
 - AngularFire2
+- Google Charts
 
 Features
 
@@ -65,6 +66,5 @@ Development build is depolyed at: https://owm-a11-fb.web.app
 
 ### Coverage
 
-![coverage-all](/misc/owm-a7-fb-coverage-all.png)
+![coverage-all](/misc/owm-a11-fb-coverage-all.jpg)
 
-![coverage-services](/misc/owm-a7-fb-coverage-services.png)

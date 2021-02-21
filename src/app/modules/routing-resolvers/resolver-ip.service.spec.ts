@@ -1,12 +1,26 @@
-import { TestBed } from '@angular/core/testing';
-
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { AppModule } from 'src/app/app.module';
 import { ResolverIpService } from './resolver-ip.service';
 
 describe('ResolverIpService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: ResolverIpService;
+  
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [AppModule],
+    });
+    service = TestBed.inject(ResolverIpService);
+  });
 
   it('should be created', () => {
-    const service: ResolverIpService = TestBed.get(ResolverIpService);
     expect(service).toBeTruthy();
   });
+
+  it('should resolve', waitForAsync(() => {
+      service.resolve().subscribe((response) => {
+        expect(response).toBe(true);
+      });
+    })
+  );
+  
 });

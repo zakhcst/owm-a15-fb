@@ -1,12 +1,25 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { AppModule } from 'src/app/app.module';
 
 import { ResolverStatsService } from './resolver-stats.service';
 
 describe('ResolverStatsService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: ResolverStatsService;
+  
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [AppModule],
+    });
+    service = TestBed.inject(ResolverStatsService);
+  });
 
   it('should be created', () => {
-    const service: ResolverStatsService = TestBed.get(ResolverStatsService);
     expect(service).toBeTruthy();
   });
+  it('should resolve', waitForAsync(() => {
+      service.resolve().subscribe((response) => {
+        expect(response).toBe(true);
+      });
+    })
+  );
 });

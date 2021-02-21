@@ -7,67 +7,68 @@ import { AngularMaterialModule } from '../modules/angular-material/angular-mater
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { delay } from 'rxjs/operators';
-import { of, asyncScheduler } from 'rxjs';
+import { of } from 'rxjs';
+import { ISnackbarData } from '../models/snackbar.model';
 
 describe('SnackbarService', () => {
   let service: SnackbarService;
   const testMessage = { message: `Message: Test`, class: 'snackbar__info' };
-  const calcDelay = () =>
-    ConstantsService.snackbarDuration *
-    (testMessage.class === 'snackbar__error' ? 2 : 1);
-  const refStub = of('Streamed on afterDismissed()', asyncScheduler).pipe(
-    delay(calcDelay())
-  );
-  const mockRef = () => {
+  const calcDelay = () => ConstantsService.snackbarDuration * (testMessage.class === 'snackbar__error' ? 2 : 1);
+  const refStub = of({ dismissedByAction: false }).pipe(delay(calcDelay()));
+  const mockRef = (data: ISnackbarData): any => {
     return {
       afterDismissed() {
         return refStub;
-      }
+      },
     };
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [AppSnackBarInnerComponent],
-      imports: [RequiredModules, AngularMaterialModule],
-      providers: [SnackbarService]
-    })
-      .overrideModule(BrowserDynamicTestingModule, {
-        set: {
-          entryComponents: [AppSnackBarInnerComponent]
-        }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AppSnackBarInnerComponent],
+        imports: [RequiredModules, AngularMaterialModule],
+        providers: [SnackbarService],
       })
-      .compileComponents();
-  }));
+        .overrideModule(BrowserDynamicTestingModule, {
+          set: {
+            entryComponents: [AppSnackBarInnerComponent],
+          },
+        })
+        .compileComponents();
+    })
+  );
 
   beforeEach(waitForAsync(() => {
-    service = TestBed.get(SnackbarService);
-  }));
+      service = TestBed.inject(SnackbarService);
+    })
+  );
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('should manage message queue', fakeAsync(() => {
+    // const spy = spyOn(service, 'ref').and.callThrough();
     const spy = spyOn(service, 'ref').and.callFake(mockRef);
 
     // Setting 3 elements
-    service.show({ ...testMessage });
+    service.show({ ...testMessage, ...{ message: `Message: Test 1` } });
     expect(spy).toHaveBeenCalledTimes(1);
     expect(service.q.length).toBe(1);
-    service.show({ ...testMessage });
+    service.show({ ...testMessage, ...{ message: `Message: Test 2` } });
     expect(spy).toHaveBeenCalledTimes(1);
     expect(service.q.length).toBe(2);
-    service.show({ ...testMessage });
+    service.show({ ...testMessage, ...{ message: `Message: Test 3` } });
     expect(spy).toHaveBeenCalledTimes(1);
     expect(service.q.length).toBe(3);
 
     // tail delay
-    tick(calcDelay() + 10);
+    tick(calcDelay() + 100);
     expect(service.q.length).toBe(2);
-    tick(calcDelay() + 10);
+    tick(calcDelay() + 100);
     expect(service.q.length).toBe(1);
-    tick(calcDelay() + 10);
+    tick(calcDelay() + 100);
     expect(service.q.length).toBe(0);
   }));
 });

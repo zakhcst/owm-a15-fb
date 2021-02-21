@@ -15,7 +15,6 @@ export class ResolverRegisterIconsService implements Resolve<any> {
   }
 
   resolve(): Observable<any> {
-    // return this._http.get(ConstantsService.iconSettings, { responseType: 'text' });
     return of(true);
   }
 }

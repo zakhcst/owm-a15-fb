@@ -1,6 +1,14 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SetStatusShowTimeSlotBgPicture, SetStatusLiveDataUpdate, SetStatusDaysForecast, SetStatusShowDetailHumidity, SetStatusShowDetailWind, SetStatusShowDetailPressure, SetStatusShowChartIcons } from 'src/app/states/app.actions';
+import {
+  SetStatusShowTimeSlotBgPicture,
+  SetStatusLiveDataUpdate,
+  SetStatusDaysForecast,
+  SetStatusShowDetailHumidity,
+  SetStatusShowDetailWind,
+  SetStatusShowDetailPressure,
+  SetStatusShowChartIcons,
+} from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
@@ -33,6 +41,7 @@ export class DialogSettingsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
+    console.log('onResize()', this)
     this.reposition();
   }
 
@@ -40,8 +49,8 @@ export class DialogSettingsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogSettingsComponent>,
     private _store: Store,
-  ) { }
-  
+  ) {}
+
   ngOnInit(): void {
     this.showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showTimeSlotBgPicture);
     this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
@@ -49,7 +58,7 @@ export class DialogSettingsComponent implements OnInit {
     this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
     this.showDetailWind = this._store.selectSnapshot(AppStatusState.showDetailWind);
     this.showDetailHumidity = this._store.selectSnapshot(AppStatusState.showDetailHumidity);
-    const routePathEndSegment = this._store.selectSnapshot(RouterState.url).split('/').pop() || ConstantsService.toolbarElements.forecastFlex.path;
+    const routePathEndSegment = this._store.selectSnapshot(RouterState.url)?.split('/').pop() || ConstantsService.toolbarElements.forecastFlex.path;
     this.settingsOptions = ConstantsService.toolbar[routePathEndSegment].settingsOptions;
     this.showChartIcons = this._store.selectSnapshot(AppStatusState.showChartIcons);
 
@@ -99,13 +108,15 @@ export class DialogSettingsComponent implements OnInit {
     if (!settingsButtonTop) {
       this.closeDialog();
     }
-    const settingsButtonLeft = this.data.settingsButton._elementRef.nativeElement.offsetLeft || document.body.clientWidth;
+    const settingsButtonLeft =
+      this.data.settingsButton._elementRef.nativeElement.offsetLeft || document.body.clientWidth;
     const isXs = this.isXs();
     const settingsButtonoffsetWidth = this.data.settingsButton._elementRef.nativeElement.offsetWidth;
-    const dialogPositionLeft = settingsButtonLeft + (isXs ? settingsButtonoffsetWidth + 10  : - (this.data.dialogWidth + 10));
+    const dialogPositionLeft =
+      settingsButtonLeft + (isXs ? settingsButtonoffsetWidth + 10 : -(this.data.dialogWidth + 10));
     const windowHeight = window.innerHeight;
     if (windowHeight < this.settingsOptions['dialogMaxHeight']) {
-      this.dialogRef.updateSize(this.data.dialogWidth + 'px', (windowHeight - this.data.dialogMargin) + 'px');
+      this.dialogRef.updateSize(this.data.dialogWidth + 'px', windowHeight - this.data.dialogMargin + 'px');
     }
     this.dialogRef.updatePosition({
       top: this.data.dialogPositionTop + 'px',

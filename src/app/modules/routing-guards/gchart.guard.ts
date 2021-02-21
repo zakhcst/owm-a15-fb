@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree,
-  CanLoad,
-} from '@angular/router';
-import { interval, merge, Observable } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanLoad } from '@angular/router';
+import { interval, merge, Observable, of } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
 import { ConstantsService } from '../../services/constants.service';
-import { debounce, filter, mapTo, take, tap } from 'rxjs/operators';
+import { filter, mapTo, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -18,16 +12,12 @@ import { debounce, filter, mapTo, take, tap } from 'rxjs/operators';
 export class CanActivateGchart implements CanActivate {
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.connectedStatus();
-  }
-  connectedStatus() {
-    const timeout = interval(1000).pipe(mapTo(false));
-    const connected = this.connected$.pipe(filter(status => status));
-    return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
+  canActivate(): Observable<boolean> {
+    const timeout = interval(ConstantsService.connectedResponseTimeLimit_ms).pipe(take(1), mapTo(false));
+    const connected = this.connected$.pipe(filter((status) => status));
+    return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected']
+      ? merge(connected, timeout).pipe(take(1))
+      : of(true);
   }
 }
 
@@ -36,13 +26,13 @@ export class CanActivateGchart implements CanActivate {
 })
 export class CanLoadGChart implements CanLoad {
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
-  
-  canLoad(): Observable<boolean> | Promise<boolean> | boolean {
-    return this.connectedStatus();
-  }
-  connectedStatus() {
-    const timeout = interval(1000).pipe(mapTo(false));
-    const connected = this.connected$.pipe(filter(status => status));
-    return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] ? merge(connected, timeout).pipe(take(1)) : true;
+
+  canLoad(): Observable<boolean> {
+    const timeout = interval(ConstantsService.connectedResponseTimeLimit_ms).pipe(take(1), mapTo(false));
+    const connected = this.connected$.pipe(filter((status) => status));
+    return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected']
+      ? merge(connected, timeout).pipe(take(1))
+      : of(true);
   }
 }
+

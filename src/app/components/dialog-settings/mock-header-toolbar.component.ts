@@ -28,10 +28,10 @@ import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.comp
 
 @Component({
   selector: 'app-header-toolbar',
-  templateUrl: './header-toolbar.component.html',
-  styleUrls: ['./header-toolbar.component.css'],
+  templateUrl: '../header-toolbar/header-toolbar.component.html',
+  styleUrls: ['../header-toolbar/header-toolbar.component.css'],
 })
-export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MockHeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatToolbar) matToolbar: MatToolbar;
   @ViewChild('container', { static: true }) container: ElementRef;
 

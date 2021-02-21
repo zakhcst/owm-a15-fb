@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { RequiredModules } from '../modules/required.module';
 
 import { OwmDataManagerService } from './owm-data-manager.service';
 import { OwmService } from './owm.service';
@@ -14,8 +13,10 @@ import {
   MockCitiesService,
   MockErrorsService,
   MockOwmFallbackDataService,
-  getNewDataObject
+  getNewDataObject,
 } from './testing.services.mocks';
+import { SnackbarService } from './snackbar.service';
+import { AppModule } from '../app.module';
 
 describe('OwmDataManagerService', () => {
   let service: OwmDataManagerService;
@@ -26,144 +27,98 @@ describe('OwmDataManagerService', () => {
   let mockErrorsService: MockErrorsService;
   let dataService: DataService;
 
-  beforeEach(waitForAsync(() => {
-    mockOwmService = new MockOwmService();
-    mockDataService = new MockDataService();
-    mockCitiesService = new MockCitiesService();
-    mockOwmFallbackDataService = new MockOwmFallbackDataService();
-    mockErrorsService = new MockErrorsService();
+  beforeEach(
+    waitForAsync(() => {
+      mockOwmService = new MockOwmService();
+      mockDataService = new MockDataService();
+      mockCitiesService = new MockCitiesService();
+      mockOwmFallbackDataService = new MockOwmFallbackDataService();
+      mockErrorsService = new MockErrorsService();
 
-    TestBed.configureTestingModule({
-      imports: [RequiredModules],
-      providers: [
-        {
-          provide: OwmService,
-          useValue: mockOwmService
+      TestBed.configureTestingModule({
+        imports: [AppModule],
+        declarations: [],
+        providers: [
+          {
+            provide: OwmService,
+            useValue: mockOwmService,
+          },
+          {
+            provide: DataService,
+            useValue: mockDataService,
+          },
+          {
+            provide: CitiesService,
+            useValue: mockCitiesService,
+          },
+          {
+            provide: OwmFallbackDataService,
+            useValue: mockOwmFallbackDataService,
+          },
+          {
+            provide: ErrorsService,
+            useValue: mockErrorsService,
+          },
+          SnackbarService,
+        ],
+      });
+      service = TestBed.inject(OwmDataManagerService);
+      dataService = TestBed.inject(DataService);
+    })
+  );
+
+  it(
+    'should be created',
+    waitForAsync(() => {
+      expect(service).toBeTruthy();
+      expect(dataService).toBeTruthy();
+    })
+  );
+
+  it(
+    'getDataDB: should return new data when existing has expired',
+    waitForAsync(() => {
+      // const reads = mockCitiesService.reads;
+      mockErrorsService.messages = [];
+      const spyDataServiceGetData = spyOn(mockDataService, 'getData').and.callThrough();
+      const spyFallBackDataServiceGetData = spyOn(mockOwmFallbackDataService, 'getData').and.callThrough();
+
+      service.getDataDB('citiId').subscribe(
+        (responseData) => {
+          // expect(mockCitiesService.reads).toBe(reads + 1);
+          expect(mockErrorsService.messages.length).toBe(0);
+          expect(spyDataServiceGetData).toHaveBeenCalledTimes(1);
+          expect(spyFallBackDataServiceGetData).toHaveBeenCalledTimes(0);
+          // fails getOwmData because of not valid cityId
+          // and defaults to the fallback data
+          delete responseData.updated;
+          expect(responseData).toEqual(getNewDataObject());
+          // done();
         },
-        {
-          provide: DataService,
-          useValue: mockDataService
-        },
-        {
-          provide: CitiesService,
-          useValue: mockCitiesService
-        },
-        {
-          provide: OwmFallbackDataService,
-          useValue: mockOwmFallbackDataService
-        },
-        {
-          provide: ErrorsService,
-          useValue: mockErrorsService
-        }
-      ]
-    });
-    service = TestBed.get(OwmDataManagerService);
-    dataService = TestBed.get(DataService);
-  }));
-
-  it('should be created', waitForAsync(() => {
-    expect(service).toBeTruthy();
-    expect(dataService).toBeTruthy();
-  }));
-
-  // it('getData: should return data with new listByDate and reads++', (done: DoneFn) => {
-  it('getData: should return data with new listByDate and reads++', waitForAsync(() => {
-    const reads = mockCitiesService.reads;
-    mockDataService.dbData = null;
-    service.getData('citiId').subscribe(
-      _ => {
-        expect(mockCitiesService.reads).toBe(reads + 1);
-        expect(mockDataService.dbData.updated).toBeTruthy();
-        expect(mockDataService.dbData.listByDate).toEqual(
-          getNewDataObject().listByDate
-        );
-        // done();
-      },
-      error => fail(error)
-    );
-  }));
-
-  // it('getData: should return new data when expired', (done: DoneFn) => {
-  it('getData: should return new data when expired', waitForAsync(() => {
-    const reads = mockCitiesService.reads;
-    mockErrorsService.messages = [];
-    const spyDataServiceGetData = spyOn(
-      mockDataService,
-      'getData'
-    ).and.callThrough();
-    const spyFallBackDataServiceGetData = spyOn(
-      mockOwmFallbackDataService,
-      'getData'
-    ).and.callThrough();
-
-    service.getData('citiId').subscribe(
-      responseData => {
-        expect(mockCitiesService.reads).toBe(reads + 1);
-        expect(mockErrorsService.messages.length).toBe(0);
-        expect(spyDataServiceGetData).toHaveBeenCalledTimes(1);
-        expect(spyFallBackDataServiceGetData).toHaveBeenCalledTimes(0);
-        expect(responseData).toEqual(getNewDataObject());
-        // done();
-      },
-      error => fail(error)
-    );
-  }));
-
-  // it('getData: should return _owmFallback data when _cities.updateReads fails', (done: DoneFn) => {
-  it('getData: should return _owmFallback data when _cities.updateReads fails', waitForAsync(() => {
-    const reads = mockCitiesService.reads;
-    mockErrorsService.messages = [];
-    const spyFallBackDataServiceGetData = spyOn(mockOwmFallbackDataService, 'getData').and.callThrough();
-    const spyDataServiceGetData = spyOn(mockDataService, 'getData').and.callThrough();
-    service.getData(null).subscribe(
-      responseData => {
-        expect(mockCitiesService.reads).toBe(reads);
-        expect(mockErrorsService.messages.length).toBe(1);
-        expect(spyDataServiceGetData).toHaveBeenCalledTimes(0);
-        expect(spyFallBackDataServiceGetData).toHaveBeenCalledTimes(1);
-        expect(responseData).toEqual(getNewDataObject('owm'));
-        // done();
-      },
-      error => fail(error)
-    );
-  }));
+        (error) => fail(error)
+      );
+    })
+  );
 
   // it('requestNewOwmData: should requestNewOwmData', (done: DoneFn) => {
-  it('requestNewOwmData: should requestNewOwmData', waitForAsync(() => {
-    mockDataService.dbData = null;
-    service.requestNewOwmData('citiId').subscribe(
-      _ => {
-        expect(mockDataService.dbData.updated).toBeTruthy();
-        expect(mockDataService.dbData.listByDate).toEqual(
-          getNewDataObject().listByDate
-        );
-        // done();
-      },
-      error => fail(error)
-    );
-  }));
-
-  // it('requestNewOwmData: should fail requestNewOwmData when no cityId is supplied', (done: DoneFn) => {
-  it('requestNewOwmData: should fail requestNewOwmData when no cityId is supplied', waitForAsync(() => {
-    mockDataService.dbData = null;
-    service.requestNewOwmData(null).subscribe(
-      _ => {
-        expect(mockDataService.dbData).toBeFalsy();
-        fail('should have failed');
-        // done();
-      },
-      error => {
-        expect(mockDataService.dbData).toBeFalsy();
-        // done();
-      }
-    );
-  }));
+  it(
+    'requestNewOwmData: should requestNewOwmData',
+    waitForAsync(() => {
+      mockDataService.dbData = null;
+      service.getDataOWM('citiId').subscribe(
+        (responseData) => {
+          delete responseData.updated;
+          expect(responseData).toEqual(getNewDataObject());
+          // expect(mockDataService.dbData.listByDate).toEqual(getNewDataObject().listByDate);
+          // done();
+        },
+        (error) => fail(error)
+      );
+    })
+  );
 
   it('setListByDate: should set listByDate', () => {
-    expect(
-      service.setListByDate(getNewDataObject('owm')).listByDate
-    ).toBeTruthy();
+    expect(service.setListByDate(getNewDataObject('owm')).listByDate).toBeTruthy();
   });
 
   it('isNotExpired: fallback/sample data should be expired', () => {

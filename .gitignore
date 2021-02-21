@@ -6,6 +6,7 @@ src/build-info.ts
 /tmp
 /out-tsc
 
+#firebase system
 firebase-debug.log
 firebase/.firebase/
 firebase/public
@@ -16,6 +17,10 @@ firebase/pubsub-debug.log
 /node_modules
 node_modules
 update
+
+#coverage
+coverage
+
 
 # IDEs and editors
 /.idea

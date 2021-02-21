@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
-import { take, switchMap, map, filter } from 'rxjs/operators';
+import { take, switchMap, map, last } from 'rxjs/operators';
 import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
@@ -15,28 +15,27 @@ export class ErrorPageComponent implements OnInit {
   viewCount: number;
 
   constructor(
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute
+    public _router: Router,
+    public _activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this._activatedRoute.data
+    this._activatedRoute.params
       .pipe(
         take(1),
-        switchMap(activatedRouteData => {
-          this.errorMessage = activatedRouteData.errorMessage;
-          this.redirectPage = activatedRouteData.redirectPage;
+        switchMap(activatedRouteParams => {
+          this.errorMessage = activatedRouteParams.errorMessage ||'ERROR';
+          this.redirectPage = activatedRouteParams.redirectPage || '';
           return timer(0, 1000);
         }),
         take(ConstantsService.redirectDelay + 1),
         map((timerCount: number) => {
           this.viewCount = ConstantsService.redirectDelay - timerCount;
-          return timerCount;
         }),
-        filter((timerCount: number) => timerCount === ConstantsService.redirectDelay)
+        last(),
       )
-      .subscribe((timerCount: number) => {
-          this._router.navigate([this.redirectPage]);
+      .subscribe(() => {
+          this._router.navigate([this.redirectPage || '' ]);
       });
   }
 }

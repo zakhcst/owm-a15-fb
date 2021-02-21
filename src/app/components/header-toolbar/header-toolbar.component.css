@@ -98,6 +98,9 @@
 .button-settings-xs {
   margin: 10px 2px;
 }
+.mat-icon {
+  display: inline;
+}
 
 .header-action {
   margin-left: 10px !important;

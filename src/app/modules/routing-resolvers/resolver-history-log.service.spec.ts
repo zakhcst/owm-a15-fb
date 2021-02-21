@@ -1,12 +1,26 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { AppModule } from 'src/app/app.module';
 
 import { ResolverHistoryLogService } from './resolver-history-log.service';
 
 describe('ResolverHistoryLogService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: ResolverHistoryLogService;
+  
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [AppModule],
+    });
+    service = TestBed.inject(ResolverHistoryLogService);
+  });
 
   it('should be created', () => {
-    const service: ResolverHistoryLogService = TestBed.get(ResolverHistoryLogService);
     expect(service).toBeTruthy();
   });
+  
+  it('should resolve', waitForAsync(() => {
+      service.resolve().subscribe((response) => {
+        expect(response).toBe(true);
+      });
+    })
+  );
 });

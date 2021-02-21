@@ -1,16 +1,21 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from 'src/environments/environment';
 import { AppComponent } from './app.component';
-import { RequiredModules } from './modules/required.module';
+import { AppModule } from './app.module';
 import { SortCitiesPipe } from './pipes/sort-cities.pipe';
 
 describe('AppComponent', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [AppComponent, SortCitiesPipe],
-      imports: [RequiredModules],
-      providers: [AppComponent]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AppComponent, SortCitiesPipe],
+        imports: [AppModule, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })],
+        // imports: [AppModule],
+        providers: [AppComponent],
+      }).compileComponents();
+    })
+  );
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);

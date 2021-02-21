@@ -1,5 +1,5 @@
 import { Injectable, ErrorHandler, Injector, NgZone } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ErrorsService } from './errors.service';
 import { AppErrorPayloadModel } from '../states/app.models';
 
@@ -20,6 +20,6 @@ export class AppErrorHandlerService implements ErrorHandler {
       logMessage: `Client error:\n ${error.message}:\n ${error}`
     };
     _errors.add(errorLog);
-    this.ngZone.run(() => router.navigate(['error']));
+    this.ngZone.run(() => router.navigate(['error', {errorMessage: error, redirectPage: ''}]));
   }
 }

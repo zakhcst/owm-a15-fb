@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ConstantsService } from './constants.service';
 import { IOwmDataModel } from '../models/owm-data.model';
-import { OwmFallbackDataService } from './owm-fallback-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  constructor(private _db: AngularFireDatabase, private _owmFallback: OwmFallbackDataService) {}
+  constructor(private _db: AngularFireDatabase) {}
   
 
   getData(cityId: string) {

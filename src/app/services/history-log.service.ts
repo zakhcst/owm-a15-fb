@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { AppHistoryLogState, AppStatusState } from '../states/app.state';
 import { SetHistoryLogState } from '../states/app.actions';
-import { HistoryLogModel } from '../states/app.models';
 @Injectable({
   providedIn: 'root',
 })

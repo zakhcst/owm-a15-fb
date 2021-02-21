@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     MatSliderModule,
     MatDialogModule,
     MatIconModule,
-    FormsModule, 
+    FormsModule,
   ],
   exports: [
     CommonModule,
@@ -40,7 +40,7 @@ import { FormsModule } from '@angular/forms';
     MatSliderModule,
     MatDialogModule,
     MatIconModule,
-    FormsModule, 
-  ]
+    FormsModule,
+  ],
 })
-export class AngularMaterialModule { }
+export class AngularMaterialModule {}

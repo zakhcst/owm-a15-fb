@@ -24,15 +24,11 @@
     <span
       >OWM Forecast
       <br />
-      <span
-        *ngIf="owmData && owmDataExpired"
-        class="header-sample-text"
-        >{{
-          (owmDataExpired ? "Offline" : "") +
-            (!owmData.updated ? " Sample" : "") +
-            " Data"
-        }}</span
-      >
+      <span *ngIf="owmData && owmDataExpired" class="header-sample-text">{{
+        (owmDataExpired ? "Offline" : "") +
+          (!owmData.updated ? " Sample" : "") +
+          " Data"
+      }}</span>
     </span>
     <span class="header-actions-container">
       <ng-container *ngFor="let action of toolbarActions">

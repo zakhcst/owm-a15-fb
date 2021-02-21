@@ -9,7 +9,10 @@ export interface IOwmDataModel {
 }
 
 export interface IListByDateModel {
-  [dateValue: string]: IOwmDataModelTimeSlotUnit;
+  [dateValue: string]: IListDayByHourModel;
+}
+export interface IListDayByHourModel {
+  [hourValue: string]: IOwmDataModelTimeSlotUnit;
 }
 
 
@@ -52,17 +55,17 @@ export interface IOwmDataModelTimeSlotUnit {
   sys?: {
     pod: string;
   };
-  weather: [
-    {
-      description: string;
-      icon: string;
-      id: number;
-      main: string;
-    }
-  ];
+  weather: IOwmDataWeatherModel[];
   wind: {
     deg: number;
     speed: number;
   };
   visibility: number;
+}
+
+export interface IOwmDataWeatherModel {
+  description: string;
+  icon: string;
+  id: number;
+  main: string; 
 }

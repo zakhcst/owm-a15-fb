@@ -1,15 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
-import { Observable, of, Subscription, timer } from 'rxjs';
-import { debounce, filter, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 
 import { ConstantsService } from '../../services/constants.service';
 import { ITimeTemplate } from '../../models/hours.model';
 import { ErrorsService } from '../../services/errors.service';
 
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { IOwmDataModel, IListByDateModel } from '../../models/owm-data.model';
-import { AppOwmDataState, AppStatusState } from 'src/app/states/app.state';
+import { AppStatusState } from 'src/app/states/app.state';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,15 +41,14 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   listByDateLength = 0;
   scrollbarHeight = 0;
   listByDate: IListByDateModel;
-  daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
   subscriptions: Subscription;
+  daysForecast = 5;
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
   constructor(
     private _errors: ErrorsService,
     public dialog: MatDialog,
-    private _store: Store,
     private _data: OwmDataManagerService
   ) {}
 

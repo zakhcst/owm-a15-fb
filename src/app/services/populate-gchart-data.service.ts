@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConstantsService } from './constants.service';
-import { IOwmDataModelTimeSlotUnit, IListByDateModel } from '../models/owm-data.model';
+import { IOwmDataModelTimeSlotUnit, IListByDateModel, IListDayByHourModel } from '../models/owm-data.model';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +39,7 @@ export class PopulateGchartDataService {
     this.chart[dayK].data = [];
   }
 
-  setGChartDayData(dayK: string, day: IOwmDataModelTimeSlotUnit, weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]) {
+  setGChartDayData(dayK: string, day: IListDayByHourModel, weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]) {
     const hoursKeys = Object.keys(day).sort((a, b) => (a > b ? +a : +b));
 
     // add the missing slots at the begining of the day
@@ -198,7 +198,7 @@ export class PopulateGchartDataService {
   }
 
 
-  setGChartDayIcons(dayK: string, day: IOwmDataModelTimeSlotUnit) {
+  setGChartDayIcons(dayK: string, day: IListDayByHourModel) {
     const hoursKeys = Object.keys(day).sort((a, b) => (a > b ? +a : +b));
     this.chart[dayK].icons = [];
     // add the missing slots at the begining of the day

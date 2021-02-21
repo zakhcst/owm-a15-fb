@@ -10,6 +10,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { getNewDataObject } from './testing.services.mocks';
+import { SharedModule } from '../modules/shared.module';
 
 
 describe('DataService', () => {
@@ -24,15 +25,16 @@ describe('DataService', () => {
       imports: [
         RequiredModules,
         AngularFireModule.initializeApp(environment.firebase),
-        AngularFireDatabaseModule
+        AngularFireDatabaseModule, 
+        SharedModule
       ],
       providers: [
         DataService,
         { provide: AngularFireDatabase, useClass: MockAngularFireService }
       ]
     });
-    service = TestBed.get(DataService);
-    serviceFB = TestBed.get(AngularFireDatabase);
+    service = TestBed.inject(DataService);
+    serviceFB = TestBed.inject(AngularFireDatabase);
   }));
 
   it('should be created', () => {

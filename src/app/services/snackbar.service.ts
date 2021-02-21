@@ -3,14 +3,14 @@ import {
   MatSnackBar,
   MatSnackBarRef,
   MatSnackBarHorizontalPosition,
-  MatSnackBarConfig
+  MatSnackBarConfig,
 } from '@angular/material/snack-bar';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { ISnackbarData } from '../models/snackbar.model';
 import { Subscription } from 'rxjs';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnackbarService {
   public q = [];
@@ -33,7 +33,7 @@ export class SnackbarService {
     if (this.q[0] === data) {
       this.zone.run(() => {
         const snackbarRef = this.ref(data);
-        const afterDismissedSubscription: Subscription =  snackbarRef.afterDismissed().subscribe(() => {
+        const afterDismissedSubscription: Subscription = snackbarRef.afterDismissed().subscribe((_) => {
           afterDismissedSubscription.unsubscribe();
           this.q.shift();
           if (this.q.length > 0) {
@@ -50,7 +50,7 @@ export class SnackbarService {
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
       panelClass: data.class,
-      duration: data.delay || ConstantsService.snackbarDuration * (data.class === 'snackbar__error' ? 2 : 1)
+      duration: data.delay || ConstantsService.snackbarDuration * (data.class === 'snackbar__error' ? 2 : 1),
     };
     return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, options);
   }

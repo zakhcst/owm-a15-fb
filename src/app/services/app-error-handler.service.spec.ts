@@ -6,7 +6,7 @@ describe('AppErrorHandlerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: AppErrorHandlerService = TestBed.get(AppErrorHandlerService);
+    const service: AppErrorHandlerService = TestBed.inject(AppErrorHandlerService);
     expect(service).toBeTruthy();
   });
 });

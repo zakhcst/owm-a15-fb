@@ -7,7 +7,6 @@ import { Select, Store } from '@ngxs/store';
 import { SetStatusShowLoading, SetStatusUpdatesAvailable } from './states/app.actions';
 import { ConstantsService } from './services/constants.service';
 import { AppStatusState } from './states/app.state';
-import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -60,8 +59,8 @@ export class AppComponent implements OnDestroy {
     this._store.dispatch(new SetStatusUpdatesAvailable(false));
     this.subscriptions.add(
       this._updates.available.subscribe((event) => {
-        console.log('current version is', event.current);
-        console.log('available version is', event.available);
+        console.log('Current version is', event.current);
+        console.log('New available version is', event.available);
         this._store.dispatch(new SetStatusUpdatesAvailable(true));
       })
     );

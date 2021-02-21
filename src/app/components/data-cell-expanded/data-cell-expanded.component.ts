@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from '../../services/constants.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -11,7 +11,7 @@ import { AppStatusState } from 'src/app/states/app.state';
   styleUrls: ['./data-cell-expanded.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataCellExpandedComponent {
+export class DataCellExpandedComponent implements OnInit {
   iconsOwm: string = ConstantsService.iconsOwm;
   timeSlotData: IOwmDataModelTimeSlotUnit;
   dateTime: number;
