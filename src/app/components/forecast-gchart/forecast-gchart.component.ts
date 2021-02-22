@@ -211,7 +211,8 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   showDataCellExpanded(timeSlotData: IOwmDataModelTimeSlotUnit, iconIndex: number) {
-    if (timeSlotData && iconIndex) {
+    console.log(timeSlotData, iconIndex)
+    if (timeSlotData && (iconIndex===0 || iconIndex)) {
       const bgColor = this.timeTemplate[iconIndex].bgColor;
       this.dialog.open(DataCellExpandedComponent, {
         data: { timeSlotData, bgColor },
