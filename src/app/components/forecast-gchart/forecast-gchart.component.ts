@@ -6,6 +6,7 @@ import { debounceTime, filter } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { ITimeTemplate } from '../../models/hours.model';
+import { IOwmDataModelTimeSlotUnit } from '../../models/owm-data.model';
 
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
@@ -15,6 +16,8 @@ import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ChartReadyEvent } from 'angular-google-charts';
 import { OwmDataManagerService } from 'src/app/services/owm-data-manager.service';
+import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -49,7 +52,8 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     private _populateGchartData: PopulateGchartDataService,
     private _breakpointObserver: BreakpointObserver,
     private _store: Store,
-    private _data: OwmDataManagerService
+    private _data: OwmDataManagerService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -204,6 +208,17 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
         `
       );
     }, 500);
+  }
+
+  showDataCellExpanded(timeSlotData: IOwmDataModelTimeSlotUnit, iconIndex: number) {
+    if (timeSlotData && iconIndex) {
+      const bgColor = this.timeTemplate[iconIndex].bgColor;
+      this.dialog.open(DataCellExpandedComponent, {
+        data: { timeSlotData, bgColor },
+        panelClass: 'data-cell-expanded',
+        hasBackdrop: true,
+      });
+    }
   }
 
   addError(custom: string, errorMessage: string) {

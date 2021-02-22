@@ -51,9 +51,12 @@
             
             <div class="overlay flex flex-row flex-justify-content-center" #overlay>
               <div class="overlay-content flex-justify-content-stretch" #overlayContent>
-                  <ng-container *ngFor="let slot of chart[dayK].icons">
+                  <ng-container *ngFor="let slot of chart[dayK].icons; index as iconInd">
                     <span class="flex flex-justify-content-center">
-                      <span class="icon-weather-container">
+                      <span 
+                        class="icon-weather-container" 
+                        (click)="$event.stopPropagation();showDataCellExpanded(weatherData.listByDate[dayK][slot.hourK], iconInd)"
+                        >
                         <span class="icons-weather" [ngStyle]="setIconStyle(slot)" *ngIf="showChartIcons$ | async"></span>
                       </span>
                     </span>
