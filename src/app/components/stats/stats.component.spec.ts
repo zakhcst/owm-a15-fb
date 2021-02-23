@@ -1,30 +1,43 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RequiredModules } from 'src/app/modules/required.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxsModule, Store } from '@ngxs/store';
+import { of } from 'rxjs';
 import { SharedModule } from 'src/app/modules/shared.module';
 import { SnackbarService } from 'src/app/services/snackbar.service';
+import { AppCitiesState, AppHistoryLogState, AppStatsState, AppStatusState } from 'src/app/states/app.state';
 
 import { StatsComponent } from './stats.component';
 
 describe('StatsComponent', () => {
   let component: StatsComponent;
   let fixture: ComponentFixture<StatsComponent>;
+  let store: Store;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [RequiredModules, SharedModule],
-      declarations: [ StatsComponent ],
-      providers: [SnackbarService]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          BrowserModule,
+          BrowserAnimationsModule,
+          SharedModule,
+          NgxsModule.forRoot([AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState]),
+        ],
+        declarations: [StatsComponent],
+        providers: [SnackbarService, Store],
+      }).compileComponents();
+      store = TestBed.inject(Store);
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StatsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    spyOn(store, 'select').and.callFake((selector) => of({}));
+    fixture.detectChanges();
+    expect(component).toBeDefined();
   });
 });

@@ -15,7 +15,7 @@
           <div
             fxFlex
             *ngFor="
-              let dataDaily of weatherData?.listByDate
+              let dataDaily of listByDate
                 | keyvalue
                 | sliceArray: daysForecast;
               trackBy: trackByIdFn;
@@ -69,7 +69,7 @@
             class="table-row"
             fxLayoutAlign="start center"
             *ngFor="
-              let dataDaily of weatherData?.listByDate
+              let dataDaily of listByDate
                 | keyvalue
                 | sliceArray: daysForecast;
               index as ind
@@ -93,13 +93,6 @@
       </div>
       <!-- Hours columns-->
     </div>
-    <div
-      fxFlex
-      fxLayout="column"
-      fxLayoutAlign="center center"
-      *ngIf="loadingOwmData"
-    >
-      <mat-spinner diameter="50"></mat-spinner>
-    </div>
+
   </div>
 </mat-card>

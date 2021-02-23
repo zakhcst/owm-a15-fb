@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AppModule } from 'src/app/app.module';
+import { HistoryLogService } from 'src/app/services/history-log.service';
 
 import { ResolverHistoryLogService } from './resolver-history-log.service';
 
@@ -8,7 +8,7 @@ describe('ResolverHistoryLogService', () => {
   
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      providers: [ {provide: HistoryLogService, useValue: {} }],
     });
     service = TestBed.inject(ResolverHistoryLogService);
   });

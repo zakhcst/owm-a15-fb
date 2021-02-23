@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AppModule } from '../../app.module';
+import { CitiesService } from 'src/app/services/cities.service';
 
 import { ResolverCitiesService } from './resolver-cities.service';
 
@@ -8,7 +8,7 @@ describe('ResolverCitiesService', () => {
 
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      providers: [ {provide: CitiesService, useValue: {} }],
     })
   );
   beforeEach(() => {

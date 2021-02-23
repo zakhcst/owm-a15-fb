@@ -24,7 +24,7 @@ import { ConstantsService } from '../../services/constants.service';
   ],
 })
 export class StatsComponent implements OnInit, OnDestroy {
-  stats: IStats;
+  stats: IStats[] | {};
   cities: ICities;
   citiesLength = 0;
   loadingError = false;
@@ -36,7 +36,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   @Select(AppStatusState.selectStatusIp) ip$: Observable<string>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
   @Select(AppHistoryLogState) historyLogState$: Observable<IHistoryLog>;
-  @Select(AppStatsState) stats$: Observable<IStats>;
+  @Select(AppStatsState) stats$: Observable<IStats[]>;
 
   constructor() {}
 

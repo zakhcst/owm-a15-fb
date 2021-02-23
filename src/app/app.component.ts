@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { PresenceService } from './services/presence.service';
 import { Observable, Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { Select, Store } from '@ngxs/store';
 import { SetStatusShowLoading, SetStatusUpdatesAvailable } from './states/app.actions';
 import { ConstantsService } from './services/constants.service';
 import { AppStatusState } from './states/app.state';
+import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -29,6 +30,7 @@ export class AppComponent implements OnDestroy {
     this.setSubscribeOnConnected();
     this.startListenerOnAway();
     this.setSubscribeOnUpdates();
+    this.setSubscribeDebounceLoadingActions();
   }
 
   initCss() {
@@ -42,17 +44,15 @@ export class AppComponent implements OnDestroy {
     document.documentElement.style.setProperty('--showDetailWind', this._store.selectSnapshot(AppStatusState.showDetailWind) ? 'flex' : 'none');
     document.documentElement.style.setProperty('--showDetailHumidity', this._store.selectSnapshot(AppStatusState.showDetailHumidity) ? 'flex' : 'none');
     document.documentElement.style.setProperty('--showDetailSecondary', this._store.selectSnapshot(AppStatusState.showDetailSecondary) ? 'flex' : 'none');
-
   }
 
-  setSubscribeOnConnected() {
-    this.subscriptions.add(
-      this._presence.updateOnConnected().subscribe((connected) => console.log('AppComponent connected', connected))
-    );
-  }
-
-  startListenerOnAway() {
-    this._presence.updateOnAway();
+  setSubscribeDebounceLoadingActions() {
+    const subscriptionDespatchLoadingActions = this.showLoading$
+      .pipe(debounceTime(ConstantsService.loadingDispatechesDebounceTime_ms))
+      .subscribe((loading) => {
+        this.loading = loading;
+      });
+    this.subscriptions.add(subscriptionDespatchLoadingActions);
   }
 
   setSubscribeOnUpdates() {
@@ -63,6 +63,16 @@ export class AppComponent implements OnDestroy {
         console.log('New available version is', event.available);
         this._store.dispatch(new SetStatusUpdatesAvailable(true));
       })
+    );
+  }
+  
+  startListenerOnAway() {
+    this._presence.updateOnAway();
+  }
+
+  setSubscribeOnConnected() {
+    this.subscriptions.add(
+      this._presence.updateOnConnected().subscribe((connected) => console.log('AppComponent connected', connected))
     );
   }
 

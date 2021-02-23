@@ -29,7 +29,6 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   dateColumn: ElementRef;
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
-  loadingOwmData = true;
   weatherData: IOwmDataModel;
   chart: {} = {};
   activeDays: string[] = [];
@@ -120,18 +119,15 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   subscribeOwmData() {
-    this.loadingOwmData = true;
     const weatherDataSubscription = this._data.getOwmData$({ showLoading: true }).subscribe(
       (data) => {
         this.weatherData = data;
         this.activeDays = Object.keys(this.weatherData.listByDate).sort();
         this.weatherDataDateKeys = [...this.activeDays];
-        this.loadingOwmData = false;
         this.chart = this._populateGchartData.setGChartData(this.weatherData.listByDate, this.weatherDataDateKeys);
         this.resizeGraphs(this.activeDays);
       },
       (err) => {
-        this.loadingOwmData = false;
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );

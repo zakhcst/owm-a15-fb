@@ -72,7 +72,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
       (data) => {
         this.weatherData = data;
         this.listByDate = data.listByDate;
-        this.listByDateLength = Object.keys(this.weatherData.listByDate).length;
+        this.listByDateLength = Object.keys(data.listByDate).length;
         this.loadingOwmData = false;
       },
       (err) => {

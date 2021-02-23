@@ -103,7 +103,9 @@ export class ConstantsService {
   public static readonly arrow000Deg = String.fromCodePoint(11165);
   public static readonly snackbarDuration = 2500;
   public static readonly redirectDelay = 5;
-  public static readonly connectedResponseTimeLimit_ms = 1000;
+  public static readonly connectedResponseTimeLimit_ms = 1500;
+  public static readonly loadingDispatechesDebounceTime_ms = 100;
+  public static readonly loadingDataDebounceTime_ms = 1000;
 
   public static readonly iconsWeatherSize2 = 50;
   public static readonly iconsWeatherMap = {

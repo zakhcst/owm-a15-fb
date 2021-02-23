@@ -24,10 +24,12 @@
     <span
       >OWM Forecast
       <br />
-      <span *ngIf="owmData && owmDataExpired" class="header-sample-text">{{
-        (owmDataExpired ? "Offline" : "") +
-          (!owmData.updated ? " Sample" : "") +
-          " Data"
+      <span *ngIf="owmData && (owmDataExpired || !connected || !owmData.updated)" class="header-sample-text">
+        {{
+          (!connected ? "Offline " : "") +
+          (owmDataExpired ? "Expired " : "") +
+          (!owmData.updated ? "Sample " : "") +
+          "Data"
       }}</span>
     </span>
     <span class="header-actions-container">

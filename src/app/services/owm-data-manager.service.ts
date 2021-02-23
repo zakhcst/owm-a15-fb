@@ -11,6 +11,7 @@ import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
 import { AppStatusState, AppHistoryState, AppOwmDataState, AppFallbackDataState } from '../states/app.state';
 import { StatsService } from './stats.service';
+import { ConstantsService } from './constants.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,18 +38,35 @@ export class OwmDataManagerService {
     private _store: Store,
     private _snackbar: SnackbarService
   ) {
+    this.setSubscriptions();
+  }
+
+  setSubscriptions() {
+    this.subscribeAway();
+    this.subscribeConnected();
+    this.subscribeSelectedCityChange();
+  }
+
+  subscribeSelectedCityChange() {
     const that = this;
     this.selectedCityId$
       .pipe(
-        tap((_) => (this.getDataOnCityChangeInProgress = true)),
+        tap(() => {
+          this._store.dispatch(new SetStatusShowLoading(true));
+          this.getDataOnCityChangeInProgress = true;
+        }),
         switchMap((selectedCityId) => this.getDataMemoryOnCityChange(selectedCityId)),
         filter((data) => (this.getDataOnCityChangeInProgress = !!data))
-      )
-      .subscribe((data) => {
+        )
+        .subscribe((data) => {
         this._store.dispatch(new SetDataState(data));
         this.getDataOnCityChangeInProgress = false;
+        this._store.dispatch(new SetStatusShowLoading(false));
       });
+  }
 
+  subscribeConnected() {
+    const that = this;
     this.connected$
       .pipe(
         filter(
@@ -63,13 +81,15 @@ export class OwmDataManagerService {
         this._store.dispatch(new SetDataState(data));
         this.getDataOnConnectedInProgress = false;
       });
+  }
 
+  subscribeAway() {
+    const that = this;
     this.away$
       .pipe(
+        filter(away => away !== undefined),
         filter(
-          (away) =>
-            (this.getDataOnBackFromAwayInProgress =
-              !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress)
+          (away) => (this.getDataOnBackFromAwayInProgress = !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress)
         ),
         switchMap(that.getDataMemoryOnAway.bind(that)),
         filter((data) => (this.getDataOnBackFromAwayInProgress = !!data))
@@ -79,8 +99,8 @@ export class OwmDataManagerService {
         this.getDataOnBackFromAwayInProgress = false;
       });
   }
-
-  getDataMemoryOnAway(): Observable<IOwmDataModel> {
+    
+  getDataMemoryOnAway(): Observable<IOwmDataModel | null> {
     const owmData = this._store.selectSnapshot(AppOwmDataState.selectOwmData);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on back from away' });
     if (owmData && this.isNotExpired(owmData)) {
@@ -133,7 +153,7 @@ export class OwmDataManagerService {
     this._stats.updateStatsDBRequests(cityId);
   }
 
-  getDataOWM(cityId: string): Observable<IOwmDataModel> {
+  getDataOWM(cityId: string): Observable<IOwmDataModel | null> {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
     return this._owm.getData(cityId).pipe(
       switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
@@ -199,7 +219,7 @@ export class OwmDataManagerService {
         }
       }),
       filter((data) => !!data),
-      debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(1000))),
+      debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(ConstantsService.loadingDataDebounceTime_ms))),
       tap(() => {
         if (showLoading) {
           this._store.dispatch(new SetStatusShowLoading(false));
