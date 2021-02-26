@@ -22,6 +22,7 @@ import {
   SetStatusShowDetailSecondary,
   SetStatusShowChartIcons,
   SetStatusShowLoading,
+  SetStatusBuildInfo,
 } from './app.actions';
 import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IHistoryModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
@@ -54,11 +55,12 @@ import { IHistoryLog } from '../models/history-log.model';
     showDetailHumidity: true,
     showDetailSecondary: true,
     showChartIcons: true,
+    buildInfo: null
   },
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private normalizedData: NormalizeDataService) {}
+  constructor(private normalizedData: NormalizeDataService) { }
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -129,6 +131,11 @@ export class AppStatusState {
     return state.showChartIcons;
   }
 
+  @Selector()
+  static buildInfo(state: AppStatusModel) {
+    return state.buildInfo;
+  }
+
   @Action(SetStatusIp)
   setStatusIp(context: StateContext<AppStatusModel>, action: SetStatusIp) {
     const ip = action.payload;
@@ -177,12 +184,12 @@ export class AppStatusState {
   setStatusShowLoading(context: StateContext<AppStatusModel>, action: SetStatusShowLoading) {
     context.patchState({ showLoading: action.payload });
   }
-  
+
   @Action(SetStatusShowChartIcons)
   setStatusShowChartIcons(context: StateContext<AppStatusModel>, action: SetStatusShowChartIcons) {
     context.patchState({ showChartIcons: action.payload });
   }
-  
+
   @Action(SetStatusShowDetailPressure)
   setStatusShowDetailPressure(context: StateContext<AppStatusModel>, action: SetStatusShowDetailPressure) {
     context.patchState({ showDetailPressure: action.payload });
@@ -209,6 +216,10 @@ export class AppStatusState {
     document.documentElement.style.setProperty('--' + action.payload, state[action.payload] ? 'flex' : 'none');
     document.documentElement.style.setProperty('--showDetailSecondary', display ? 'flex' : 'none');
   }
+  @Action(SetStatusBuildInfo)
+  setStatusBuildInfo(context: StateContext<AppStatusModel>, action: SetStatusBuildInfo) {
+    context.patchState({ buildInfo: action.payload });
+  }
 }
 
 @State<IHistoryModel>({
@@ -222,7 +233,7 @@ export class AppHistoryState {
     private _historyLogUpdate: HistoryLogUpdateService,
     private _snackbar: SnackbarService,
     private _fb: DataService
-  ) {}
+  ) { }
 
   @Selector([AppStatusState])
   static selectSelectedCityHistoryLast(state: IOwmDataModel, status: AppStatusModel) {
@@ -274,7 +285,7 @@ const defaultErrorsRecord = {
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(private _errors: ErrorsService, private _snackbar: SnackbarService, private _store: Store) {}
+  constructor(private _errors: ErrorsService, private _snackbar: SnackbarService, private _store: Store) { }
 
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {

@@ -3,6 +3,7 @@ import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
 import { IStats } from '../models/stats.model';
 import { IHistoryLog } from '../models/history-log.model';
+import { IStatusBuildInfo } from '../models/build-info.model';
 
 export class SetHistoryState {
   static readonly type = '[activity] set history';
@@ -112,4 +113,8 @@ export class SetHistoryLogState {
 export class SetFallbackDataState {
   static readonly type = '[fallback data] set';
   constructor(public payload: IOwmDataModel) { }
+}
+export class SetStatusBuildInfo {
+  static readonly type = '[build info] set';
+  constructor(public payload: IStatusBuildInfo) { }
 }

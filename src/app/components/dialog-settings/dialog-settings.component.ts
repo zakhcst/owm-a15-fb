@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 import { buildInfo } from '../../../build-info';
 import { RouterState } from '@ngxs/router-plugin';
 import { ConstantsService } from 'src/app/services/constants.service';
+import { IStatusBuildInfo } from 'src/app/models/build-info.model';
 
 @Component({
   selector: 'app-dialog-settings',
@@ -38,6 +39,7 @@ export class DialogSettingsComponent implements OnInit {
   settingsOptions: {};
 
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
+  @Select(AppStatusState.buildInfo) buildInfo$: Observable<IStatusBuildInfo>;
 
   @HostListener('window:resize', ['$event'])
   onResize() {

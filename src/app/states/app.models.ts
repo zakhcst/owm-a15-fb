@@ -1,3 +1,4 @@
+import { IBuilInfo, IStatusBuildInfo } from '../models/build-info.model';
 import { IOwmDataModel } from '../models/owm-data.model';
 
 export interface HistoryLogModel {
@@ -26,6 +27,7 @@ export interface AppStatusModel {
   showDetailWind: boolean;
   showDetailSecondary: boolean;
   showChartIcons: boolean;
+  buildInfo: IStatusBuildInfo;
 }
 
 export interface AppHistoryPayloadModel {

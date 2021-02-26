@@ -1,11 +1,11 @@
 {
   "name": "owm-a11-fb",
-  "version": "0.11.71",
+  "version": "0.11.79",
   "scripts": {
     "ng": "ng",
     "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4211",
     "build": "./utils/generate-build-info.js && ng build",
-    "build-prod": "./utils/generate-build-info.js && ng build --prod",
+    "build-prod": "./utils/generate-build-info.js && ng build --prod && git checkout HEAD -- ngsw-config.json",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

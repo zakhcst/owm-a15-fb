@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { PresenceService } from './services/presence.service';
 import { Observable, Subscription } from 'rxjs';
 import { SwUpdate } from '@angular/service-worker';
 import { Select, Store } from '@ngxs/store';
-import { SetStatusShowLoading, SetStatusUpdatesAvailable } from './states/app.actions';
+import { SetStatusBuildInfo, SetStatusShowLoading, SetStatusUpdatesAvailable } from './states/app.actions';
 import { ConstantsService } from './services/constants.service';
 import { AppStatusState } from './states/app.state';
 import { debounceTime } from 'rxjs/operators';
@@ -34,16 +34,21 @@ export class AppComponent implements OnDestroy {
   }
 
   initCss() {
-    const iconsMeasuresUrl = `url("../../../${ConstantsService.iconsMeasures}")`;
-    document.documentElement.style.setProperty('--iconsMeasuresUrl', iconsMeasuresUrl);
-    const iconsWeatherUrl = `url("../../../${ConstantsService.iconsWeather}")`;
-    const iconArrowWindDirection = `url("../../../${ConstantsService.iconArrowWindDirection}")`;
-    document.documentElement.style.setProperty('--iconArrowWindDirection', iconArrowWindDirection);
-    document.documentElement.style.setProperty('--iconsWeatherUrl', iconsWeatherUrl);
-    document.documentElement.style.setProperty('--showDetailPressure', this._store.selectSnapshot(AppStatusState.showDetailPressure) ? 'flex' : 'none');
-    document.documentElement.style.setProperty('--showDetailWind', this._store.selectSnapshot(AppStatusState.showDetailWind) ? 'flex' : 'none');
-    document.documentElement.style.setProperty('--showDetailHumidity', this._store.selectSnapshot(AppStatusState.showDetailHumidity) ? 'flex' : 'none');
-    document.documentElement.style.setProperty('--showDetailSecondary', this._store.selectSnapshot(AppStatusState.showDetailSecondary) ? 'flex' : 'none');
+    [
+      'iconArrowWindDirection',
+      'iconsMeasures',
+      'iconsWeather'
+    ].forEach((property) => {
+      document.documentElement.style.setProperty(`--${property}Url`, `url("../../../${ConstantsService[property]}")`);
+    });
+    [
+      'showDetailPressure',
+      'showDetailWind',
+      'showDetailHumidity',
+      'showDetailSecondary'
+    ].forEach((property) => {
+      document.documentElement.style.setProperty('--' + property, this._store.selectSnapshot(AppStatusState[property]) ? 'flex' : 'none');
+    });
   }
 
   setSubscribeDebounceLoadingActions() {
@@ -62,10 +67,15 @@ export class AppComponent implements OnDestroy {
         console.log('Current version is', event.current);
         console.log('New available version is', event.available);
         this._store.dispatch(new SetStatusUpdatesAvailable(true));
+        const buildInfo = {
+          current: (event.current?.appData as any)?.buildInfo,
+          available: (event.available?.appData as any)?.buildInfo
+        };
+        this._store.dispatch(new SetStatusBuildInfo(buildInfo));
       })
     );
   }
-  
+
   startListenerOnAway() {
     this._presence.updateOnAway();
   }
