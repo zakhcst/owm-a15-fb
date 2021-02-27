@@ -11,8 +11,8 @@ import {
 import { ICities } from '../../models/cities.model';
 import { Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
-import { debounceTime, filter, map, tap } from 'rxjs/operators';
-import { Subscription, Observable } from 'rxjs';
+import { debounce, filter, map, tap } from 'rxjs/operators';
+import { Subscription, Observable, timer, of } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { AppErrorPayloadModel } from '../../states/app.models';
@@ -82,7 +82,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   subscribeAvailableUpdates() {
-    const subscriptionAvailableUpdates =  this.updatesAvailable$.subscribe(updatesAvailable => {
+    const subscriptionAvailableUpdates = this.updatesAvailable$.subscribe(updatesAvailable => {
       this.updatesAvailable = updatesAvailable;
     });
     this.subscriptions.add(subscriptionAvailableUpdates);
@@ -90,26 +90,26 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   subscribeRouterEvents() {
     this.subscriptions = this._router.events
-    .pipe(
-      filter((event: Event) => event instanceof NavigationEnd),
-      map((event: ChildActivationEnd) => event['urlAfterRedirects'].split('/').pop() || event['url'].split('/').pop())
-    )
-    .subscribe(
-      (eventPathEndSegment) => {
-        if (eventPathEndSegment in ConstantsService.toolbar) {
-          if (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]) {
-            this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions;
-            this.settingsOptions = ConstantsService.toolbar[eventPathEndSegment].settingsOptions;
-            this.toolbarShow = true;
+      .pipe(
+        filter((event: Event) => event instanceof NavigationEnd),
+        map((event: ChildActivationEnd) => event['urlAfterRedirects'].split('/').pop() || event['url'].split('/').pop())
+      )
+      .subscribe(
+        (eventPathEndSegment) => {
+          if (eventPathEndSegment in ConstantsService.toolbar) {
+            if (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]) {
+              this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions;
+              this.settingsOptions = ConstantsService.toolbar[eventPathEndSegment].settingsOptions;
+              this.toolbarShow = true;
+            }
+          } else {
+            this.toolbarShow = false;
           }
-        } else {
-          this.toolbarShow = false;
+        },
+        (err) => {
+          this.addError('header-toolbar: router.events', err.message);
         }
-      },
-      (err) => {
-        this.addError('header-toolbar: router.events', err.message);
-      }
-    );
+      );
   }
 
   ngOnInit() {
@@ -119,14 +119,16 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   subscribeConnected() {
-    const subscriptionConnected = this.connected$.pipe(debounceTime(ConstantsService.connectedResponseTimeLimit_ms)).subscribe(connected => {
+    const subscriptionConnected = this.connected$.pipe(
+      debounce(connected => connected ? of(true) : timer(ConstantsService.connectedResponseTimeLimit_ms)),
+    ).subscribe(connected => {
       this.connected = connected;
     });
     this.subscriptions.add(subscriptionConnected);
   }
 
   subscribeOwmData() {
-    const subscriptionOwmData = this._data.getOwmData$( { showLoading: false })
+    const subscriptionOwmData = this._data.getOwmData$({ showLoading: false })
       .pipe(
         tap((data: IOwmDataModel) => {
           this.owmData = data;
