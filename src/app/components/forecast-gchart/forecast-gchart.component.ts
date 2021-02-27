@@ -172,7 +172,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   onReady($event: ChartReadyEvent, gc, overlay, overlayContent, ind) {
-    if (!gc || !overlay || !overlayContent) return;
+    if (!gc || !overlay || !overlayContent) { return; }
     overlayContent.setAttribute('style', 'display: none;');
     const extendedIndex = this.activeDays.length === 1 ? 5 : ind;
     const params = { gc, overlay, overlayContent, extendedIndex };
@@ -198,8 +198,8 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       const overlayContentWidth = chartArea.width * scaleFactor;
       overlayContent.setAttribute(
         'style',
-        `left: ${offsetLeft}px; 
-        width: ${overlayContentWidth}px; 
+        `left: ${offsetLeft}px;
+        width: ${overlayContentWidth}px;
         display: flex;
         `
       );
@@ -207,7 +207,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   showDataCellExpanded(timeSlotData: IOwmDataModelTimeSlotUnit, iconIndex: number) {
-    if (timeSlotData && (iconIndex===0 || iconIndex)) {
+    if (timeSlotData && (iconIndex === 0 || iconIndex)) {
       const bgColor = this.timeTemplate[iconIndex].bgColor;
       this.dialog.open(DataCellExpandedComponent, {
         data: { timeSlotData, bgColor },

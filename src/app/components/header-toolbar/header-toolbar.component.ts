@@ -117,11 +117,11 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     this.subscribeOwmData();
     this.subscribeConnected();
   }
-  
-  subscribeConnected(){
+
+  subscribeConnected() {
     const subscriptionConnected = this.connected$.pipe(debounceTime(ConstantsService.connectedResponseTimeLimit_ms)).subscribe(connected => {
       this.connected = connected;
-    })
+    });
     this.subscriptions.add(subscriptionConnected);
   }
 

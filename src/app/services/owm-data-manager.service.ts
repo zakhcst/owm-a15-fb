@@ -99,7 +99,7 @@ export class OwmDataManagerService {
         this.getDataOnBackFromAwayInProgress = false;
       });
   }
-    
+
   getDataMemoryOnAway(): Observable<IOwmDataModel | null> {
     const owmData = this._store.selectSnapshot(AppOwmDataState.selectOwmData);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on back from away' });

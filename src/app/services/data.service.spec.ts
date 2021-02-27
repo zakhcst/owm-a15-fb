@@ -25,7 +25,7 @@ describe('DataService', () => {
       imports: [
         RequiredModules,
         AngularFireModule.initializeApp(environment.firebase),
-        AngularFireDatabaseModule, 
+        AngularFireDatabaseModule,
         SharedModule
       ],
       providers: [

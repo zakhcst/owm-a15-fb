@@ -10,13 +10,13 @@ describe('DataCellComponent', () => {
   let fixture: ComponentFixture<DataCellComponent>;
   // let data: IOwmDataModel;
   const mockData = getNewDataObject();
-  
+
   beforeEach(waitForAsync(() => {
-    
+
     TestBed.configureTestingModule({
       imports: [ AppModule ],
       declarations: [ DataCellComponent ],
-      
+
     })
     .compileComponents();
   }));

@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
       hostedLink: 'https://owm-weather-forecast.firebaseapp.com/',
       sourceLink: 'https://github.com/zakhcst/owm-weather-forecast'
     }
-  ]
+  ];
 
   constructor() { }
 

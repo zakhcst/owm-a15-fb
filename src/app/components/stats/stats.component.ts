@@ -45,7 +45,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     this.subscribeHistory();
     this.subscribeCities();
   }
-  
+
   ngOnDestroy() {
     if (this.subscriptions) {
       this.subscriptions.unsubscribe();

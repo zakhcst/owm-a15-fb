@@ -67,5 +67,5 @@ export interface IOwmDataWeatherModel {
   description: string;
   icon: string;
   id: number;
-  main: string; 
+  main: string;
 }

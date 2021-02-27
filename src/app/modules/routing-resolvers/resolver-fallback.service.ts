@@ -21,7 +21,7 @@ export class ResolverFallbackService implements Resolve<any> {
       return of(falbackData);
     } else {
       return this._owmFallback.getData().pipe(
-        switchMap((data: IOwmDataModel) => { 
+        switchMap((data: IOwmDataModel) => {
           return this._store.dispatch(new SetFallbackDataState(data));
         })
       );

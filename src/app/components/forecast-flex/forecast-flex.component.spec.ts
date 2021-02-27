@@ -39,7 +39,7 @@ describe('ForecastFlexComponent services', () => {
     localStorage.removeItem('OwmDataManagerService');
     localStorage.removeItem('mockIp');
   }
-  
+
   beforeEach(
     waitForAsync(() => {
       mockOwmDataService = new MockOwmDataService();

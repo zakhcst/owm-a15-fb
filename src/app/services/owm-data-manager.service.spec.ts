@@ -180,7 +180,7 @@ fdescribe('OwmDataManagerService', () => {
     expect(spyOnDispatch).toHaveBeenCalledTimes(1);
     expect(spyOnDispatch).toHaveBeenCalledWith(new SetDataState({ ...owmData, cod: 'test' }));
   }));
-  
+
   fit('subscribeAway: should wait when away$ emits true', fakeAsync(() => {
     const owmData = getNewDataObject();
     service.getDataOnCityChangeInProgress = false;

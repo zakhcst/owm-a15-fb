@@ -5,7 +5,7 @@ import { ResolverStatsService } from './resolver-stats.service';
 
 describe('ResolverStatsService', () => {
   let service: ResolverStatsService;
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AppModule],

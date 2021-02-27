@@ -24,7 +24,7 @@ export class ErrorPageComponent implements OnInit {
       .pipe(
         take(1),
         switchMap(activatedRouteParams => {
-          this.errorMessage = activatedRouteParams.errorMessage ||'ERROR';
+          this.errorMessage = activatedRouteParams.errorMessage || 'ERROR';
           this.redirectPage = activatedRouteParams.redirectPage || '';
           return timer(0, 1000);
         }),

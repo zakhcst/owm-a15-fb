@@ -13,7 +13,7 @@ describe('ErrorPageComponent', () => {
     errorMessage: 'Test Error Message',
     redirectPage: 'Test Redirect Page',
   };
-  
+
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
@@ -27,7 +27,7 @@ describe('ErrorPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ErrorPageComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router) 
+    router = TestBed.inject(Router);
   });
 
   it('should create', () => {

@@ -15,7 +15,7 @@ describe('OwmService', () => {
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
   const cityId = 'cityId';
-  
+
   beforeEach(() => {
     mockErrorsService = new MockErrorsService();
     TestBed.configureTestingModule({

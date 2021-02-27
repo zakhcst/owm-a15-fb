@@ -133,7 +133,7 @@ export class MockHeaderToolbarComponent implements OnInit, OnDestroy, AfterViewI
       );
     this.connected$.subscribe(connected => {
       this.connected = connected;
-    })
+    });
 
     this.subscriptions.add(subscriptionOwmData);
   }

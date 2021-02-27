@@ -5,7 +5,7 @@
 // This file supports 3 development setups:
 // 1. Firebase cloud servers
 // 2. Firebase emulator run in local environment (eg ip 192.168.1.15 as in virtual machine or host os)
-// 3. Firebase emulator run in docker container (eg ip localhost, started as vscode remote development container) 
+// 3. Firebase emulator run in docker container (eg ip localhost, started as vscode remote development container)
 //
 // 'emulator' and 'container' constants have to be set according to the environment,
 // along with in 'firebase/firebase.json' the 'emulators' section.
@@ -21,7 +21,7 @@ const firebaseConfigDevEnv = {
   projectId: 'owm-a7-fb',
   storageBucket: 'owm-a7-fb.appspot.com',
   messagingSenderId: '1062734348256',
-  appId: "1:1062734348256:web:2dc7c01ad7a90d0ab23585"
+  appId: '1:1062734348256:web:2dc7c01ad7a90d0ab23585'
 };
 const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
 

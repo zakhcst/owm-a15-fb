@@ -118,7 +118,7 @@ export class PopulateGchartDataService {
 
     this.chart[dayK].data.push(last);
   }
-  
+
 
 
   setGChartDayOptions(dayK: string) {
@@ -182,13 +182,13 @@ export class PopulateGchartDataService {
     return `
     <div style="display: flex; color: white; background-color: #33425c; padding: 8px;">
       <b>${hour}</b>&nbsp;&nbsp;
-      <svg 
-        style="display:inline" 
-        xmlns="http://www.w3.org/2000/svg" 
-        stroke="none" 
-        fill="${this.weatherParams[type.toLocaleLowerCase()].lineColor}" 
-        viewBox="0 0 10 10" 
-        width="10" 
+      <svg
+        style="display:inline"
+        xmlns="http://www.w3.org/2000/svg"
+        stroke="none"
+        fill="${this.weatherParams[type.toLocaleLowerCase()].lineColor}"
+        viewBox="0 0 10 10"
+        width="10"
         height="10">
         <circle cx="5" cy="5" r="4"/>
       </svg>&nbsp;${type}:&nbsp;<b>${data}</b>
@@ -205,7 +205,7 @@ export class PopulateGchartDataService {
     let i = 0;
     while (ConstantsService.timeTemplate[i].hour < +hoursKeys[0]) {
       this.chart[dayK].icons.push({
-        hourK : ConstantsService.timeTemplate[i++].hour 
+        hourK : ConstantsService.timeTemplate[i++].hour
       });
     }
 
@@ -219,10 +219,10 @@ export class PopulateGchartDataService {
     // add the missing slots at the end of the day
     const timeTemplate = ConstantsService.timeTemplate;
     i = this.chart[dayK].icons.length;
-    
+
     while (i < timeTemplate.length && timeTemplate[i].hour > +hoursKeys[hoursKeys.length - 1]) {
       this.chart[dayK].icons.push({
-        hourK : ConstantsService.timeTemplate[i++].hour 
+        hourK : ConstantsService.timeTemplate[i++].hour
       });
     }
   }

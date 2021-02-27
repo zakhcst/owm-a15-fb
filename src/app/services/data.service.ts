@@ -8,7 +8,7 @@ import { IOwmDataModel } from '../models/owm-data.model';
 })
 export class DataService {
   constructor(private _db: AngularFireDatabase) {}
-  
+
 
   getData(cityId: string) {
     return this._db.object(ConstantsService.owmData + '/' + cityId).valueChanges();

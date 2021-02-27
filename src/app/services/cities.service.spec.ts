@@ -21,7 +21,7 @@ describe('CitiesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RequiredModules, MatSnackBarModule],
-      providers: [CitiesService, 
+      providers: [CitiesService,
         { provide: AngularFireDatabase, useClass: MockAngularFireService }
       ],
     });

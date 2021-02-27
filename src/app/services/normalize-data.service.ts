@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class NormalizeDataService {
 
   constructor() { }
-  
+
   ip(ip: string) {
     if (typeof ip !== 'string') {
       ip = '--ip';

@@ -9,7 +9,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [HeaderToolbarComponent, DialogSettingsComponent],
-  
+
   imports: [RouterModule, SharedModule, RequiredModules, MatSlideToggleModule],
   exports: [DialogSettingsComponent],
   entryComponents: [DialogSettingsComponent],

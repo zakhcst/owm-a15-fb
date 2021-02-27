@@ -19,7 +19,7 @@ describe('StatsService', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [AppModule, MatSnackBarModule],
-        providers: [SnackbarService, StatsService, 
+        providers: [SnackbarService, StatsService,
           { provide: ErrorsService, useValue: mockErrorsService },
           { provide: AngularFireDatabase, useValue: mockAngularFireService }
         ],

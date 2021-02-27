@@ -167,7 +167,7 @@ export class ConstantsService {
   public static readonly weatherDefaultBgImgFileName = 'default.jpg';
   public static readonly weatherBgImgPath = 'assets/backgrounds/';
   public static readonly getWeatherDefaultBgImg = () =>
-    ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName;
+    ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName
 
   public static readonly getWeatherBgImg = (dataListHour: IOwmDataModelTimeSlotUnit) => {
     const main = dataListHour.weather[0].main;
@@ -183,5 +183,5 @@ export class ConstantsService {
     } else {
       return ConstantsService.getWeatherDefaultBgImg();
     }
-  };
+  }
 }

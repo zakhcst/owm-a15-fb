@@ -16,9 +16,9 @@ describe('DataCellExpandedComponent', () => {
       TestBed.configureTestingModule({
         imports: [ RequiredModules, MatSnackBarModule ],
         declarations: [DataCellExpandedComponent],
-        
-        providers: [ Store, 
-          { provide: MatDialogRef, useValue: { close: function (){}} },
+
+        providers: [ Store,
+          { provide: MatDialogRef, useValue: { close: function () {}} },
           { provide: MAT_DIALOG_DATA, useValue: { timeSlotData: getNewDataObject().list[0]} },
         ],
       }).compileComponents();

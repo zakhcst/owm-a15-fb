@@ -43,7 +43,6 @@ export class DialogSettingsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    console.log('onResize()', this)
     this.reposition();
   }
 
@@ -69,7 +68,7 @@ export class DialogSettingsComponent implements OnInit {
   }
 
   updateDaysForecast() {
-    if (this.daysForecastOld === this.daysForecast) return;
+    if (this.daysForecastOld === this.daysForecast) { return; }
     this.daysForecastOld = this.daysForecast;
     this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
   }

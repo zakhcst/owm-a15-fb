@@ -79,7 +79,6 @@ describe('ForecastGChartComponent services', () => {
     resetLocalStorage();
   });
 
-
   it('should get data from OwmDataService', waitForAsync(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     fixture.detectChanges();
@@ -89,5 +88,4 @@ describe('ForecastGChartComponent services', () => {
     });
   }));
 
-  
 });

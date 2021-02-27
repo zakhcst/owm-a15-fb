@@ -57,7 +57,7 @@ describe('HeaderToolbarComponent', () => {
         declarations: [DialogSettingsComponent, HeaderToolbarComponent],
         providers: [ResolverRegisterIconsService, OwmDataManagerService, ErrorsService],
       }).compileComponents();
-      
+
       iconService = TestBed.inject(ResolverRegisterIconsService);
       fixture = TestBed.createComponent(HeaderToolbarComponent);
       component = fixture.componentInstance;
@@ -73,9 +73,9 @@ describe('HeaderToolbarComponent', () => {
     expect(component).toBeDefined();
     const settingsIcon = fixture.debugElement.query(By.css('.mat-icon.button-settings'));
     const dialogRef = component.showSettings({ _elementRef: { nativeElement: settingsIcon.nativeNode } }, false);
-    
+
     expect(dialogRef).toBeDefined();
-    dialogRef.close()
+    dialogRef.close();
     // component.dialog.closeAll();
   });
 });

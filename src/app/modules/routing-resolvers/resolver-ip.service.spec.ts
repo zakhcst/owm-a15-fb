@@ -4,7 +4,7 @@ import { ResolverIpService } from './resolver-ip.service';
 
 describe('ResolverIpService', () => {
   let service: ResolverIpService;
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AppModule],
@@ -22,5 +22,5 @@ describe('ResolverIpService', () => {
       });
     })
   );
-  
+
 });

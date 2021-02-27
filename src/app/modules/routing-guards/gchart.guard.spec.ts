@@ -10,7 +10,7 @@ describe('GchartGuard', () => {
   let canActivateGchart: CanActivateGchart;
   let canLoadGChart: CanLoadGChart;
   let store: Store;
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ NgxsModule.forRoot([])],
@@ -24,11 +24,11 @@ describe('GchartGuard', () => {
   it('should be created canActivateGchart', () => {
     expect(canActivateGchart).toBeTruthy();
   });
- 
+
   it('should canActivateGchart return true when connected$ changed to true within the set period', waitForAsync(() => {
     const q$ = cold('-f-t|', { t: true, f: false });
     spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeLimit_ms - 50)));
-    
+
     canActivateGchart.canActivate().subscribe((response) => {
       expect(response).toBe(true);
     });
@@ -38,7 +38,7 @@ describe('GchartGuard', () => {
   it('should canActivateGchart return false when connected$ is false within the set period', waitForAsync(() => {
     const q$ = cold('-f-|', { t: true, f: false });
     spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeLimit_ms - 50)));
-    
+
     canActivateGchart.canActivate().subscribe((response) => {
       expect(response).toBe(false);
     });
@@ -48,7 +48,7 @@ describe('GchartGuard', () => {
   it('should canActivateGchart return false when connected$ is false and set period lapses', waitForAsync(() => {
     const q$ = cold('-f-|', { t: true, f: false });
     spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeLimit_ms + 1)));
-    
+
     canActivateGchart.canActivate().subscribe((response) => {
       expect(response).toBe(false);
     });
@@ -58,11 +58,11 @@ describe('GchartGuard', () => {
   it('should be created canLoadGChart', () => {
     expect(canLoadGChart).toBeTruthy();
   });
- 
+
   it('should canLoadGChart return true when connected$ changed to true within the set period', waitForAsync(() => {
     const q$ = cold('-f-t|', { t: true, f: false });
     spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeLimit_ms - 50)));
-    
+
     canLoadGChart.canLoad().subscribe((response) => {
       expect(response).toBe(true);
     });
@@ -72,7 +72,7 @@ describe('GchartGuard', () => {
   it('should canLoadGChart return false when connected$ is false within the set period', waitForAsync(() => {
     const q$ = cold('-f-|', { t: true, f: false });
     spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeLimit_ms - 50)));
-    
+
     canLoadGChart.canLoad().subscribe((response) => {
       expect(response).toBe(false);
     });
@@ -82,7 +82,7 @@ describe('GchartGuard', () => {
   it('should canLoadGChart return false when connected$ is false and set period lapses', waitForAsync(() => {
     const q$ = cold('-f-|', { t: true, f: false });
     spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeLimit_ms + 1)));
-    
+
     canLoadGChart.canLoad().subscribe((response) => {
       expect(response).toBe(false);
     });
