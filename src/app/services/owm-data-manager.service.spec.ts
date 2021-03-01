@@ -25,7 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SetDataState } from '../states/app.actions';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 
-fdescribe('OwmDataManagerService', () => {
+describe('OwmDataManagerService', () => {
   let service: OwmDataManagerService;
   let mockDataService: MockDataService;
   let mockOwmService: MockOwmService;
@@ -181,7 +181,7 @@ fdescribe('OwmDataManagerService', () => {
     expect(spyOnDispatch).toHaveBeenCalledWith(new SetDataState({ ...owmData, cod: 'test' }));
   }));
 
-  fit('subscribeAway: should wait when away$ emits true', fakeAsync(() => {
+  it('subscribeAway: should wait when away$ emits true', fakeAsync(() => {
     const owmData = getNewDataObject();
     service.getDataOnCityChangeInProgress = false;
     service.getDataOnConnectedInProgress = false;

@@ -6,7 +6,7 @@ import { IHistoryLog } from '../../models/history-log.model';
 import { Select } from '@ngxs/store';
 import { AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState } from 'src/app/states/app.state';
 import { Observable, of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { ConstantsService } from '../../services/constants.service';
 
 @Component({
@@ -42,8 +42,8 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeStats();
-    this.subscribeHistory();
     this.subscribeCities();
+    this.setHistoryLog$();
   }
 
   ngOnDestroy() {
@@ -53,37 +53,33 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   subscribeStats() {
-    this.subscriptions = this.stats$.subscribe((stats) => {
-      if (stats) {
+    this.subscriptions = this.stats$.pipe(filter(stats => !!stats)).subscribe((stats) => {
         this.stats = stats;
-      }
     });
   }
 
   subscribeCities() {
     this.subscriptions.add(
-      this.cities$.subscribe((cities) => {
-        if (cities) {
+      this.cities$.pipe(filter(cities => !!cities)).subscribe((cities) => {
           this.cities = cities;
           this.citiesLength = Object.keys(this.cities).length;
-        }
       })
     );
   }
 
-  subscribeHistory() {
-    this.historyLog$ = this.historyLogState$.pipe(
+  setHistoryLog$() {
+    this.historyLog$ = this.historyLogState$.pipe(filter(historyLog => !!historyLog)).pipe(
       switchMap((historyLog: IHistoryLog) => {
-        return of(
-          Object.entries(historyLog)
-            .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
-            .map((ent: any[]) => {
-              ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
-              ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
-              return ent;
-            })
-            .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1))
-        );
+        const sortedTrimmedEntries = Object.entries(historyLog)
+        .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
+        .map((ent: any[]) => {
+          ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
+          ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
+          return ent;
+        })
+        .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1))
+
+        return of(sortedTrimmedEntries);
       })
     );
   }

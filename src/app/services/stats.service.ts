@@ -48,11 +48,15 @@ export class StatsService {
     if (!cityId) {
       return throwError('CitiesService: updateReads: CityId not provided');
     }
-    const ref = this._db.object(ConstantsService.stats + '/' + cityId);
+    const path = ConstantsService.stats + '/' + cityId;
+    const ref = this._db.object(path);
     return ref.valueChanges().pipe(
       take(1),
       switchMap((city: any) => {
-        return from(ref.update({ r: ((city && city.r) || 0) + 1 }));
+        return from(ref.update({ r: ((city && city.r) || 0) + 1 })).pipe(catchError((err) => {
+          console.log(path, city?.r);
+          return throwError(err);
+        }));
       }),
       catchError((err) => {
         console.log(err);
