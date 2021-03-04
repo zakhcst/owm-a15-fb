@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConstantsService } from './constants.service';
-import { IOwmDataModelTimeSlotUnit, IListByDateModel, IListDayByHourModel } from '../models/owm-data.model';
+import { IListByDateModel, IListDayByHourModel } from '../models/owm-data.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,42 +10,58 @@ export class PopulateGchartDataService {
   textColor = '#FFF';
   weatherParams = ConstantsService.weatherParams;
 
-  constructor() { }
+  constructor() {}
 
   setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]): any {
+    this.chart = {};
     Object.entries(weatherDataListByDate).forEach(([dayK, day]) => {
-      this.setGChartDay(dayK);
-      this.setGChartDayData(dayK, day, weatherDataListByDate, weatherDataDateKeys);
-      this.setGChartDayIcons(dayK, day);
-      this.setGChartDayOptions(dayK);
+      const hoursKeys: number[] = Object.keys(day).map(Number).sort((a, b) => Number(a > b));
+
+      this.chart[dayK] = { type: 'LineChart' };
+      this.chart[dayK].columnNames = this.setGChartColumnNames();
+      this.chart[dayK].data = this.setGChartDayData(dayK, day, weatherDataListByDate, weatherDataDateKeys, hoursKeys);
+      this.chart[dayK].icons = this.setGChartDayIcons(dayK, day, hoursKeys);
+      this.chart[dayK].options = this.setGChartDayOptions();
     });
     return this.chart;
   }
 
-  setGChartDay(dayK: string) {
-    this.chart[dayK] = {};
-    this.chart[dayK].type = 'LineChart';
-    this.chart[dayK].columnNames = [
+  setGChartColumnNames() {
+    const columnNames = [
       'Time',
       'Temperature',
-      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      { type: 'string', role: 'tooltip', p: { html: true } },
       'Wind',
-      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      { type: 'string', role: 'tooltip', p: { html: true } },
       'Humidity',
-      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      { type: 'string', role: 'tooltip', p: { html: true } },
       'Pressure',
-      { type: 'string', role: 'tooltip', 'p': { 'html': true } },
+      { type: 'string', role: 'tooltip', p: { html: true } },
     ];
-    this.chart[dayK].data = [];
+    return columnNames;
   }
 
-  setGChartDayData(dayK: string, day: IListDayByHourModel, weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]) {
-    const hoursKeys = Object.keys(day).sort((a, b) => (a > b ? +a : +b));
+  setGChartDayData(
+    dayK: string,
+    day: IListDayByHourModel,
+    weatherDataListByDate: IListByDateModel,
+    weatherDataDateKeys: string[],
+    hoursKeys: number[]
+  ) {
+    const data = [];
 
-    // add the missing slots at the begining of the day
+    this.addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys);
+    this.copyAvailabeSlots(data, day);
+    this.addMissingSlotsAtTheEndOfTheDay(data, hoursKeys);
+    this.addAdditionalRow2359(data, weatherDataListByDate, weatherDataDateKeys, dayK);
+
+    return data;
+  }
+
+  addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys: number[]) {
     let i = 0;
-    while (ConstantsService.timeTemplate[i].hour < +hoursKeys[0]) {
-      this.chart[dayK].data.push([
+    while (ConstantsService.timeTemplate[i].hour < hoursKeys[0]) {
+      data.push([
         ConstantsService.timeTemplate[i++].hour + ':00',
         undefined,
         undefined,
@@ -57,10 +73,11 @@ export class PopulateGchartDataService {
         undefined,
       ]);
     }
+  }
 
-    // copy existing slots
+  copyAvailabeSlots(data, day: IListDayByHourModel) {
     Object.entries(day).forEach(([hourK, hour]) => {
-      this.chart[dayK].data.push([
+      data.push([
         hourK + ':00',
         hour.main.temp,
         this.formatTooltip(hourK + ':00', 'Temperature', Math.floor(hour.main.temp), 'C' + String.fromCodePoint(176)),
@@ -72,17 +89,19 @@ export class PopulateGchartDataService {
         this.formatTooltip(hourK + ':00', 'Pressure', hour.main.pressure, '&nbsp;hPa'),
       ]);
     });
+  }
 
-    // add the missing slots at the end of the day
+  addMissingSlotsAtTheEndOfTheDay(data, hoursKeys: number[]) {
     const timeTemplate = ConstantsService.timeTemplate;
-    i = this.chart[dayK].data.length;
+    let i = data.length;
     // when slot[0] is available only - duplicate it to render a line
-    if (i++ === 1) {
-      this.chart[dayK].data.push(this.chart[dayK].data[0].slice(0));
-      this.chart[dayK].data[1][0] = '3:00';
+    if (i === 1) {
+      data.push(data[0].slice(0));
+      data[1][0] = '3:00';
     }
-    while (i < timeTemplate.length && timeTemplate[i].hour > +hoursKeys[hoursKeys.length - 1]) {
-      this.chart[dayK].data.push([
+    i++;
+    while (i < timeTemplate.length && timeTemplate[i].hour > hoursKeys[hoursKeys.length - 1]) {
+      data.push([
         timeTemplate[i++].hour + ':00',
         undefined,
         undefined,
@@ -94,8 +113,9 @@ export class PopulateGchartDataService {
         undefined,
       ]);
     }
+  }
 
-    // add additional row to extend lines for the whole day
+  addAdditionalRow2359(data, weatherDataListByDate, weatherDataDateKeys, dayK) {
     let last = [];
     const dayKIndex = weatherDataDateKeys.indexOf(dayK);
 
@@ -110,19 +130,16 @@ export class PopulateGchartDataService {
         nextDay0Hour.main.humidity,
         this.formatTooltip('23:59', 'Humidity', nextDay0Hour.main.humidity, '%'),
         nextDay0Hour.main.pressure,
-        this.formatTooltip('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa')
+        this.formatTooltip('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa'),
       ];
     } else {
-      last = JSON.parse(JSON.stringify([...this.chart[dayK].data[this.chart[dayK].data.length - 1]]).replace(/21:00/g, '23:59'));
+      last = JSON.parse(JSON.stringify([...data[data.length - 1]]).replace(/21:00/g, '23:59'));
     }
-
-    this.chart[dayK].data.push(last);
+    data.push(last);
   }
 
-
-
-  setGChartDayOptions(dayK: string) {
-    this.chart[dayK].options = {
+  setGChartDayOptions() {
+    const options = {
       curveType: 'function',
       animation: {
         duration: 1500,
@@ -176,6 +193,8 @@ export class PopulateGchartDataService {
       backgroundColor: 'transparent',
       tooltip: { isHtml: true },
     };
+
+    return options;
   }
 
   formatTooltip(hour: string, type: string, data: number, unit: string) {
@@ -197,15 +216,14 @@ export class PopulateGchartDataService {
     `;
   }
 
+  setGChartDayIcons(dayK: string, day: IListDayByHourModel, hoursKeys: number[]) {
+    const icons = [];
 
-  setGChartDayIcons(dayK: string, day: IListDayByHourModel) {
-    const hoursKeys = Object.keys(day).sort((a, b) => (a > b ? +a : +b));
-    this.chart[dayK].icons = [];
     // add the missing slots at the begining of the day
     let i = 0;
-    while (ConstantsService.timeTemplate[i].hour < +hoursKeys[0]) {
-      this.chart[dayK].icons.push({
-        hourK : ConstantsService.timeTemplate[i++].hour
+    while (ConstantsService.timeTemplate[i].hour < hoursKeys[0]) {
+      icons.push({
+        hourK: ConstantsService.timeTemplate[i++].hour.toString(),
       });
     }
 
@@ -213,18 +231,19 @@ export class PopulateGchartDataService {
     Object.entries(day).forEach(([hourK, hour]) => {
       const iconCode = day[hourK].weather[0].icon;
       const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
-      this.chart[dayK].icons.push({ hourK, iconIndex});
+      icons.push({ hourK, iconIndex });
     });
 
     // add the missing slots at the end of the day
     const timeTemplate = ConstantsService.timeTemplate;
-    i = this.chart[dayK].icons.length;
+    i = icons.length;
 
-    while (i < timeTemplate.length && timeTemplate[i].hour > +hoursKeys[hoursKeys.length - 1]) {
-      this.chart[dayK].icons.push({
-        hourK : ConstantsService.timeTemplate[i++].hour
+    while (i < timeTemplate.length && timeTemplate[i].hour > hoursKeys[hoursKeys.length - 1]) {
+      icons.push({
+        hourK: ConstantsService.timeTemplate[i++].hour.toString(),
       });
     }
-  }
 
+    return icons;
+  }
 }
