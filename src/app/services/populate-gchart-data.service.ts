@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConstantsService } from './constants.service';
-import { IListByDateModel, IListDayByHourModel } from '../models/owm-data.model';
+import { IListByDateModel, IListDayByHourModel, IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
 
 @Injectable({
   providedIn: 'root',
@@ -80,13 +80,13 @@ export class PopulateGchartDataService {
       data.push([
         hourK + ':00',
         hour.main.temp,
-        this.formatTooltip(hourK + ':00', 'Temperature', Math.floor(hour.main.temp), 'C' + String.fromCodePoint(176)),
+        this.formatTooltipPoint(hourK + ':00', 'Temperature', Math.round(hour.main.temp), 'C' + String.fromCodePoint(176)),
         hour.wind.speed,
-        this.formatTooltip(hourK + ':00', 'Wind', Math.floor(hour.wind.speed), '&nbsp;m/s'),
+        this.formatTooltipPoint(hourK + ':00', 'Wind', Math.round(hour.wind.speed), '&nbsp;m/s'),
         hour.main.humidity,
-        this.formatTooltip(hourK + ':00', 'Humidity', hour.main.humidity, '%'),
+        this.formatTooltipPoint(hourK + ':00', 'Humidity', hour.main.humidity, '%'),
         hour.main.pressure,
-        this.formatTooltip(hourK + ':00', 'Pressure', hour.main.pressure, '&nbsp;hPa'),
+        this.formatTooltipPoint(hourK + ':00', 'Pressure', hour.main.pressure, '&nbsp;hPa'),
       ]);
     });
   }
@@ -124,13 +124,13 @@ export class PopulateGchartDataService {
       last = [
         '23:59',
         nextDay0Hour.main.temp,
-        this.formatTooltip('23:59', 'Temperature', Math.floor(nextDay0Hour.main.temp), 'C' + String.fromCodePoint(176)),
+        this.formatTooltipPoint('23:59', 'Temperature', Math.round(nextDay0Hour.main.temp), 'C' + String.fromCodePoint(176)),
         nextDay0Hour.wind.speed,
-        this.formatTooltip('23:59', 'Wind', Math.floor(nextDay0Hour.wind.speed), '&nbsp;m/s'),
+        this.formatTooltipPoint('23:59', 'Wind', Math.round(nextDay0Hour.wind.speed), '&nbsp;m/s'),
         nextDay0Hour.main.humidity,
-        this.formatTooltip('23:59', 'Humidity', nextDay0Hour.main.humidity, '%'),
+        this.formatTooltipPoint('23:59', 'Humidity', nextDay0Hour.main.humidity, '%'),
         nextDay0Hour.main.pressure,
-        this.formatTooltip('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa'),
+        this.formatTooltipPoint('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa'),
       ];
     } else {
       last = JSON.parse(JSON.stringify([...data[data.length - 1]]).replace(/21:00/g, '23:59'));
@@ -189,7 +189,7 @@ export class PopulateGchartDataService {
         },
       },
       legend: 'none',
-      pointSize: 2,
+      pointSize: 3,
       backgroundColor: 'transparent',
       tooltip: { isHtml: true },
     };
@@ -197,7 +197,7 @@ export class PopulateGchartDataService {
     return options;
   }
 
-  formatTooltip(hour: string, type: string, data: number, unit: string) {
+  formatTooltipPoint(hour: string, type: string, data: number, unit: string) {
     return `
     <div style="display: flex; color: white; background-color: #33425c; padding: 8px;">
       <b>${hour}</b>&nbsp;&nbsp;
@@ -231,7 +231,8 @@ export class PopulateGchartDataService {
     Object.entries(day).forEach(([hourK, hour]) => {
       const iconCode = day[hourK].weather[0].icon;
       const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
-      icons.push({ hourK, iconIndex });
+      const tooltipTxt = this.formatTooltipIcon(hour);
+      icons.push({ hourK, iconIndex, tooltipTxt });
     });
 
     // add the missing slots at the end of the day
@@ -245,5 +246,16 @@ export class PopulateGchartDataService {
     }
 
     return icons;
+  }
+
+  formatTooltipIcon(hour: IOwmDataModelTimeSlotUnit) {
+    const description = hour.weather[0].description.split(' ').map((word) => word[0].toUpperCase() + word.slice(1).toLocaleLowerCase()).join(' ') + '\n\n';
+    const temperature ='Temperature'.padEnd(15, ' ') +(Math.round(hour.main.temp) + ' C' + String.fromCodePoint(176) + '  ').padStart(10, ' ') + '\n';
+    const wind = 'Wind'.padEnd(21, ' ') + (Math.round(hour.wind.speed) + ' m/s').padStart(10, ' ') + '\n';
+    const humidity = 'Humidity'.padEnd(17, ' ') + (hour.main.humidity + ' %  ').padStart(10, ' ') + '\n';
+    const pressure = 'Pressure'.padEnd(15, ' ') + (hour.main.pressure + ' hPa').padStart(10, ' ');
+    const txt = description + temperature + wind + humidity + pressure;
+
+    return txt;
   }
 }

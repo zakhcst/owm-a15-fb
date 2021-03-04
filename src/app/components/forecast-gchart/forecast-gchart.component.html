@@ -55,6 +55,9 @@
                     <span class="flex flex-justify-content-center">
                       <span 
                         class="icon-weather-container" 
+                        [matTooltip]="slot.tooltipTxt"
+                        matTooltipPosition="right"
+                        matTooltipClass="gchart-tooltip-icon"
                         (click)="$event.stopPropagation();showDataCellExpanded(weatherData.listByDate[dayK][slot.hourK], iconInd)"
                         >
                         <span class="icons-weather" [ngStyle]="setIconStyle(slot)" *ngIf="showChartIcons$ | async"></span>

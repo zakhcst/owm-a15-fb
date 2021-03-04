@@ -11,6 +11,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FormsModule } from '@angular/forms';
     MatSliderModule,
     MatDialogModule,
     MatIconModule,
+    MatTooltipModule,
     FormsModule,
   ],
   exports: [
@@ -40,6 +42,7 @@ import { FormsModule } from '@angular/forms';
     MatSliderModule,
     MatDialogModule,
     MatIconModule,
+    MatTooltipModule,
     FormsModule,
   ],
 })
