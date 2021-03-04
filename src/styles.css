@@ -59,6 +59,10 @@ body {
   border-radius: 5px;
 }
 
+.data-cell-expanded {
+  font-family: Roboto;
+}
+
 .data-cell-expanded .mat-dialog-container {
   padding: 0;
   border-radius: 0;
