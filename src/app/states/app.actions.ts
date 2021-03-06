@@ -5,9 +5,9 @@ import { IStats } from '../models/stats.model';
 import { IHistoryLog } from '../models/history-log.model';
 import { IStatusBuildInfo } from '../models/build-info.model';
 
-export class SetHistoryState {
-  static readonly type = '[activity] set history';
-  constructor(public payload: AppHistoryPayloadModel) { }
+export class SetOwmDataCacheState {
+  static readonly type = '[activity] set cache';
+  constructor(public payload: IOwmDataModel) { }
 }
 
 export class SetHistoryIpState {

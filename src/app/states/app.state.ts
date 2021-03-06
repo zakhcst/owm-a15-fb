@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import {
-  SetHistoryState,
+  SetOwmDataCacheState,
   SetErrorsState,
   SetDataState,
   SetCitiesState,
@@ -24,7 +24,7 @@ import {
   SetStatusShowLoading,
   SetStatusBuildInfo,
 } from './app.actions';
-import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IHistoryModel } from './app.models';
+import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IOwmDataCacheModel } from './app.models';
 import { SnackbarService } from '../services/snackbar.service';
 import { HistoryLogUpdateService } from '../services/history-log-update.service';
 import { ErrorsService } from '../services/errors.service';
@@ -75,35 +75,35 @@ export class AppStatusState {
   static selectStatusNormalizedIp(state: AppStatusModel) {
     return state.normalizedIp;
   }
-
-  @Selector()
-  static showTimeSlotBgPicture(state: AppStatusModel) {
-    return state.showTimeSlotBgPicture;
-  }
-
+  
   @Selector()
   static connected(state: AppStatusModel) {
     return state.connected;
   }
-
+  
   @Selector()
   static away(state: AppStatusModel) {
     return state.away;
   }
-
+  
   @Selector()
   static updatesAvailable(state: AppStatusModel) {
     return state.updatesAvailable;
   }
-
+  
   @Selector()
   static liveDataUpdate(state: AppStatusModel) {
     return state.liveDataUpdate;
   }
-
+  
   @Selector()
   static daysForecast(state: AppStatusModel) {
     return state.daysForecast;
+  }
+
+  @Selector()
+  static showTimeSlotBgPicture(state: AppStatusModel) {
+    return state.showTimeSlotBgPicture;
   }
 
   @Selector()
@@ -222,12 +222,31 @@ export class AppStatusState {
   }
 }
 
-@State<IHistoryModel>({
-  name: 'history',
+
+@State<IOwmDataModel>({
+  name: 'fallbackData',
+  defaults: null,
+})
+@Injectable()
+export class AppFallbackDataState {
+  @Selector()
+  static selectFallbackData(state: IHistoryLog) {
+    return state;
+  }
+
+  @Action(SetFallbackDataState)
+  setFallbackDataState(context: StateContext<IOwmDataModel>, action: SetFallbackDataState) {
+    context.setState(action.payload);
+  }
+}
+
+
+@State<IOwmDataCacheModel>({
+  name: 'owmDataCache',
   defaults: {},
 })
 @Injectable()
-export class AppHistoryState {
+export class AppOwmDataCacheState {
   constructor(
     private _store: Store,
     private _historyLogUpdate: HistoryLogUpdateService,
@@ -235,13 +254,16 @@ export class AppHistoryState {
     private _fb: DataService
   ) { }
 
-  @Selector([AppStatusState])
-  static selectSelectedCityHistoryLast(state: IOwmDataModel, status: AppStatusModel) {
-    return state[status.selectedCityId];
+  @Selector([AppStatusState, AppFallbackDataState])
+  static selectOwmDataCacheSelectedCity(state: IOwmDataModel, status: AppStatusModel, fallbackData: IOwmDataModel) {
+    return state[status.selectedCityId] || fallbackData || null;
   }
 
-  @Action(SetHistoryState)
-  setHistoryState(context: StateContext<IHistoryModel>, action: SetHistoryState) {
+  @Action(SetOwmDataCacheState)
+  setOwmDataCacheState(context: StateContext<IOwmDataCacheModel>, action: SetOwmDataCacheState) {
+    const owmData = action.payload;
+    if (!owmData || !owmData.updated) return;
+
     const updatesPromiseArray = [];
     const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
     const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
@@ -249,13 +271,12 @@ export class AppHistoryState {
       cityId: selectedCityId,
       time: new Date().valueOf(),
     };
-    updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
-
-    const owmData = action.payload.owmData;
+    
     const existingSnapshot = context.getState()[selectedCityId];
-    if (owmData.updated && (!existingSnapshot || existingSnapshot.updated !== owmData.updated)) {
-      const update = { ...context.getState(), [selectedCityId]: owmData };
-      context.setState(update);
+    const update = { ...context.getState(), [selectedCityId]: owmData };
+    context.setState(update);
+    if (!existingSnapshot || existingSnapshot.updated !== owmData.updated) {
+      updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
       updatesPromiseArray.push(this._fb.setData(selectedCityId, owmData));
     }
 
@@ -308,25 +329,6 @@ export class AppErrorsState {
   }
 }
 
-@State<IOwmDataModel>({
-  name: 'data',
-  defaults: null,
-})
-@Injectable()
-export class AppOwmDataState {
-  @Selector()
-  static selectOwmData(state: IOwmDataModel) {
-    return state;
-  }
-
-  @Action(SetDataState)
-  setDataState(context: StateContext<IOwmDataModel>, action: SetDataState) {
-    const owmData = action.payload;
-    context.setState(owmData);
-    return context.dispatch(new SetHistoryState({ owmData }));
-  }
-}
-
 @State<ICities>({
   name: 'cities',
   defaults: null,
@@ -374,23 +376,6 @@ export class AppHistoryLogState {
 
   @Action(SetHistoryLogState)
   setHistoryLogState(context: StateContext<IHistoryLog>, action: SetHistoryLogState) {
-    context.setState(action.payload);
-  }
-}
-
-@State<IOwmDataModel>({
-  name: 'fallbackData',
-  defaults: null,
-})
-@Injectable()
-export class AppFallbackDataState {
-  @Selector()
-  static selectFallbackData(state: IHistoryLog) {
-    return state;
-  }
-
-  @Action(SetFallbackDataState)
-  setFallbackDataState(context: StateContext<IOwmDataModel>, action: SetFallbackDataState) {
     context.setState(action.payload);
   }
 }

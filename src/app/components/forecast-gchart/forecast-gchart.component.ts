@@ -119,7 +119,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   subscribeOwmData() {
-    const weatherDataSubscription = this._data.getOwmData$({ showLoading: true }).subscribe(
+    const weatherDataSubscription = this._data.getOwmDataDebounced$({ showLoading: true }).subscribe(
       (data) => {
         this.weatherData = data;
         this.activeDays = Object.keys(this.weatherData.listByDate).sort();

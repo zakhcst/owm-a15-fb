@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { OwmFallbackDataService } from '../../services/owm-fallback-data.service';
 import { IOwmDataModel } from '../../models/owm-data.model';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AppFallbackDataState } from '../../states/app.state';
 import { SetFallbackDataState } from '../../states/app.actions';
 import { IHistoryLog } from '../../models/history-log.model';

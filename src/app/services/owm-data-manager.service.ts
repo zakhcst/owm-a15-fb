@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, timer } from 'rxjs';
-import { switchMap, catchError, tap, take, filter, debounce } from 'rxjs/operators';
+import { of, Observable, timer, merge, throwError } from 'rxjs';
+import { switchMap, catchError, tap, take, filter, debounce, mapTo } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DataService } from './data.service';
 import { ErrorsService } from './errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { Store, Select } from '@ngxs/store';
-import { SetDataState, SetStatusShowLoading } from '../states/app.actions';
+import { SetOwmDataCacheState, SetStatusShowLoading } from '../states/app.actions';
 import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
-import { AppStatusState, AppHistoryState, AppOwmDataState, AppFallbackDataState } from '../states/app.state';
+import { AppStatusState, AppOwmDataCacheState, AppFallbackDataState } from '../states/app.state';
 import { StatsService } from './stats.service';
 import { ConstantsService } from './constants.service';
 
@@ -28,7 +28,7 @@ export class OwmDataManagerService {
   @Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$: Observable<string>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
   @Select(AppStatusState.away) away$: Observable<boolean>;
-  @Select(AppOwmDataState.selectOwmData) owmData$: Observable<IOwmDataModel>;
+  @Select(AppOwmDataCacheState.selectOwmDataCacheSelectedCity) selectedCityOwmDataCache$: Observable<IOwmDataModel>;
 
   constructor(
     private _owm: OwmService,
@@ -56,12 +56,14 @@ export class OwmDataManagerService {
           this.getDataOnCityChangeInProgress = true;
         }),
         switchMap((selectedCityId) => this.getDataMemoryOnCityChange(selectedCityId)),
+        tap(() => {
+          this._store.dispatch(new SetStatusShowLoading(false));
+          this.getDataOnCityChangeInProgress = false;
+        }),
         filter((data) => (this.getDataOnCityChangeInProgress = !!data))
-        )
-        .subscribe((data) => {
-        this._store.dispatch(new SetDataState(data));
-        this.getDataOnCityChangeInProgress = false;
-        this._store.dispatch(new SetStatusShowLoading(false));
+      )
+      .subscribe((data) => {
+        this._store.dispatch(new SetOwmDataCacheState(data));
       });
   }
 
@@ -71,14 +73,14 @@ export class OwmDataManagerService {
       .pipe(
         filter(
           (connected) =>
-            (this.getDataOnConnectedInProgress =
-              connected && !this.getDataOnCityChangeInProgress && !this.getDataOnBackFromAwayInProgress)
+          (this.getDataOnConnectedInProgress =
+            connected && !this.getDataOnCityChangeInProgress && !this.getDataOnBackFromAwayInProgress)
         ),
         switchMap(that.getDataMemoryOnConnected.bind(that)),
         filter((data) => (this.getDataOnConnectedInProgress = !!data))
       )
       .subscribe((data) => {
-        this._store.dispatch(new SetDataState(data));
+        this._store.dispatch(new SetOwmDataCacheState(data));
         this.getDataOnConnectedInProgress = false;
       });
   }
@@ -87,21 +89,23 @@ export class OwmDataManagerService {
     const that = this;
     this.away$
       .pipe(
-        filter(away => away !== undefined),
+        filter((away) => away !== undefined),
         filter(
-          (away) => (this.getDataOnBackFromAwayInProgress = !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress)
+          (away) =>
+          (this.getDataOnBackFromAwayInProgress =
+            !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress)
         ),
         switchMap(that.getDataMemoryOnAway.bind(that)),
         filter((data) => (this.getDataOnBackFromAwayInProgress = !!data))
       )
       .subscribe((data) => {
-        this._store.dispatch(new SetDataState(data));
+        this._store.dispatch(new SetOwmDataCacheState(data));
         this.getDataOnBackFromAwayInProgress = false;
       });
   }
 
   getDataMemoryOnAway(): Observable<IOwmDataModel | null> {
-    const owmData = this._store.selectSnapshot(AppOwmDataState.selectOwmData);
+    const owmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on back from away' });
     if (owmData && this.isNotExpired(owmData)) {
       return of(null);
@@ -111,7 +115,7 @@ export class OwmDataManagerService {
   }
 
   getDataMemoryOnConnected(): Observable<IOwmDataModel> {
-    const owmData = this._store.selectSnapshot(AppOwmDataState.selectOwmData);
+    const owmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on connected' });
     if (owmData && this.isNotExpired(owmData)) {
       return of(null);
@@ -121,10 +125,10 @@ export class OwmDataManagerService {
   }
 
   getDataMemoryOnCityChange(cityId: string): Observable<IOwmDataModel> {
-    const lastOwmData = this._store.selectSnapshot(AppHistoryState.selectSelectedCityHistoryLast);
+    const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory' });
     if (lastOwmData && this.isNotExpired(lastOwmData)) {
-      return of(lastOwmData);
+      return of(null);
     }
     return this.getDataDB(cityId);
   }
@@ -133,7 +137,7 @@ export class OwmDataManagerService {
     const connected = this._store.selectSnapshot(AppStatusState.connected);
     if (connected) {
       this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
-      return this._fb.getData(cityId).pipe(
+      return this.getDataServiceTimeout(this._fb.getData(cityId)).pipe(
         take(1),
         tap(() => this.updateStatsDBRequests(cityId)),
         switchMap((fbdata: IOwmDataModel) => {
@@ -142,41 +146,44 @@ export class OwmDataManagerService {
           } else {
             return this.getDataOWM(cityId);
           }
+        }),
+        catchError((err) => {
+          this._errors.add({
+            userMessage: 'Connection or service problem',
+            logMessage: 'DBDataService: getData: ' + err,
+          });
+          return of(null);
         })
       );
     } else {
-      return this.getFallbackData();
+      return of(null);
     }
-  }
-
-  updateStatsDBRequests(cityId: string) {
-    this._stats.updateStatsDBRequests(cityId);
   }
 
   getDataOWM(cityId: string): Observable<IOwmDataModel | null> {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
-    return this._owm.getData(cityId).pipe(
+    return this.getDataServiceTimeout(this._owm.getData(cityId)).pipe(
       switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
       catchError((err) => {
         this._errors.add({
           userMessage: 'Connection or service problem',
           logMessage: 'OwmDataService: getData: ' + err,
         });
-        return this.getFallbackData();
+        return of(null);
       })
     );
   }
 
-  getFallbackData(): Observable<IOwmDataModel> {
-    let lastOwmData = this._store.selectSnapshot(AppHistoryState.selectSelectedCityHistoryLast);
-    if (lastOwmData) {
-      return of(lastOwmData);
-    }
-    lastOwmData = this._store.selectSnapshot(AppFallbackDataState.selectFallbackData);
-    if (lastOwmData) {
-      return of(lastOwmData);
-    }
-    return of(null);
+  getDataServiceTimeout(service: Observable<IOwmDataModel>) {
+    const timeout = timer(ConstantsService.dataResponseTimeout_ms * 3).pipe(mapTo(null));
+    return merge(service, timeout).pipe(
+      take(1),
+      switchMap((data) => (data ? of(data) : throwError('Service Timeout Error')))
+    );
+  }
+
+  updateStatsDBRequests(cityId: string) {
+    this._stats.updateStatsDBRequests(cityId);
   }
 
   setListByDate(data: IOwmDataModel): IOwmDataModel {
@@ -208,11 +215,12 @@ export class OwmDataManagerService {
     return diff < 3 * 3600 * 1000; // < 3 hours
   }
 
-  getOwmData$({ showLoading }) {
+  getOwmDataDebounced$({ showLoading }) {
     if (showLoading) {
       this._store.dispatch(new SetStatusShowLoading(true));
     }
-    return this.owmData$.pipe(
+    
+    return this.selectedCityOwmDataCache$.pipe(
       tap(() => {
         if (showLoading) {
           this._store.dispatch(new SetStatusShowLoading(true));

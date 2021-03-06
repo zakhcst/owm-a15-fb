@@ -1,4 +1,4 @@
-import { IBuilInfo, IStatusBuildInfo } from '../models/build-info.model';
+import { IStatusBuildInfo } from '../models/build-info.model';
 import { IOwmDataModel } from '../models/owm-data.model';
 
 export interface HistoryLogModel {
@@ -6,7 +6,7 @@ export interface HistoryLogModel {
   time: number;
 }
 
-export interface IHistoryModel {
+export interface IOwmDataCacheModel {
   [cityId: string]: IOwmDataModel;
 }
 

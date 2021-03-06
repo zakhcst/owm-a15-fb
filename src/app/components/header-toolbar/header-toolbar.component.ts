@@ -120,7 +120,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   subscribeConnected() {
     const subscriptionConnected = this.connected$.pipe(
-      debounce(connected => connected ? of(true) : timer(ConstantsService.connectedResponseTimeLimit_ms)),
+      debounce(connected => connected ? of(true) : timer(ConstantsService.connectedResponseTimeout_ms)),
     ).subscribe(connected => {
       this.connected = connected;
     });
@@ -128,7 +128,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   subscribeOwmData() {
-    const subscriptionOwmData = this._data.getOwmData$({ showLoading: false })
+    const subscriptionOwmData = this._data.getOwmDataDebounced$({ showLoading: false })
       .pipe(
         tap((data: IOwmDataModel) => {
           this.owmData = data;

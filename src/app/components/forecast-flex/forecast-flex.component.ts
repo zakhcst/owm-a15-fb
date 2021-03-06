@@ -68,7 +68,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   }
 
   subscribeOwmData() {
-    this.subscriptions = this._data.getOwmData$({ showLoading: true }).subscribe(
+    this.subscriptions = this._data.getOwmDataDebounced$({ showLoading: true }).subscribe(
       (data) => {
         this.weatherData = data;
         this.listByDate = data.listByDate;

@@ -12,7 +12,7 @@ import {
   AppErrorsState,
   AppFallbackDataState,
   AppHistoryLogState,
-  AppHistoryState,
+  AppOwmDataCacheState,
   AppOwmDataState,
   AppStatsState,
   AppStatusState,
@@ -42,7 +42,7 @@ describe('HeaderToolbarComponent', () => {
           HeaderToolbarModule,
           NgxsModule.forRoot(
             [
-              AppHistoryState,
+              AppOwmDataCacheState,
               AppErrorsState,
               AppOwmDataState,
               AppStatusState,

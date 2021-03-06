@@ -22,7 +22,7 @@ import { of } from 'rxjs';
 import { StatsService } from './stats.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SetDataState } from '../states/app.actions';
+import { SetOwmDataCacheState } from '../states/app.actions';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 
 describe('OwmDataManagerService', () => {
@@ -178,7 +178,7 @@ describe('OwmDataManagerService', () => {
     tick(20);
     expect(spyOnGetDataMemoryOnAway).toHaveBeenCalledTimes(1);
     expect(spyOnDispatch).toHaveBeenCalledTimes(1);
-    expect(spyOnDispatch).toHaveBeenCalledWith(new SetDataState({ ...owmData, cod: 'test' }));
+    expect(spyOnDispatch).toHaveBeenCalledWith(new SetOwmDataCacheState({ ...owmData, cod: 'test' }));
   }));
 
   it('subscribeAway: should wait when away$ emits true', fakeAsync(() => {

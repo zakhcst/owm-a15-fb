@@ -13,7 +13,7 @@ export class CanActivateGchart implements CanActivate {
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
 
   canActivate(): Observable<boolean> {
-    const timeout = timer(ConstantsService.connectedResponseTimeLimit_ms).pipe(mapTo(false));
+    const timeout = timer(ConstantsService.connectedResponseTimeout_ms).pipe(mapTo(false));
     const connected = this.connected$.pipe(filter((status) => status));
     return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected']
       ? merge(connected, timeout).pipe(take(1))
@@ -28,7 +28,7 @@ export class CanLoadGChart implements CanLoad {
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
 
   canLoad(): Observable<boolean> {
-    const timeout = timer(ConstantsService.connectedResponseTimeLimit_ms).pipe(mapTo(false));
+    const timeout = timer(ConstantsService.connectedResponseTimeout_ms).pipe(mapTo(false));
     const connected = this.connected$.pipe(filter((status) => status));
     return ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected']
       ? merge(connected, timeout).pipe(take(1))

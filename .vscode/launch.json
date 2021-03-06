@@ -7,9 +7,17 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome 4211",
+      "name": "Launch Chrome localhost:4211",
       "runtimeExecutable": "/usr/bin/google-chrome-stable",
       "url": "http://localhost:4211",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome 192.168.1.15:4211",
+      "runtimeExecutable": "/usr/bin/google-chrome-stable",
+      "url": "http://192.168.1.15:4211",
       "webRoot": "${workspaceFolder}"
     },
     {
@@ -40,7 +48,7 @@
       "type": "node",
       "request": "attach",
       "name": "Attach to Node",
-      "port": 9222,
+      "port": 9222
       // "preLaunchTask": "node ...node server"
     },
     {
@@ -65,7 +73,7 @@
       "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
       "protocol": "inspector",
       "args": ["${workspaceFolder}/e2e/protractor.conf.js"]
-    },
+    }
   ],
   "compounds": [
     {

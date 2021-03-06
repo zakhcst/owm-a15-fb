@@ -109,7 +109,7 @@ export class MockHeaderToolbarComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   subscribeOwmData() {
-    const subscriptionOwmData = this._data.getOwmData$( { showLoading: false })
+    const subscriptionOwmData = this._data.getOwmDataDebounced$( { showLoading: false })
       .pipe(
         tap((data: IOwmDataModel) => {
           this.owmData = data;

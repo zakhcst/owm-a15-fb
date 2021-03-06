@@ -11,7 +11,7 @@ import {
   AppErrorsState,
   AppFallbackDataState,
   AppHistoryLogState,
-  AppHistoryState,
+  AppOwmDataCacheState,
   AppOwmDataState,
   AppStatsState,
   AppStatusState,
@@ -57,7 +57,7 @@ describe('DialogSettingsComponent', () => {
           SharedModule,
           NgxsModule.forRoot(
             [
-              AppHistoryState,
+              AppOwmDataCacheState,
               AppErrorsState,
               AppOwmDataState,
               AppStatusState,

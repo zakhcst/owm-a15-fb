@@ -52,7 +52,7 @@ export class MockOwmDataService {
     return cityId ? of(this.dbData) : throwError(new Error('MockOwmDataService:getData'));
   }
 
-  getOwmData$({ showLoading }) {
+  getOwmDataDebounced$({ showLoading }) {
     this.dbData = getNewDataObject();
     // if (showLoading) {
     //   this._store.dispatch(new SetStatusShowLoading(true));

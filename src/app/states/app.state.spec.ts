@@ -2,7 +2,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AngularFireDatabase } from '@angular/fire/database';
 
 import {
-  AppHistoryState,
+  AppOwmDataCacheState,
   AppErrorsState,
   AppStatusState,
   AppOwmDataState,
@@ -35,7 +35,7 @@ describe('State store', () => {
   let store: Store;
 
   let appStatusState: AppStatusState;
-  let appHistoryState: AppHistoryState;
+  let appOwmDataCacheState: AppOwmDataCacheState;
   let appErrorsState: AppErrorsState;
   let appOwmDataState: AppOwmDataState;
   let appCitiesState: AppCitiesState;
@@ -59,7 +59,7 @@ describe('State store', () => {
         imports: [AppModule, MatSnackBarModule],
         providers: [
           AppStatusState,
-          AppHistoryState,
+          AppOwmDataCacheState,
           AppErrorsState,
           AppOwmDataState,
           AppCitiesState,
@@ -76,7 +76,7 @@ describe('State store', () => {
 
       store = TestBed.inject(Store);
       appStatusState = TestBed.inject(AppStatusState);
-      appHistoryState = TestBed.inject(AppHistoryState);
+      appOwmDataCacheState = TestBed.inject(AppOwmDataCacheState);
       appErrorsState = TestBed.inject(AppErrorsState);
       appOwmDataState = TestBed.inject(AppOwmDataState);
       appCitiesState = TestBed.inject(AppCitiesState);
@@ -96,8 +96,8 @@ describe('State store', () => {
   it('should create AppStatusState', () => {
     expect(appStatusState).toBeTruthy();
   });
-  it('should create AppHistoryState', () => {
-    expect(appHistoryState).toBeTruthy();
+  it('should create AppOwmDataCacheState', () => {
+    expect(appOwmDataCacheState).toBeTruthy();
   });
   it('should create AppErrorsState', () => {
     expect(appErrorsState).toBeTruthy();
