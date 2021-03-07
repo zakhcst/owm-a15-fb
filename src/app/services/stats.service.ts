@@ -46,7 +46,7 @@ export class StatsService {
 
   updateStatsDBRequests(cityId: string) {
     if (!cityId) {
-      return throwError('CitiesService: updateReads: CityId not provided');
+      return throwError('StatsService: updateReads: CityId not provided');
     }
     const path = ConstantsService.stats + '/' + cityId;
     const ref = this._db.object(path);
@@ -54,13 +54,13 @@ export class StatsService {
       take(1),
       switchMap((city: any) => {
         return from(ref.update({ r: ((city && city.r) || 0) + 1 })).pipe(catchError((err) => {
-          console.log(path, city?.r);
+          console.log('StatsService:', path, city?.r);
           return throwError(err);
         }));
       }),
       catchError((err) => {
         console.log(err);
-        return throwError('CitiesService: updateReads: ' + err);
+        return throwError('StatsService: updateReads: ' + err);
       })
     ).subscribe();
   }
