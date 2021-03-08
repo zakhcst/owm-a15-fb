@@ -2,17 +2,15 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { OwmDataManagerService } from './owm-data-manager.service';
 import { OwmService } from './owm.service';
-import { DataService } from './data.service';
+import { DbOwmService } from './db-owm.service';
 import { CitiesService } from './cities.service';
-import { OwmFallbackDataService } from './owm-fallback-data.service';
 import { ErrorsService } from './errors.service';
 
 import {
-  MockDataService,
+  MockDbOwmService,
   MockOwmService,
   MockCitiesService,
   MockErrorsService,
-  MockOwmFallbackDataService,
   getNewDataObject,
   MockOwmStatsService,
 } from './testing.services.mocks';
@@ -27,22 +25,19 @@ import { cold, getTestScheduler } from 'jasmine-marbles';
 
 describe('OwmDataManagerService', () => {
   let service: OwmDataManagerService;
-  let mockDataService: MockDataService;
+  let mockDbOwmService: MockDbOwmService;
   let mockOwmService: MockOwmService;
   let mockCitiesService: MockCitiesService;
   let mockOwmStatsService: MockOwmStatsService;
-  let mockOwmFallbackDataService: MockOwmFallbackDataService;
   let mockErrorsService: MockErrorsService;
-  let dataService: DataService;
   let store: Store;
   let snackbarService: SnackbarService;
   beforeEach(
     waitForAsync(() => {
       mockOwmService = new MockOwmService();
-      mockDataService = new MockDataService();
+      mockDbOwmService = new MockDbOwmService();
       mockCitiesService = new MockCitiesService();
       mockOwmStatsService = new MockOwmStatsService();
-      mockOwmFallbackDataService = new MockOwmFallbackDataService();
       mockErrorsService = new MockErrorsService();
 
       TestBed.configureTestingModule({
@@ -54,8 +49,8 @@ describe('OwmDataManagerService', () => {
             useValue: mockOwmService,
           },
           {
-            provide: DataService,
-            useValue: mockDataService,
+            provide: DbOwmService,
+            useValue: mockDbOwmService,
           },
           {
             provide: CitiesService,
@@ -66,10 +61,6 @@ describe('OwmDataManagerService', () => {
             useValue: mockOwmStatsService,
           },
           {
-            provide: OwmFallbackDataService,
-            useValue: mockOwmFallbackDataService,
-          },
-          {
             provide: ErrorsService,
             useValue: mockErrorsService,
           },
@@ -77,7 +68,6 @@ describe('OwmDataManagerService', () => {
           Store,
         ],
       });
-      dataService = TestBed.inject(DataService);
       store = TestBed.inject(Store);
       snackbarService = TestBed.inject(SnackbarService);
       service = TestBed.inject(OwmDataManagerService);
@@ -290,7 +280,7 @@ describe('OwmDataManagerService', () => {
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
           expect(spyOnIsNotExpired).toHaveBeenCalledTimes(1);
           expect(spyOnGetDataDB).toHaveBeenCalledTimes(0);
-          expect(responseData).toEqual({ ...owmData, cod: 'data from store not expired' });
+          expect(responseData).toEqual(null);
         },
         (error) => fail(error)
       );
@@ -351,26 +341,22 @@ describe('OwmDataManagerService', () => {
       const owmData = getNewDataObject();
       const spyOnConnected = spyOn(store, 'selectSnapshot').and.returnValue(false);
       const spyOnSnackbarShow = spyOn(snackbarService, 'show').and.callFake(() => {});
-      const spyOnMockDataService = spyOn(mockDataService, 'getData').and.returnValue(
+      const spyOnMockDbOwmService = spyOn(mockDbOwmService, 'getData').and.returnValue(
         of({ ...owmData, cod: 'expired from db' })
       );
       const spyOnUpdateStatsDBRequests = spyOn(service, 'updateStatsDBRequests').and.returnValue(null);
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
-      const spyOnFallBackDataServiceGetData = spyOn(service, 'getFallbackData').and.returnValue(
-        of({ ...owmData, cod: 'fallback' })
-      );
       const spyOnIsNotExpired = spyOn(service, 'isNotExpired').and.callThrough();
 
       service.getDataDB(cityId).subscribe(
         (responseData) => {
-          expect(spyOnConnected).toHaveBeenCalledTimes(1);
+          expect(spyOnConnected).toHaveBeenCalledTimes(2);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(0);
-          expect(spyOnMockDataService).toHaveBeenCalledTimes(0);
+          expect(spyOnMockDbOwmService).toHaveBeenCalledTimes(0);
           expect(spyOnUpdateStatsDBRequests).toHaveBeenCalledTimes(0);
           expect(spyOnIsNotExpired).toHaveBeenCalledTimes(0);
           expect(spyOnGetDataOwm).toHaveBeenCalledTimes(0);
-          expect(spyOnFallBackDataServiceGetData).toHaveBeenCalledTimes(1);
-          expect(responseData).toEqual({ ...owmData, cod: 'fallback' });
+          expect(responseData).toEqual(null);
         },
         (error) => fail(error)
       );
@@ -382,28 +368,24 @@ describe('OwmDataManagerService', () => {
     waitForAsync(() => {
       const cityId = 'cityId';
       const owmData = getNewDataObject();
-      const spyOnConnected = spyOn(store, 'selectSnapshot').and.returnValue(true);
+      const spyOnSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValues(true, false);
       const spyOnSnackbarShow = spyOn(snackbarService, 'show').and.callFake(() => {});
       const timeNow = new Date().valueOf() / 1000;
       const dataNow = { ...owmData, cod: 'data now from db' };
       dataNow.list[0].dt = timeNow;
-      const spyOnMockDataService = spyOn(mockDataService, 'getData').and.returnValue(of(dataNow));
+      const spyOnMockDbOwmService = spyOn(mockDbOwmService, 'getData').and.returnValue(of(dataNow));
       const spyOnUpdateStatsDBRequests = spyOn(service, 'updateStatsDBRequests').and.returnValue(null);
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
-      const spyOnFallBackDataServiceGetData = spyOn(service, 'getFallbackData').and.returnValue(
-        of({ ...owmData, cod: 'fallback' })
-      );
       const spyOnIsNotExpired = spyOn(service, 'isNotExpired').and.callThrough();
 
       service.getDataDB(cityId).subscribe(
         (responseData) => {
-          expect(spyOnConnected).toHaveBeenCalledTimes(1);
+          expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(2);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
-          expect(spyOnMockDataService).toHaveBeenCalledTimes(1);
+          expect(spyOnMockDbOwmService).toHaveBeenCalledTimes(1);
           expect(spyOnUpdateStatsDBRequests).toHaveBeenCalledTimes(1);
           expect(spyOnIsNotExpired).toHaveBeenCalledTimes(1);
           expect(spyOnGetDataOwm).toHaveBeenCalledTimes(0);
-          expect(spyOnFallBackDataServiceGetData).toHaveBeenCalledTimes(0);
           expect(responseData).toEqual({ ...owmData, cod: 'data now from db' });
         },
         (error) => fail(error)
@@ -416,42 +398,24 @@ describe('OwmDataManagerService', () => {
     waitForAsync(() => {
       const cityId = 'cityId';
       const owmData = getNewDataObject();
-      const spyOnConnected = spyOn(store, 'selectSnapshot').and.returnValue(true);
+      const spyOnSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValues(true, false);
       const spyOnSnackbarShow = spyOn(snackbarService, 'show').and.callFake(() => {});
-      const spyOnMockDataService = spyOn(mockDataService, 'getData').and.returnValue(
+      const spyOnMockDbOwmService = spyOn(mockDbOwmService, 'getData').and.returnValue(
         of({ ...owmData, cod: 'expired from db' })
       );
       const spyOnUpdateStatsDBRequests = spyOn(service, 'updateStatsDBRequests').and.returnValue(null);
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
-      const spyOnFallBackDataServiceGetData = spyOn(service, 'getFallbackData').and.returnValue(
-        of({ ...owmData, cod: 'fallback' })
-      );
       const spyOnIsNotExpired = spyOn(service, 'isNotExpired').and.callThrough();
 
       service.getDataDB(cityId).subscribe(
         (responseData) => {
-          expect(spyOnConnected).toHaveBeenCalledTimes(1);
+          expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(2);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
-          expect(spyOnMockDataService).toHaveBeenCalledTimes(1);
+          expect(spyOnMockDbOwmService).toHaveBeenCalledTimes(1);
           expect(spyOnUpdateStatsDBRequests).toHaveBeenCalledTimes(1);
           expect(spyOnIsNotExpired).toHaveBeenCalledTimes(1);
           expect(spyOnGetDataOwm).toHaveBeenCalledTimes(1);
-          expect(spyOnFallBackDataServiceGetData).toHaveBeenCalledTimes(0);
           expect(responseData).toEqual({ ...owmData, cod: 'fresh from owm' });
-        },
-        (error) => fail(error)
-      );
-    })
-  );
-
-  it(
-    'requestNewOwmData: should requestNewOwmData',
-    waitForAsync(() => {
-      mockDataService.dbData = null;
-      service.getDataOWM('citiId').subscribe(
-        (responseData) => {
-          delete responseData.updated;
-          expect(responseData).toEqual(getNewDataObject());
         },
         (error) => fail(error)
       );

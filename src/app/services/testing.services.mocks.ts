@@ -45,11 +45,11 @@ export class MockDataService {
     return owmData && !this.error ? Promise.resolve() : Promise.reject();
   }
 }
-export class MockOwmDataService {
+export class MockDbOwmService {
   dbData: IOwmDataModel;
   getData(cityId: string) {
     this.dbData = getNewDataObject();
-    return cityId ? of(this.dbData) : throwError(new Error('MockOwmDataService:getData'));
+    return cityId ? of(this.dbData) : throwError(new Error('MockDbOwmService:getData'));
   }
 
   getOwmDataDebounced$({ showLoading }) {

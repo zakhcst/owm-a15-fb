@@ -10,7 +10,7 @@ import { OwmDataManagerService } from '../../services/owm-data-manager.service';
 import { ErrorsService } from '../../services/errors.service';
 
 import {
-  MockOwmDataService,
+  MockDbOwmService,
   MockHistoryService,
   MockErrorsService,
   getNewDataObject,
@@ -22,10 +22,10 @@ import { AppModule } from 'src/app/app.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('ForecastFlexComponent services', () => {
-  let mockOwmDataService: MockOwmDataService;
+  let mockDbOwmService: MockDbOwmService;
   let mockErrorsService: MockErrorsService;
 
-  let owmDataService: OwmDataManagerService;
+  let owmDbOwmService: OwmDataManagerService;
   let errorsService: ErrorsService;
 
   let component: ForecastFlexComponent;
@@ -42,7 +42,7 @@ describe('ForecastFlexComponent services', () => {
 
   beforeEach(
     waitForAsync(() => {
-      mockOwmDataService = new MockOwmDataService();
+      mockDbOwmService = new MockDbOwmService();
       mockErrorsService = new MockErrorsService();
       TestBed.configureTestingModule({
         imports: [AppModule],
@@ -50,7 +50,7 @@ describe('ForecastFlexComponent services', () => {
         providers: [
           ForecastFlexComponent,
           MatSnackBarModule,
-          { provide: OwmDataManagerService, useValue: mockOwmDataService },
+          { provide: OwmDataManagerService, useValue: mockDbOwmService },
           { provide: ErrorsService, useValue: mockErrorsService },
         ],
       })
@@ -81,7 +81,7 @@ describe('ForecastFlexComponent services', () => {
   });
 
   it('should have all async data', waitForAsync(() => {
-      owmDataService = TestBed.inject(OwmDataManagerService);
+      owmDbOwmService = TestBed.inject(OwmDataManagerService);
       errorsService = TestBed.inject(ErrorsService);
       fixture.detectChanges();
 
@@ -90,13 +90,13 @@ describe('ForecastFlexComponent services', () => {
 
         expect(component.loadingOwmData).toBe(false);
         expect(component).toBeTruthy('expect(component)');
-        expect(owmDataService).toBeTruthy('expect(owmDataService)');
+        expect(owmDbOwmService).toBeTruthy('expect(owmDbOwmService)');
         expect(errorsService).toBeTruthy('expect(errorsService)');
       });
     })
   );
 
-  it('should get data from OwmDataService', waitForAsync(() => {
+  it('should get data from DbOwmService', waitForAsync(() => {
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(component.weatherData).toEqual(getNewDataObject());

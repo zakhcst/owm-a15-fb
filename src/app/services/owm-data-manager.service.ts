@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { of, Observable, timer, merge, throwError } from 'rxjs';
 import { switchMap, catchError, tap, take, filter, debounce, mapTo } from 'rxjs/operators';
 import { OwmService } from './owm.service';
-import { DataService } from './data.service';
+import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { Store, Select } from '@ngxs/store';
 import { SetOwmDataCacheState, SetStatusShowLoading } from '../states/app.actions';
 import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
-import { AppStatusState, AppOwmDataCacheState, AppFallbackDataState } from '../states/app.state';
+import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
 import { StatsService } from './stats.service';
 import { ConstantsService } from './constants.service';
 
@@ -32,7 +32,7 @@ export class OwmDataManagerService {
 
   constructor(
     private _owm: OwmService,
-    private _fb: DataService,
+    private _dbOwmData: DbOwmService,
     private _stats: StatsService,
     private _errors: ErrorsService,
     private _store: Store,
@@ -135,9 +135,13 @@ export class OwmDataManagerService {
 
   getDataDB(cityId: string): Observable<IOwmDataModel> {
     const connected = this._store.selectSnapshot(AppStatusState.connected);
+    const liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
     if (connected) {
+      if (liveDataUpdate) { 
+        return this.getDataOWM(cityId); 
+      }
       this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
-      return this.getDataServiceTimeout(this._fb.getData(cityId)).pipe(
+      return this.getDataServiceTimeout(this._dbOwmData.getData(cityId)).pipe(
         take(1),
         tap(() => this.updateStatsDBRequests(cityId)),
         switchMap((fbdata: IOwmDataModel) => {
@@ -164,10 +168,11 @@ export class OwmDataManagerService {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
     return this.getDataServiceTimeout(this._owm.getData(cityId)).pipe(
       switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
+      tap((newOwmData: IOwmDataModel) => this._dbOwmData.setData(cityId, newOwmData)),
       catchError((err) => {
         this._errors.add({
           userMessage: 'Connection or service problem',
-          logMessage: 'OwmDataService: getData: ' + err,
+          logMessage: 'DbOwmService: getData: ' + err,
         });
         return of(null);
       })
@@ -253,10 +258,11 @@ getDataMemoryOnCityChange  getDataMemoryOnConnected   getDataMemoryOnAway       
 |                          \----------------------------------------------------|
 |                                                                               |
 getDataDB ----------- (updateStatsDBRequests)                                   |
-|  |    \                                                                       |
-|  |     \----------------------------------------------------------------------|
-|   \                                                                           |
-|    getDataOWM ----------- setListByDate --------------------------------------|
-|    |                                                                          |
-getFallbackData ----------------------------------------------------------------/
+|       \                                                                       |
+|        \----------------------------------------------------------------------|
+|                                                                               |
+getDataOWM ----------- setListByDate -------------------------------------------|
+|                                                                               |
+\---- null ---------------------------------------------------------------------/
+
 */

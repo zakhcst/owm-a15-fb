@@ -11,7 +11,7 @@ import { OwmDataManagerService } from '../../services/owm-data-manager.service';
 import { ErrorsService } from '../../services/errors.service';
 
 import {
-  MockOwmDataService,
+  MockDbOwmService,
   MockErrorsService,
   getNewDataObject,
 } from '../../services/testing.services.mocks';
@@ -23,10 +23,10 @@ import { SnackbarService } from '../../services/snackbar.service';
 import { ForecastGchartLegendComponent } from '../../components/forecast-gchart-legend/forecast-gchart-legend.component';
 
 describe('ForecastGChartComponent services', () => {
-  let mockOwmDataService: MockOwmDataService;
+  let mockDbOwmService: MockDbOwmService;
   let mockErrorsService: MockErrorsService;
 
-  let owmDataService: OwmDataManagerService;
+  let owmDbOwmService: OwmDataManagerService;
   let errorsService: ErrorsService;
 
   let component: ForecastGChartComponent;
@@ -37,12 +37,12 @@ describe('ForecastGChartComponent services', () => {
     localStorage.removeItem('mockGetBrowserIpServiceError');
     localStorage.removeItem('mockOwmStatsServiceError');
     localStorage.removeItem('mockCitiesServiceError');
-    localStorage.removeItem('mockOwmDataServiceError');
+    localStorage.removeItem('mockDbOwmServiceError');
     localStorage.removeItem('mockIp');
   }
 
   beforeEach(waitForAsync(() => {
-    mockOwmDataService = new MockOwmDataService();
+    mockDbOwmService = new MockDbOwmService();
     mockErrorsService = new MockErrorsService();
     TestBed.configureTestingModule({
       declarations: [
@@ -56,7 +56,7 @@ describe('ForecastGChartComponent services', () => {
         MatSnackBarModule,
         ForecastGChartComponent,
         SnackbarService,
-        { provide: OwmDataManagerService, useValue: mockOwmDataService },
+        { provide: OwmDataManagerService, useValue: mockDbOwmService },
         { provide: ErrorsService, useValue: mockErrorsService },
       ]
     })
@@ -79,7 +79,7 @@ describe('ForecastGChartComponent services', () => {
     resetLocalStorage();
   });
 
-  it('should get data from OwmDataService', waitForAsync(() => {
+  it('should get data from DbOwmService', waitForAsync(() => {
     expect(mockErrorsService.messages.length).toBe(0);
     fixture.detectChanges();
     fixture.whenStable().then(() => {

@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';
-import { DataService } from './data.service';
+import { DbOwmService } from './db-owm.service';
 import { MockAngularFireService } from './testing.services.mocks';
 import { AngularFireModule } from '@angular/fire';
 import {
@@ -13,8 +13,8 @@ import { getNewDataObject } from './testing.services.mocks';
 import { SharedModule } from '../modules/shared.module';
 
 
-describe('DataService', () => {
-  let service: DataService;
+describe('DbOwmService', () => {
+  let service: DbOwmService;
   const testIP = 'ip';
   const testData: IOwmDataModel = getNewDataObject();
   let serviceFB: any;
@@ -29,11 +29,11 @@ describe('DataService', () => {
         SharedModule
       ],
       providers: [
-        DataService,
+        DbOwmService,
         { provide: AngularFireDatabase, useClass: MockAngularFireService }
       ]
     });
-    service = TestBed.inject(DataService);
+    service = TestBed.inject(DbOwmService);
     serviceFB = TestBed.inject(AngularFireDatabase);
   }));
 

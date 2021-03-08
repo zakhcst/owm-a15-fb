@@ -30,7 +30,6 @@ import { HistoryLogUpdateService } from '../services/history-log-update.service'
 import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from '../services/constants.service';
-import { DataService } from '../services/data.service';
 import { NormalizeDataService } from '../services/normalize-data.service';
 import { ICities } from '../models/cities.model';
 import { IStats } from '../models/stats.model';
@@ -251,7 +250,7 @@ export class AppOwmDataCacheState {
     private _store: Store,
     private _historyLogUpdate: HistoryLogUpdateService,
     private _snackbar: SnackbarService,
-    private _fb: DataService
+    // private _fb: DbOwmService
   ) { }
 
   @Selector([AppStatusState, AppFallbackDataState])
@@ -273,20 +272,20 @@ export class AppOwmDataCacheState {
     };
     
     const existingSnapshot = context.getState()[selectedCityId];
-    const update = { ...context.getState(), [selectedCityId]: owmData };
-    context.setState(update);
     if (!existingSnapshot || existingSnapshot.updated !== owmData.updated) {
-      updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
-      updatesPromiseArray.push(this._fb.setData(selectedCityId, owmData));
-    }
+      const update = { ...context.getState(), [selectedCityId]: owmData };
+      context.setState(update);
 
-    const cityName = owmData.city.name;
-    const countryISO2 = owmData.city.country;
-    this._snackbar.show({
-      message: `Selected: ${cityName}, ${countryISO2}`,
-      class: 'snackbar__info',
-    });
-    return Promise.all(updatesPromiseArray);
+      updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
+      
+      const cityName = owmData.city.name;
+      const countryISO2 = owmData.city.country;
+      this._snackbar.show({
+        message: `Selected: ${cityName}, ${countryISO2}`,
+        class: 'snackbar__info',
+      });
+      return Promise.all(updatesPromiseArray);
+    }
   }
 }
 

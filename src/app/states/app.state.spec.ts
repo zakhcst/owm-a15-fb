@@ -5,7 +5,6 @@ import {
   AppOwmDataCacheState,
   AppErrorsState,
   AppStatusState,
-  AppOwmDataState,
   AppCitiesState,
   AppStatsState,
   AppHistoryLogState,
@@ -37,7 +36,6 @@ describe('State store', () => {
   let appStatusState: AppStatusState;
   let appOwmDataCacheState: AppOwmDataCacheState;
   let appErrorsState: AppErrorsState;
-  let appOwmDataState: AppOwmDataState;
   let appCitiesState: AppCitiesState;
   let appStatsState: AppStatsState;
   let appHistoryLogState: AppHistoryLogState;
@@ -61,7 +59,6 @@ describe('State store', () => {
           AppStatusState,
           AppOwmDataCacheState,
           AppErrorsState,
-          AppOwmDataState,
           AppCitiesState,
           AppStatsState,
           AppHistoryLogState,
@@ -78,7 +75,6 @@ describe('State store', () => {
       appStatusState = TestBed.inject(AppStatusState);
       appOwmDataCacheState = TestBed.inject(AppOwmDataCacheState);
       appErrorsState = TestBed.inject(AppErrorsState);
-      appOwmDataState = TestBed.inject(AppOwmDataState);
       appCitiesState = TestBed.inject(AppCitiesState);
       appStatsState = TestBed.inject(AppStatsState);
       appHistoryLogState = TestBed.inject(AppHistoryLogState);
@@ -101,9 +97,6 @@ describe('State store', () => {
   });
   it('should create AppErrorsState', () => {
     expect(appErrorsState).toBeTruthy();
-  });
-  it('should create AppOwmDataState', () => {
-    expect(appOwmDataState).toBeTruthy();
   });
   it('should create AppCitiesState', () => {
     expect(appCitiesState).toBeTruthy();

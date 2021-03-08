@@ -13,7 +13,6 @@ import {
   AppFallbackDataState,
   AppHistoryLogState,
   AppOwmDataCacheState,
-  AppOwmDataState,
   AppStatsState,
   AppStatusState,
 } from 'src/app/states/app.state';
@@ -44,7 +43,6 @@ describe('HeaderToolbarComponent', () => {
             [
               AppOwmDataCacheState,
               AppErrorsState,
-              AppOwmDataState,
               AppStatusState,
               AppCitiesState,
               AppStatsState,

@@ -12,9 +12,7 @@ import {
   AppFallbackDataState,
   AppHistoryLogState,
   AppOwmDataCacheState,
-  AppOwmDataState,
   AppStatsState,
-  AppStatusState,
 } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
 import { ConstantsService } from 'src/app/services/constants.service';
@@ -59,8 +57,6 @@ describe('DialogSettingsComponent', () => {
             [
               AppOwmDataCacheState,
               AppErrorsState,
-              AppOwmDataState,
-              AppStatusState,
               AppCitiesState,
               AppStatsState,
               AppHistoryLogState,
