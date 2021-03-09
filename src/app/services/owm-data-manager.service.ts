@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, Observable, timer, merge, throwError } from 'rxjs';
-import { switchMap, catchError, tap, take, filter, debounce, mapTo } from 'rxjs/operators';
+import { switchMap, catchError, tap, take, filter, debounce, mapTo, distinctUntilChanged } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
@@ -136,6 +136,7 @@ export class OwmDataManagerService {
   getDataDB(cityId: string): Observable<IOwmDataModel> {
     const connected = this._store.selectSnapshot(AppStatusState.connected);
     const liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
+    
     if (connected) {
       if (liveDataUpdate) { 
         return this.getDataOWM(cityId); 
@@ -154,7 +155,7 @@ export class OwmDataManagerService {
         catchError((err) => {
           this._errors.add({
             userMessage: 'Connection or service problem',
-            logMessage: 'DBDataService: getData: ' + err,
+            logMessage: 'DBDataService: getDataDB: ' + err,
           });
           return of(null);
         })
@@ -172,7 +173,7 @@ export class OwmDataManagerService {
       catchError((err) => {
         this._errors.add({
           userMessage: 'Connection or service problem',
-          logMessage: 'DbOwmService: getData: ' + err,
+          logMessage: 'DbOwmService: getDataOWM: ' + err,
         });
         return of(null);
       })
@@ -180,10 +181,12 @@ export class OwmDataManagerService {
   }
 
   getDataServiceTimeout(service: Observable<IOwmDataModel>) {
-    const timeout = timer(ConstantsService.dataResponseTimeout_ms * 3).pipe(mapTo(null));
+    const timeout = timer(ConstantsService.dataResponseTimeout_ms * 3).pipe(mapTo('timedout'));
     return merge(service, timeout).pipe(
       take(1),
-      switchMap((data) => (data ? of(data) : throwError('Service Timeout Error')))
+      switchMap((data) => { 
+        return (data  === 'timedout' ? throwError('Service Timeout Error') : of(data))
+      })
     );
   }
 
@@ -232,7 +235,8 @@ export class OwmDataManagerService {
         }
       }),
       filter((data) => !!data),
-      debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(ConstantsService.loadingDataDebounceTime_ms))),
+      distinctUntilChanged((prev, curr) => prev.updated === curr.updated),
+      debounce((data: IOwmDataModel) => (data.updated && this.isNotExpired(data) ? of(null) : timer(ConstantsService.loadingDataDebounceTime_ms))),
       tap(() => {
         if (showLoading) {
           this._store.dispatch(new SetStatusShowLoading(false));

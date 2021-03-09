@@ -221,7 +221,6 @@ export class AppStatusState {
   }
 }
 
-
 @State<IOwmDataModel>({
   name: 'fallbackData',
   defaults: null,
@@ -239,7 +238,6 @@ export class AppFallbackDataState {
   }
 }
 
-
 @State<IOwmDataCacheModel>({
   name: 'owmDataCache',
   defaults: {},
@@ -250,7 +248,6 @@ export class AppOwmDataCacheState {
     private _store: Store,
     private _historyLogUpdate: HistoryLogUpdateService,
     private _snackbar: SnackbarService,
-    // private _fb: DbOwmService
   ) { }
 
   @Selector([AppStatusState, AppFallbackDataState])
@@ -264,18 +261,18 @@ export class AppOwmDataCacheState {
     if (!owmData || !owmData.updated) return;
 
     const updatesPromiseArray = [];
-    const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
     const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
-    const newEntry: HistoryLogModel = {
-      cityId: selectedCityId,
-      time: new Date().valueOf(),
-    };
-    
     const existingSnapshot = context.getState()[selectedCityId];
-    if (!existingSnapshot || existingSnapshot.updated !== owmData.updated) {
+    
+    if (!existingSnapshot || existingSnapshot.updated < owmData.updated) {
       const update = { ...context.getState(), [selectedCityId]: owmData };
       context.setState(update);
-
+      
+      const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
+      const newEntry: HistoryLogModel = {
+        cityId: selectedCityId,
+        time: new Date().valueOf(),
+      };
       updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
       
       const cityName = owmData.city.name;

@@ -6,18 +6,8 @@ import { IHistoryLog } from '../models/history-log.model';
 import { IStatusBuildInfo } from '../models/build-info.model';
 
 export class SetOwmDataCacheState {
-  static readonly type = '[activity] set cache';
+  static readonly type = '[owmDataCache] set';
   constructor(public payload: IOwmDataModel) { }
-}
-
-export class SetHistoryIpState {
-  static readonly type = '[activity] set ip';
-  constructor(public payload: string) { }
-}
-
-export class SetSelectedCityIdState {
-  static readonly type = '[activity] set SelectedCityId';
-  constructor(public payload?: string) { }
 }
 
 export class SetStatusIp {
