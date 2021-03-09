@@ -53,8 +53,10 @@ export class StatsService {
     return ref.valueChanges().pipe(
       take(1),
       switchMap((city: any) => {
-        return from(ref.update({ r: ((city && city.r) || 0) + 1 })).pipe(catchError((err) => {
-          console.log('StatsService:', path, city?.r);
+        const newValue = ((city && city.r) || 0) + 1;
+        console.log('StatsService:', path, city?.r, newValue);
+        return from(ref.update({ r: newValue })).pipe(catchError((err) => {
+          console.log('Error StatsService:', path, city?.r, newValue);
           return throwError(err);
         }));
       }),
