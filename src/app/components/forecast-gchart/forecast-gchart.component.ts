@@ -42,6 +42,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   cardPadding = 10;
   dateColumnWidth = 40;
   overlaySubjecs = [];
+  showChartIcons = false;
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
   @Select(AppStatusState.showChartIcons) showChartIcons$: Observable<boolean>;
@@ -61,6 +62,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     this.subscribeDaysForecast();
     this.subscribeOwmData();
     this.setDebounceIconsDraws();
+    this.subscribeShowChartIcons();
   }
 
   ngOnDestroy() {
@@ -118,6 +120,13 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     });
   }
 
+  subscribeShowChartIcons(){
+    const showChartIconsSubscription = this.showChartIcons$.subscribe(showChartIcons => {
+      this.showChartIcons = showChartIcons;
+    });
+    this.subscriptions.add(showChartIconsSubscription);
+  }
+
   subscribeOwmData() {
     const weatherDataSubscription = this._data.getOwmDataDebounced$({ showLoading: true }).subscribe(
       (data) => {
@@ -160,15 +169,6 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
         this.chart[dayK].width = graphWidth;
       });
     }
-  }
-
-  setIconStyle(slot) {
-    const iconSize = ConstantsService.iconsWeatherSize2;
-    const iconStyle = {
-      'background-position':
-        '0 ' + (slot.iconIndex ? '-' : '') + (slot.iconIndex === undefined ? 1 : slot.iconIndex) * iconSize + 'px',
-    };
-    return iconStyle;
   }
 
   onReady($event: ChartReadyEvent, gc, overlay, overlayContent, ind) {

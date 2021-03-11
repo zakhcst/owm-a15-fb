@@ -27,16 +27,17 @@ export class PopulateGchartDataService {
   }
 
   setGChartColumnNames() {
+    const tooltip = { type: 'string', role: 'tooltip', p: { html: true } };
     const columnNames = [
       'Time',
       'Temperature',
-      { type: 'string', role: 'tooltip', p: { html: true } },
+      tooltip,
       'Wind',
-      { type: 'string', role: 'tooltip', p: { html: true } },
+      tooltip,
       'Humidity',
-      { type: 'string', role: 'tooltip', p: { html: true } },
+      tooltip,
       'Pressure',
-      { type: 'string', role: 'tooltip', p: { html: true } },
+      tooltip,
     ];
     return columnNames;
   }
@@ -218,12 +219,14 @@ export class PopulateGchartDataService {
 
   setGChartDayIcons(dayK: string, day: IListDayByHourModel, hoursKeys: number[]) {
     const icons = [];
+    const iconSize = ConstantsService.iconsWeatherSize2;
 
     // add the missing slots at the begining of the day
     let i = 0;
     while (ConstantsService.timeTemplate[i].hour < hoursKeys[0]) {
       icons.push({
         hourK: ConstantsService.timeTemplate[i++].hour.toString(),
+        iconStyle: { 'background-position': '0 ' + iconSize + 'px' }
       });
     }
 
@@ -232,7 +235,11 @@ export class PopulateGchartDataService {
       const iconCode = day[hourK].weather[0].icon;
       const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
       const tooltipTxt = this.formatTooltipIcon(hour);
-      icons.push({ hourK, iconIndex, tooltipTxt });
+      const iconStyle = {
+        'background-position': 
+        '0 ' + (iconIndex ? '-' : '') + (iconIndex === undefined ? 1 : iconIndex) * iconSize + 'px',
+      };
+      icons.push({ hourK, iconIndex, tooltipTxt, iconStyle });
     });
 
     // add the missing slots at the end of the day
@@ -242,6 +249,7 @@ export class PopulateGchartDataService {
     while (i < timeTemplate.length && timeTemplate[i].hour > hoursKeys[hoursKeys.length - 1]) {
       icons.push({
         hourK: ConstantsService.timeTemplate[i++].hour.toString(),
+        iconStyle: { 'background-position': '0 ' + iconSize + 'px' }
       });
     }
 

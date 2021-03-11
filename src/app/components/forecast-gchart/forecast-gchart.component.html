@@ -54,13 +54,13 @@
                   <ng-container *ngFor="let slot of chart[dayK].icons; index as iconInd">
                     <span class="flex flex-justify-content-center">
                       <span 
-                        class="icon-weather-container" 
+                        [ngClass]="{'icon-weather-container' : !!slot.tooltipTxt}"
                         [matTooltip]="slot.tooltipTxt"
                         matTooltipPosition="right"
                         matTooltipClass="gchart-tooltip-icon"
                         (click)="$event.stopPropagation();showDataCellExpanded(weatherData.listByDate[dayK][slot.hourK], iconInd)"
                         >
-                        <span class="icons-weather" [ngStyle]="setIconStyle(slot)" *ngIf="showChartIcons$ | async"></span>
+                        <span class="icons-weather" [ngStyle]="slot.iconStyle" *ngIf="showChartIcons"></span>
                       </span>
                     </span>
                   </ng-container>

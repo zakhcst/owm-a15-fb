@@ -1,6 +1,6 @@
 {
   "name": "owm-a11-fb",
-  "version": "0.11.105",
+  "version": "0.11.106",
   "scripts": {
     "ng": "ng",
     "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4211",
