@@ -19,7 +19,7 @@ import { AppOwmDataCacheState, AppErrorsState, AppStatusState, AppCitiesState, A
     AngularFireDatabaseModule,
     NgxsModule.forRoot([AppOwmDataCacheState, AppErrorsState, AppStatusState, AppCitiesState, AppStatsState, AppHistoryLogState, AppFallbackDataState],
       { developmentMode: !environment.production }),
-    NgxsStoragePluginModule.forRoot({ key: ['status', 'cities', 'owmDataCache', 'data', 'stats', 'historyLog', 'fallbackData'] }),
+    NgxsStoragePluginModule.forRoot({ key: ['status', 'cities', 'owmDataCache', 'stats', 'historyLog', 'fallbackData'] }),
   ],
   exports: [
     BrowserModule,

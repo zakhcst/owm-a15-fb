@@ -152,7 +152,7 @@ describe('OwmDataManagerService', () => {
     })
   );
 
-  it('subscribeAway: should call dispatch set data on away$ emits false', fakeAsync(() => {
+  fit('subscribeAway: should call dispatch set data on away$ emits false', fakeAsync(() => {
     const owmData = getNewDataObject();
     service.getDataOnCityChangeInProgress = false;
     service.getDataOnConnectedInProgress = false;
@@ -160,15 +160,15 @@ describe('OwmDataManagerService', () => {
       of({ ...owmData, cod: 'test' })
     );
     const spyOnDispatch = spyOn(store, 'dispatch').and.callFake(() => of(true));
-    const q$ = cold('-t-f|', { t: true, f: false });
+    const q$ = cold('-f-f|', { t: true, f: false });
     const spyOnSelect = spyOnProperty(service, 'away$').and.returnValue(q$);
 
     service.subscribeAway();
     getTestScheduler().flush();
     tick(20);
-    expect(spyOnGetDataMemoryOnAway).toHaveBeenCalledTimes(1);
-    expect(spyOnDispatch).toHaveBeenCalledTimes(1);
-    expect(spyOnDispatch).toHaveBeenCalledWith(new SetOwmDataCacheState({ ...owmData, cod: 'test' }));
+    expect(spyOnSelect).toHaveBeenCalledTimes(1);
+    expect(spyOnGetDataMemoryOnAway).toHaveBeenCalledTimes(0);
+    expect(spyOnDispatch).toHaveBeenCalledTimes(0);
   }));
 
   it('subscribeAway: should wait when away$ emits true', fakeAsync(() => {

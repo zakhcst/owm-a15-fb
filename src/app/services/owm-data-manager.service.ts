@@ -52,18 +52,21 @@ export class OwmDataManagerService {
     this.selectedCityId$
       .pipe(
         tap(() => {
-          this._store.dispatch(new SetStatusShowLoading(true));
-          this.getDataOnCityChangeInProgress = true;
+          this.getDataOnCityChangeInProgress = !this.getDataOnConnectedInProgress && !this.getDataOnBackFromAwayInProgress;
+          if (this.getDataOnCityChangeInProgress) {
+            this._store.dispatch(new SetStatusShowLoading(true));
+          }
         }),
+        filter(() => this.getDataOnCityChangeInProgress),
         switchMap((selectedCityId) => this.getDataMemoryOnCityChange(selectedCityId)),
         tap(() => {
           this._store.dispatch(new SetStatusShowLoading(false));
-          this.getDataOnCityChangeInProgress = false;
         }),
-        filter((data) => (this.getDataOnCityChangeInProgress = !!data))
+        filter((data) => this.getDataOnCityChangeInProgress = !!data)
       )
       .subscribe((data) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
+        this.getDataOnCityChangeInProgress = false;
       });
   }
 
@@ -71,13 +74,9 @@ export class OwmDataManagerService {
     const that = this;
     this.connected$
       .pipe(
-        filter(
-          (connected) =>
-          (this.getDataOnConnectedInProgress =
-            connected && !this.getDataOnCityChangeInProgress && !this.getDataOnBackFromAwayInProgress)
-        ),
+        filter((connected) => this.getDataOnConnectedInProgress = connected && !this.getDataOnCityChangeInProgress && !this.getDataOnBackFromAwayInProgress),
         switchMap(that.getDataMemoryOnConnected.bind(that)),
-        filter((data) => (this.getDataOnConnectedInProgress = !!data))
+        filter((data) => this.getDataOnConnectedInProgress = !!data)
       )
       .subscribe((data) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
@@ -91,12 +90,14 @@ export class OwmDataManagerService {
       .pipe(
         filter((away) => away !== undefined),
         filter(
-          (away) =>
-          (this.getDataOnBackFromAwayInProgress =
-            !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress)
+          (away) => {
+            const connected = this._store.selectSnapshot(AppStatusState.connected);
+            this.getDataOnBackFromAwayInProgress = !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress && connected;
+            return this.getDataOnBackFromAwayInProgress;
+          }
         ),
         switchMap(that.getDataMemoryOnAway.bind(that)),
-        filter((data) => (this.getDataOnBackFromAwayInProgress = !!data))
+        filter((data) => this.getDataOnBackFromAwayInProgress = !!data)
       )
       .subscribe((data) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
@@ -114,7 +115,7 @@ export class OwmDataManagerService {
     return this.getDataDB(selectedCityId);
   }
 
-  getDataMemoryOnConnected(): Observable<IOwmDataModel> {
+  getDataMemoryOnConnected(): Observable<IOwmDataModel | null> {
     const owmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on connected' });
     if (owmData && this.isNotExpired(owmData)) {
@@ -124,7 +125,7 @@ export class OwmDataManagerService {
     return this.getDataDB(selectedCityId);
   }
 
-  getDataMemoryOnCityChange(cityId: string): Observable<IOwmDataModel> {
+  getDataMemoryOnCityChange(cityId: string): Observable<IOwmDataModel | null> {
     const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory' });
     if (lastOwmData && this.isNotExpired(lastOwmData)) {
@@ -133,7 +134,7 @@ export class OwmDataManagerService {
     return this.getDataDB(cityId);
   }
 
-  getDataDB(cityId: string): Observable<IOwmDataModel> {
+  getDataDB(cityId: string): Observable<IOwmDataModel | null> {
     const connected = this._store.selectSnapshot(AppStatusState.connected);
     const liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
     
@@ -142,8 +143,8 @@ export class OwmDataManagerService {
         return this.getDataOWM(cityId); 
       }
       this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
-      return this.getDataServiceTimeout(this._dbOwmData.getData(cityId)).pipe(
-        take(1),
+
+      return this.getDataServiceOrTimeout(this._dbOwmData.getData(cityId)).pipe(
         tap(() => this.updateStatsDBRequests(cityId)),
         switchMap((fbdata: IOwmDataModel) => {
           if (fbdata !== null && this.isNotExpired(fbdata)) {
@@ -167,7 +168,7 @@ export class OwmDataManagerService {
 
   getDataOWM(cityId: string): Observable<IOwmDataModel | null> {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
-    return this.getDataServiceTimeout(this._owm.getData(cityId)).pipe(
+    return this.getDataServiceOrTimeout(this._owm.getData(cityId)).pipe(
       switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
       tap((newOwmData: IOwmDataModel) => this._dbOwmData.setData(cityId, newOwmData)),
       catchError((err) => {
@@ -180,13 +181,11 @@ export class OwmDataManagerService {
     );
   }
 
-  getDataServiceTimeout(service: Observable<IOwmDataModel>) {
-    const timeout = timer(ConstantsService.dataResponseTimeout_ms * 3).pipe(mapTo('timedout'));
+  getDataServiceOrTimeout(service: Observable<IOwmDataModel>) {
+    const timeout = timer(ConstantsService.dataResponseTimeout_ms * 2).pipe(mapTo('timedout'));
     return merge(service, timeout).pipe(
       take(1),
-      switchMap((data) => { 
-        return (data  === 'timedout' ? throwError('Service Timeout Error') : of(data))
-      })
+      switchMap((data) => (data  === 'timedout') ? throwError('Service Timeout Error') : of(data))
     );
   }
 
