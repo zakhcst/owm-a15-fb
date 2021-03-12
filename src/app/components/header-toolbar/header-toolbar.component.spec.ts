@@ -68,6 +68,7 @@ describe('HeaderToolbarComponent', () => {
   });
 
   it('should open and close DialogSettingsComponent modal', () => {
+    fixture.detectChanges();
     expect(component).toBeDefined();
     const settingsIcon = fixture.debugElement.query(By.css('.mat-icon.button-settings'));
     const dialogRef = component.showSettings({ _elementRef: { nativeElement: settingsIcon.nativeNode } }, false);

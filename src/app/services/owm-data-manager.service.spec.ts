@@ -152,7 +152,7 @@ describe('OwmDataManagerService', () => {
     })
   );
 
-  fit('subscribeAway: should call dispatch set data on away$ emits false', fakeAsync(() => {
+  it('subscribeAway: should call dispatch set data on away$ emits false', fakeAsync(() => {
     const owmData = getNewDataObject();
     service.getDataOnCityChangeInProgress = false;
     service.getDataOnConnectedInProgress = false;
