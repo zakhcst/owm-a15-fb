@@ -9,36 +9,32 @@ export class PopulateGchartDataService {
   chart = {};
   textColor = '#FFF';
   weatherParams = ConstantsService.weatherParams;
-
+  graphsKeys = ConstantsService.graphsKeys;
   constructor() {}
 
-  setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[]): any {
+  setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[], showGraphs): any {
     this.chart = {};
     Object.entries(weatherDataListByDate).forEach(([dayK, day]) => {
       const hoursKeys: number[] = Object.keys(day).map(Number).sort((a, b) => Number(a > b));
 
       this.chart[dayK] = { type: 'LineChart' };
-      this.chart[dayK].columnNames = this.setGChartColumnNames();
-      this.chart[dayK].data = this.setGChartDayData(dayK, day, weatherDataListByDate, weatherDataDateKeys, hoursKeys);
+      this.chart[dayK].columnNames = this.setGChartColumnNames(showGraphs);
+      this.chart[dayK].data = this.setGChartDayData(dayK, day, weatherDataListByDate, weatherDataDateKeys, hoursKeys, showGraphs);
       this.chart[dayK].icons = this.setGChartDayIcons(dayK, day, hoursKeys);
-      this.chart[dayK].options = this.setGChartDayOptions();
+      this.chart[dayK].options = this.setGChartDayOptions(showGraphs);
     });
     return this.chart;
   }
 
-  setGChartColumnNames() {
+  setGChartColumnNames(showGraphs) {
     const tooltip = { type: 'string', role: 'tooltip', p: { html: true } };
-    const columnNames = [
-      'Time',
-      'Temperature',
-      tooltip,
-      'Wind',
-      tooltip,
-      'Humidity',
-      tooltip,
-      'Pressure',
-      tooltip,
-    ];
+    const columnNames: any[] = ['Time'];
+    this.graphsKeys.forEach(graphKey => {
+      if (showGraphs[graphKey]) {
+        columnNames.push(this.weatherParams[graphKey].title);
+        columnNames.push(tooltip);
+      }
+    });
     return columnNames;
   }
 
@@ -47,52 +43,63 @@ export class PopulateGchartDataService {
     day: IListDayByHourModel,
     weatherDataListByDate: IListByDateModel,
     weatherDataDateKeys: string[],
-    hoursKeys: number[]
+    hoursKeys: number[],
+    showGraphs
   ) {
     const data = [];
 
-    this.addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys);
-    this.copyAvailabeSlots(data, day);
-    this.addMissingSlotsAtTheEndOfTheDay(data, hoursKeys);
-    this.addAdditionalRow2359(data, weatherDataListByDate, weatherDataDateKeys, dayK);
-
+    this.addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys, showGraphs);
+    this.copyAvailabeSlots(data, day, showGraphs);
+    this.addMissingSlotsAtTheEndOfTheDay(data, hoursKeys, showGraphs);
+    this.addAdditionalRow2359(data, weatherDataListByDate, weatherDataDateKeys, dayK, showGraphs);
     return data;
   }
 
-  addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys: number[]) {
+  addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys: number[], showGraphs) {
     let i = 0;
     while (ConstantsService.timeTemplate[i].hour < hoursKeys[0]) {
-      data.push([
-        ConstantsService.timeTemplate[i++].hour + ':00',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-      ]);
+      const row: any[] = [ConstantsService.timeTemplate[i++].hour + ':00']
+      this.graphsKeys.forEach(graphKey => {
+        if (showGraphs[graphKey]) {
+          row.push(undefined);
+          row.push(undefined);
+        }
+      });
+      data.push(row);
     }
   }
 
-  copyAvailabeSlots(data, day: IListDayByHourModel) {
+  copyAvailabeSlots(data, day: IListDayByHourModel, showGraphs) {
     Object.entries(day).forEach(([hourK, hour]) => {
-      data.push([
-        hourK + ':00',
-        hour.main.temp,
-        this.formatTooltipPoint(hourK + ':00', 'Temperature', Math.round(hour.main.temp), 'C' + String.fromCodePoint(176)),
-        hour.wind.speed,
-        this.formatTooltipPoint(hourK + ':00', 'Wind', Math.round(hour.wind.speed), '&nbsp;m/s'),
-        hour.main.humidity,
-        this.formatTooltipPoint(hourK + ':00', 'Humidity', hour.main.humidity, '%'),
-        hour.main.pressure,
-        this.formatTooltipPoint(hourK + ':00', 'Pressure', hour.main.pressure, '&nbsp;hPa'),
-      ]);
+      const row: any[] = [hourK + ':00'];
+
+      this.graphsKeys.forEach(graphKey => {
+        if (showGraphs[graphKey]) {
+          switch (graphKey) {
+            case 'temperature':
+              row.push(hour.main.temp);
+              row.push(this.formatTooltipPoint(hourK + ':00', 'Temperature', Math.round(hour.main.temp), 'C' + String.fromCodePoint(176)));
+              break;
+            case 'wind':
+              row.push(hour.wind.speed);
+              row.push(this.formatTooltipPoint(hourK + ':00', 'Wind', Math.round(hour.wind.speed), '&nbsp;m/s'));
+              break;
+            case 'humidity':
+              row.push(hour.main.humidity);
+              row.push(this.formatTooltipPoint(hourK + ':00', 'Humidity', hour.main.humidity, '%'));
+              break;
+            case 'pressure':
+              row.push(hour.main.pressure);
+              row.push(this.formatTooltipPoint(hourK + ':00', 'Pressure', hour.main.pressure, '&nbsp;hPa'));
+              break;
+          }
+        }
+      });
+      data.push(row);
     });
   }
 
-  addMissingSlotsAtTheEndOfTheDay(data, hoursKeys: number[]) {
+  addMissingSlotsAtTheEndOfTheDay(data, hoursKeys: number[], showGraphs) {
     const timeTemplate = ConstantsService.timeTemplate;
     let i = data.length;
     // when slot[0] is available only - duplicate it to render a line
@@ -102,44 +109,53 @@ export class PopulateGchartDataService {
     }
     i++;
     while (i < timeTemplate.length && timeTemplate[i].hour > hoursKeys[hoursKeys.length - 1]) {
-      data.push([
-        timeTemplate[i++].hour + ':00',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-      ]);
+      const row: any[] = [timeTemplate[i++].hour + ':00'];
+      this.graphsKeys.forEach(graphKey => {
+        if (showGraphs[graphKey]) {
+          row.push(undefined);
+          row.push(undefined);
+        }
+      });
+      data.push(row);
     }
   }
 
-  addAdditionalRow2359(data, weatherDataListByDate, weatherDataDateKeys, dayK) {
+  addAdditionalRow2359(data, weatherDataListByDate, weatherDataDateKeys, dayK, showGraphs) {
     let last = [];
     const dayKIndex = weatherDataDateKeys.indexOf(dayK);
 
     if (dayKIndex < weatherDataDateKeys.length - 1) {
       const nextDay0Hour = weatherDataListByDate[weatherDataDateKeys[dayKIndex + 1]]['0'];
-      last = [
-        '23:59',
-        nextDay0Hour.main.temp,
-        this.formatTooltipPoint('23:59', 'Temperature', Math.round(nextDay0Hour.main.temp), 'C' + String.fromCodePoint(176)),
-        nextDay0Hour.wind.speed,
-        this.formatTooltipPoint('23:59', 'Wind', Math.round(nextDay0Hour.wind.speed), '&nbsp;m/s'),
-        nextDay0Hour.main.humidity,
-        this.formatTooltipPoint('23:59', 'Humidity', nextDay0Hour.main.humidity, '%'),
-        nextDay0Hour.main.pressure,
-        this.formatTooltipPoint('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa'),
-      ];
+      const last: any[] = ['23:59'];
+      this.graphsKeys.forEach(graphKey => {
+        if (showGraphs[graphKey]) {
+          switch (graphKey) {
+            case 'temperature':
+              last.push(nextDay0Hour.main.temp);
+              last.push(this.formatTooltipPoint('23:59', 'Temperature', Math.round(nextDay0Hour.main.temp), 'C' + String.fromCodePoint(176)));
+              break;
+            case 'wind':
+              last.push(nextDay0Hour.wind.speed);
+              last.push(this.formatTooltipPoint('23:59', 'Wind', Math.round(nextDay0Hour.wind.speed), '&nbsp;m/s'));
+              break;
+            case 'humidity':
+              last.push(nextDay0Hour.main.humidity);
+              last.push(this.formatTooltipPoint('23:59', 'Humidity', nextDay0Hour.main.humidity, '%'));
+              break;
+            case 'pressure':
+              last.push(nextDay0Hour.main.pressure);
+              last.push(this.formatTooltipPoint('23:59', 'Pressure', nextDay0Hour.main.pressure, '&nbsp;hPa'));
+              break;
+          }
+        }
+      });
+      data.push(last);
     } else {
       last = JSON.parse(JSON.stringify([...data[data.length - 1]]).replace(/21:00/g, '23:59'));
     }
-    data.push(last);
   }
 
-  setGChartDayOptions() {
+  setGChartDayOptions(showGraphs) {
     const options = {
       curveType: 'function',
       animation: {
@@ -171,30 +187,21 @@ export class PopulateGchartDataService {
         viewWindowMode: 'maximized',
         gridlines: { minSpacing: 1 },
       },
-      series: {
-        0: {
-          color: this.weatherParams.temperature.lineColor,
-          targetAxisIndex: 0,
-        },
-        1: {
-          color: this.weatherParams.wind.lineColor,
-          targetAxisIndex: 0,
-        },
-        2: {
-          color: this.weatherParams.humidity.lineColor,
-          targetAxisIndex: 0,
-        },
-        3: {
-          color: this.weatherParams.pressure.lineColor,
-          targetAxisIndex: 1,
-        },
-      },
+      series: {},
       legend: 'none',
       pointSize: 3,
       backgroundColor: 'transparent',
       tooltip: { isHtml: true },
     };
-
+    let i = 0;
+    this.graphsKeys.forEach(graphKey => {
+      if (showGraphs[graphKey]) {
+        options['series'][i++] = {
+          color: this.weatherParams[graphKey].lineColor,
+          targetAxisIndex: graphKey === 'pressure' ? 1 : 0
+        };
+      }
+    });
     return options;
   }
 

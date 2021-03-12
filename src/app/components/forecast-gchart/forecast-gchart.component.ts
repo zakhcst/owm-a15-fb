@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
-import { Observable, Subscription, fromEvent, BehaviorSubject } from 'rxjs';
+import { Observable, Subscription, fromEvent, BehaviorSubject, combineLatest } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
 
 import { Select, Store } from '@ngxs/store';
@@ -42,10 +42,12 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   cardPadding = 10;
   dateColumnWidth = 40;
   overlaySubjecs = [];
-  showChartIcons = false;
+  showGChartIcons = false;
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
-  @Select(AppStatusState.showChartIcons) showChartIcons$: Observable<boolean>;
+  @Select(AppStatusState.showGChartIcons) showGChartIcons$: Observable<boolean>;
+  @Select(AppStatusState.showGChartHumidity) showGChartHumidity$: Observable<boolean>;
+  @Select(AppStatusState.showGChartWind) showGChartWind$: Observable<boolean>;
 
   constructor(
     private _errors: ErrorsService,
@@ -121,19 +123,31 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   subscribeShowChartIcons(){
-    const showChartIconsSubscription = this.showChartIcons$.subscribe(showChartIcons => {
-      this.showChartIcons = showChartIcons;
+    const showGChartIconsSubscription = this.showGChartIcons$.subscribe(showGChartIcons => {
+      this.showGChartIcons = showGChartIcons;
     });
-    this.subscriptions.add(showChartIconsSubscription);
+    this.subscriptions.add(showGChartIconsSubscription);
   }
 
   subscribeOwmData() {
-    const weatherDataSubscription = this._data.getOwmDataDebounced$({ showLoading: true }).subscribe(
-      (data) => {
+    const weatherDataSubscription = combineLatest([
+      this._data.getOwmDataDebounced$({ showLoading: true }),
+      this.showGChartWind$, 
+      this.showGChartHumidity$
+    ]).subscribe(
+      ([data, wind, humidity]) => {
+        const showGraphs = { wind, humidity, temperature: true, pressure: true };
         this.weatherData = data;
-        this.activeDays = Object.keys(this.weatherData.listByDate).sort();
-        this.weatherDataDateKeys = [...this.activeDays];
-        this.chart = this._populateGchartData.setGChartData(this.weatherData.listByDate, this.weatherDataDateKeys);
+        const dataDays = Object.keys(this.weatherData.listByDate).sort();
+        if (this.activeDays.length === 1) {
+          if (!dataDays.includes(this.activeDays[0])) {
+            this.activeDays[0] = dataDays[0];
+          }
+        } else {
+          this.activeDays = dataDays;
+          this.weatherDataDateKeys = [...dataDays];
+        }
+        this.chart = this._populateGchartData.setGChartData(this.weatherData.listByDate, this.weatherDataDateKeys, showGraphs);
         this.resizeGraphs(this.activeDays);
       },
       (err) => {

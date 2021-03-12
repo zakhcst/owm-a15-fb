@@ -3,7 +3,6 @@ import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import {
   SetOwmDataCacheState,
   SetErrorsState,
-  SetDataState,
   SetCitiesState,
   SetStatsState,
   SetHistoryLogState,
@@ -16,10 +15,12 @@ import {
   SetStatusUpdatesAvailable,
   SetStatusLiveDataUpdate,
   SetStatusDaysForecast,
+  SetStatusShowDetailSecondary,
   SetStatusShowDetailPressure,
   SetStatusShowDetailHumidity,
   SetStatusShowDetailWind,
-  SetStatusShowDetailSecondary,
+  SetStatusShowGChartHumidity,
+  SetStatusShowGChartWind,
   SetStatusShowChartIcons,
   SetStatusShowLoading,
   SetStatusBuildInfo,
@@ -49,11 +50,13 @@ import { IHistoryLog } from '../models/history-log.model';
     liveDataUpdate: false,
     daysForecast: 5,
     showLoading: false,
+    showDetailSecondary: true,
     showDetailPressure: true,
     showDetailWind: true,
     showDetailHumidity: true,
-    showDetailSecondary: true,
-    showChartIcons: true,
+    showGChartWind: true,
+    showGChartHumidity: true,
+    showGChartIcons: true,
     buildInfo: null
   },
 })
@@ -126,8 +129,16 @@ export class AppStatusState {
     return state.showDetailSecondary;
   }
   @Selector()
-  static showChartIcons(state: AppStatusModel) {
-    return state.showChartIcons;
+  static showGChartWind(state: AppStatusModel) {
+    return state.showGChartWind;
+  }
+  @Selector()
+  static showGChartHumidity(state: AppStatusModel) {
+    return state.showGChartHumidity;
+  }
+  @Selector()
+  static showGChartIcons(state: AppStatusModel) {
+    return state.showGChartIcons;
   }
 
   @Selector()
@@ -186,7 +197,7 @@ export class AppStatusState {
 
   @Action(SetStatusShowChartIcons)
   setStatusShowChartIcons(context: StateContext<AppStatusModel>, action: SetStatusShowChartIcons) {
-    context.patchState({ showChartIcons: action.payload });
+    context.patchState({ showGChartIcons: action.payload });
   }
 
   @Action(SetStatusShowDetailPressure)
@@ -214,6 +225,14 @@ export class AppStatusState {
     context.patchState({ showDetailSecondary: display });
     document.documentElement.style.setProperty('--' + action.payload, state[action.payload] ? 'flex' : 'none');
     document.documentElement.style.setProperty('--showDetailSecondary', display ? 'flex' : 'none');
+  }
+  @Action(SetStatusShowGChartWind)
+  setStatusShowGChartWind(context: StateContext<AppStatusModel>, action: SetStatusShowGChartWind) {
+    context.patchState({ showGChartWind: action.payload });
+  }
+  @Action(SetStatusShowGChartHumidity)
+  setStatusShowSetStatusShowGChartHumidity(context: StateContext<AppStatusModel>, action: SetStatusShowGChartHumidity) {
+    context.patchState({ showGChartHumidity: action.payload });
   }
   @Action(SetStatusBuildInfo)
   setStatusBuildInfo(context: StateContext<AppStatusModel>, action: SetStatusBuildInfo) {

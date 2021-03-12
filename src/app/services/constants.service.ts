@@ -28,9 +28,9 @@ export class ConstantsService {
         liveDataUpdate: true,
         daysForecast: true,
         slotsBackground: true,
-        pressure: true,
-        wind: true,
-        humidity: true,
+        'detail-pressure': true,
+        'detail-wind': true,
+        'detail-humidity': true,
         chartIcons: false,
         dialogMaxHeight: 470,
       },
@@ -45,11 +45,9 @@ export class ConstantsService {
       settingsOptions: {
         liveDataUpdate: true,
         daysForecast: true,
-        slotsBackground: false,
-        pressure: false,
-        wind: false,
-        humidity: false,
-        chartIcons: true,
+        'gchart-wind': true,
+        'gchart-humidity': true,
+        'gchart-icons': true,
         dialogMaxHeight: 195,
       },
     },
@@ -61,12 +59,6 @@ export class ConstantsService {
       ],
       settingsOptions: {
         liveDataUpdate: true,
-        daysForecast: false,
-        slotsBackground: false,
-        pressure: false,
-        wind: false,
-        humidity: false,
-        chartIcons: false,
         dialogMaxHeight: 122,
       },
     },
@@ -130,6 +122,7 @@ export class ConstantsService {
     '50n': 17,
   };
 
+  public static readonly graphsKeys = ['temperature', 'wind', 'humidity', 'pressure'];
   public static readonly weatherParams = {
     temperature: {
       title: 'Temperature',

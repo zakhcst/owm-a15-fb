@@ -22,11 +22,13 @@ export interface AppStatusModel {
   daysForecast: number;
   showLoading: boolean;
   showTimeSlotBgPicture: boolean;
+  showDetailSecondary: boolean;
   showDetailPressure: boolean;
   showDetailHumidity: boolean;
   showDetailWind: boolean;
-  showDetailSecondary: boolean;
-  showChartIcons: boolean;
+  showGChartHumidity: boolean;
+  showGChartWind: boolean;
+  showGChartIcons: boolean;
   buildInfo: IStatusBuildInfo;
 }
 

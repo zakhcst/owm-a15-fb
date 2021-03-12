@@ -8,6 +8,8 @@ import {
   SetStatusShowDetailWind,
   SetStatusShowDetailPressure,
   SetStatusShowChartIcons,
+  SetStatusShowGChartWind,
+  SetStatusShowGChartHumidity,
 } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
@@ -35,7 +37,9 @@ export class DialogSettingsComponent implements OnInit {
   showDetailPressure: boolean;
   showDetailWind: boolean;
   showDetailHumidity: boolean;
-  showChartIcons: boolean;
+  showGChartWind: boolean;
+  showGChartHumidity: boolean;
+  showGChartIcons: boolean;
   settingsOptions: {};
 
   @Select(AppStatusState.updatesAvailable) updatesAvailable$: Observable<boolean>;
@@ -59,9 +63,12 @@ export class DialogSettingsComponent implements OnInit {
     this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
     this.showDetailWind = this._store.selectSnapshot(AppStatusState.showDetailWind);
     this.showDetailHumidity = this._store.selectSnapshot(AppStatusState.showDetailHumidity);
+    this.showGChartWind = this._store.selectSnapshot(AppStatusState.showGChartWind);
+    this.showGChartHumidity = this._store.selectSnapshot(AppStatusState.showGChartHumidity);
+    this.showGChartIcons = this._store.selectSnapshot(AppStatusState.showGChartIcons);
+
     const routePathEndSegment = this._store.selectSnapshot(RouterState.url)?.split('/').pop() || ConstantsService.toolbarElements.forecastFlex.path;
     this.settingsOptions = ConstantsService.toolbar[routePathEndSegment].settingsOptions;
-    this.showChartIcons = this._store.selectSnapshot(AppStatusState.showChartIcons);
 
     this.daysForecastOld = this.daysForecast;
     this.reposition();
@@ -72,32 +79,40 @@ export class DialogSettingsComponent implements OnInit {
     this.daysForecastOld = this.daysForecast;
     this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
   }
+  
+  toggleLiveDataUpdate() {
+    this.liveDataUpdate = !this.liveDataUpdate;
+    this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
+  }
 
   toggleShowTimeSlotBgPicture() {
     this.showTimeSlotBgPicture = !this.showTimeSlotBgPicture;
     this._store.dispatch(new SetStatusShowTimeSlotBgPicture(this.showTimeSlotBgPicture));
   }
 
-  toggleLiveDataUpdate() {
-    this.liveDataUpdate = !this.liveDataUpdate;
-    this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
-  }
-
   toggleShowPressure() {
     this.showDetailPressure = !this.showDetailPressure;
     this._store.dispatch(new SetStatusShowDetailPressure(this.showDetailPressure));
   }
-  toggleShowWind() {
+  toggleShowDetailWind() {
     this.showDetailWind = !this.showDetailWind;
     this._store.dispatch(new SetStatusShowDetailWind(this.showDetailWind));
   }
-  toggleShowHumidity() {
+  toggleShowDetailHumidity() {
     this.showDetailHumidity = !this.showDetailHumidity;
     this._store.dispatch(new SetStatusShowDetailHumidity(this.showDetailHumidity));
   }
-  toggleShowChartIcons() {
-    this.showChartIcons = !this.showChartIcons;
-    this._store.dispatch(new SetStatusShowChartIcons(this.showChartIcons));
+  toggleShowGChartWind() {
+    this.showGChartWind = !this.showGChartWind;
+    this._store.dispatch(new SetStatusShowGChartWind(this.showGChartWind));
+  }
+  toggleShowGChartHumidity() {
+    this.showGChartHumidity = !this.showGChartHumidity;
+    this._store.dispatch(new SetStatusShowGChartHumidity(this.showGChartHumidity));
+  }
+  toggleShowGChartIcons() {
+    this.showGChartIcons = !this.showGChartIcons;
+    this._store.dispatch(new SetStatusShowChartIcons(this.showGChartIcons));
   }
 
   isXs() {

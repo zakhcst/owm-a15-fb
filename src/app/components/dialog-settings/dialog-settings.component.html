@@ -39,7 +39,7 @@
       </mat-slide-toggle>
     </ng-container>
 
-    <ng-container *ngIf="settingsOptions['pressure']">
+    <ng-container *ngIf="settingsOptions['detail-pressure']">
       Pressure
       <mat-slide-toggle
         style="transform: rotate(180deg)"
@@ -51,7 +51,7 @@
       </mat-slide-toggle>
     </ng-container>
 
-    <ng-container *ngIf="settingsOptions['wind']">
+    <ng-container *ngIf="settingsOptions['detail-wind']">
       Wind
       <mat-slide-toggle
         style="transform: rotate(180deg)"
@@ -63,7 +63,7 @@
       </mat-slide-toggle>
     </ng-container>
 
-    <ng-container *ngIf="settingsOptions['humidity']">
+    <ng-container *ngIf="settingsOptions['detail-humidity']">
       Humidity
       <mat-slide-toggle
         style="transform: rotate(180deg)"
@@ -74,14 +74,38 @@
       >
       </mat-slide-toggle>
     </ng-container>
+    
+    <ng-container *ngIf="settingsOptions['gchart-wind']">
+      Wind
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="showGChartWind"
+        (toggleChange)="toggleShowGChartWind()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
 
-    <ng-container *ngIf="settingsOptions['chartIcons']">
+    <ng-container *ngIf="settingsOptions['gchart-humidity']">
+      Humidity
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="showGChartHumidity"
+        (toggleChange)="toggleShowGChartHumidity()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
+
+    <ng-container *ngIf="settingsOptions['gchart-icons']">
       Charts Icons
       <mat-slide-toggle
         style="transform: rotate(180deg)"
         [color]="'primary'"
-        [checked]="showChartIcons"
-        (toggleChange)="toggleShowChartIcons()"
+        [checked]="showGChartIcons"
+        (toggleChange)="toggleShowGChartIcons()"
         (click)="$event.stopPropagation()"
       >
       </mat-slide-toggle>

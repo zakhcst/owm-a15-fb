@@ -60,7 +60,7 @@
                         matTooltipClass="gchart-tooltip-icon"
                         (click)="$event.stopPropagation();showDataCellExpanded(weatherData.listByDate[dayK][slot.hourK], iconInd)"
                         >
-                        <span class="icons-weather" [ngStyle]="slot.iconStyle" *ngIf="showChartIcons"></span>
+                        <span class="icons-weather" [ngStyle]="slot.iconStyle" *ngIf="showGChartIcons"></span>
                       </span>
                     </span>
                   </ng-container>
