@@ -34,12 +34,12 @@ export class DataCellExpandedComponent implements OnInit {
     this.conditionStyle = {
       'background-position': '0 -' + iconIndex * iconSize + 'px',
     };
-    const showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showTimeSlotBgPicture);
-    this.setBackground(showTimeSlotBgPicture);
+    const showDetailTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showDetailTimeSlotBgPicture);
+    this.setBackground(showDetailTimeSlotBgPicture);
   }
 
-  setBackground(showTimeSlotBgPicture: boolean) {
-    if (showTimeSlotBgPicture) {
+  setBackground(showDetailTimeSlotBgPicture: boolean) {
+    if (showDetailTimeSlotBgPicture) {
       const bgImgPath = ConstantsService.getWeatherBgImg(this.timeSlotData);
       const urlBgImgPath = `url(${bgImgPath})`;
       this.timeSlotBgStyle = {

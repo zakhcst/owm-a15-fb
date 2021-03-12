@@ -21,7 +21,7 @@ export interface AppStatusModel {
   liveDataUpdate: boolean;
   daysForecast: number;
   showLoading: boolean;
-  showTimeSlotBgPicture: boolean;
+  showDetailTimeSlotBgPicture: boolean;
   showDetailSecondary: boolean;
   showDetailPressure: boolean;
   showDetailHumidity: boolean;

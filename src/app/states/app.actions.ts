@@ -16,7 +16,7 @@ export class SetStatusIp {
 }
 
 export class SetStatusShowTimeSlotBgPicture {
-  static readonly type = '[status] set showTimeSlotBgPicture';
+  static readonly type = '[status] set showDetailTimeSlotBgPicture';
   constructor(public payload: boolean) {}
 }
 

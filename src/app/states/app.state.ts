@@ -43,13 +43,15 @@ import { IHistoryLog } from '../models/history-log.model';
     normalizedIp: '--ip',
     sessionStartTime: new Date().valueOf(),
     selectedCityId: ConstantsService.defaultCityId,
-    showTimeSlotBgPicture: true,
     connected: true,
     away: false,
     updatesAvailable: false,
     liveDataUpdate: false,
     daysForecast: 5,
     showLoading: false,
+    buildInfo: null,
+
+    showDetailTimeSlotBgPicture: true,
     showDetailSecondary: true,
     showDetailPressure: true,
     showDetailWind: true,
@@ -57,7 +59,6 @@ import { IHistoryLog } from '../models/history-log.model';
     showGChartWind: true,
     showGChartHumidity: true,
     showGChartIcons: true,
-    buildInfo: null
   },
 })
 @Injectable()
@@ -104,8 +105,8 @@ export class AppStatusState {
   }
 
   @Selector()
-  static showTimeSlotBgPicture(state: AppStatusModel) {
-    return state.showTimeSlotBgPicture;
+  static showDetailTimeSlotBgPicture(state: AppStatusModel) {
+    return state.showDetailTimeSlotBgPicture;
   }
 
   @Selector()
@@ -162,7 +163,7 @@ export class AppStatusState {
 
   @Action(SetStatusShowTimeSlotBgPicture)
   setStatusShowTimeSlotBgPicture(context: StateContext<AppStatusModel>, action: SetStatusShowTimeSlotBgPicture) {
-    context.patchState({ showTimeSlotBgPicture: action.payload });
+    context.patchState({ showDetailTimeSlotBgPicture: action.payload });
   }
 
   @Action(SetStatusDaysForecast)

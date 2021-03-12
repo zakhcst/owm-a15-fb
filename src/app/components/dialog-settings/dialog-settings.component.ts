@@ -30,7 +30,7 @@ export class DialogSettingsComponent implements OnInit {
   buildTime = buildInfo.timeStamp;
   buildHash = buildInfo.hash;
   buildVersion = buildInfo.version;
-  showTimeSlotBgPicture: boolean;
+  showDetailTimeSlotBgPicture: boolean;
   liveDataUpdate: boolean;
   daysForecast: number;
   daysForecastOld: number;
@@ -57,7 +57,7 @@ export class DialogSettingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.showTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showTimeSlotBgPicture);
+    this.showDetailTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showDetailTimeSlotBgPicture);
     this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
     this.daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
     this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
@@ -86,8 +86,8 @@ export class DialogSettingsComponent implements OnInit {
   }
 
   toggleShowTimeSlotBgPicture() {
-    this.showTimeSlotBgPicture = !this.showTimeSlotBgPicture;
-    this._store.dispatch(new SetStatusShowTimeSlotBgPicture(this.showTimeSlotBgPicture));
+    this.showDetailTimeSlotBgPicture = !this.showDetailTimeSlotBgPicture;
+    this._store.dispatch(new SetStatusShowTimeSlotBgPicture(this.showDetailTimeSlotBgPicture));
   }
 
   toggleShowPressure() {

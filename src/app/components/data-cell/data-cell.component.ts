@@ -21,14 +21,14 @@ export class DataCellComponent implements OnInit, OnDestroy {
   timeSlotBgStyle = {};
   conditionStyle = {};
 
-  @Select(AppStatusState.showTimeSlotBgPicture) showTimeSlotBgPicture$: Observable<boolean>;
+  @Select(AppStatusState.showDetailTimeSlotBgPicture) showDetailTimeSlotBgPicture$: Observable<boolean>;
 
   constructor() {}
 
   ngOnInit() {
     this.setIcons();
-    this.subscription = this.showTimeSlotBgPicture$.subscribe((showTimeSlotBgPicture) => {
-      this.setBackground(showTimeSlotBgPicture);
+    this.subscription = this.showDetailTimeSlotBgPicture$.subscribe((showDetailTimeSlotBgPicture) => {
+      this.setBackground(showDetailTimeSlotBgPicture);
     });
   }
 
@@ -42,8 +42,8 @@ export class DataCellComponent implements OnInit, OnDestroy {
       };
     }
   }
-  setBackground(showTimeSlotBgPicture: boolean) {
-    if (this.dataDaily[this.timeSlot.hour] && showTimeSlotBgPicture) {
+  setBackground(showDetailTimeSlotBgPicture: boolean) {
+    if (this.dataDaily[this.timeSlot.hour] && showDetailTimeSlotBgPicture) {
       const bgImgPath = ConstantsService.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]);
       this.timeSlotBgStyle = {
         'background-image': `url(${bgImgPath})`,
