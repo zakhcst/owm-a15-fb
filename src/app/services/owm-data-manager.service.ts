@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, Observable, timer, merge, throwError } from 'rxjs';
-import { switchMap, catchError, tap, take, filter, debounce, mapTo, distinctUntilChanged } from 'rxjs/operators';
+import { switchMap, catchError, tap, take, filter, debounce, mapTo, distinctUntilChanged, throttle } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
@@ -10,7 +10,7 @@ import { SetOwmDataCacheState, SetStatusShowLoading } from '../states/app.action
 import { SnackbarService } from './snackbar.service';
 import { ISnackbarData } from '../models/snackbar.model';
 import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
-import { StatsService } from './stats.service';
+import { StatsUpdateService } from './stats-update-dbrequests.service';
 import { ConstantsService } from './constants.service';
 
 @Injectable({
@@ -20,11 +20,9 @@ export class OwmDataManagerService {
   snackbarOptions: ISnackbarData = {
     message: '',
     class: 'snackbar__warn',
-    delay: 500,
+    delay: 1000,
   };
-  getDataOnCityChangeInProgress = false;
-  getDataOnConnectedInProgress = false;
-  getDataOnBackFromAwayInProgress = false;
+  
   @Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$: Observable<string>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
   @Select(AppStatusState.away) away$: Observable<boolean>;
@@ -33,137 +31,86 @@ export class OwmDataManagerService {
   constructor(
     private _owm: OwmService,
     private _dbOwmData: DbOwmService,
-    private _stats: StatsService,
+    private _statsUpdate: StatsUpdateService,
     private _errors: ErrorsService,
     private _store: Store,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
   ) {
     this.setSubscriptions();
   }
 
   setSubscriptions() {
-    this.subscribeAway();
-    this.subscribeConnected();
-    this.subscribeSelectedCityChange();
+    this.subscribeOnStatusChange();
   }
 
-  subscribeSelectedCityChange() {
+  subscribeOnStatusChange() {
     const that = this;
-    this.selectedCityId$
+    merge(this.selectedCityId$, this.connected$, this.away$.pipe(switchMap(status => of(!status))))
       .pipe(
-        tap(() => {
-          this.getDataOnCityChangeInProgress = !this.getDataOnConnectedInProgress && !this.getDataOnBackFromAwayInProgress;
-          if (this.getDataOnCityChangeInProgress) {
-            this._store.dispatch(new SetStatusShowLoading(true));
-          }
-        }),
-        filter(() => this.getDataOnCityChangeInProgress),
-        switchMap((selectedCityId) => this.getDataMemoryOnCityChange(selectedCityId)),
+        filter(status => !!status),
+        tap(_ => this._store.dispatch(new SetStatusShowLoading(true))),
+        throttle((status: string | boolean) => {
+          return timer(ConstantsService.loadingDataDebounceTime_ms*2).pipe(
+            tap(() => {
+              this._store.dispatch(new SetStatusShowLoading(false));
+            }),
+          );
+
+
+        }
+        , {leading: true, trailing: false}
+        ),
+        switchMap(this.getDataMemory.bind(that)),
         tap(() => {
           this._store.dispatch(new SetStatusShowLoading(false));
         }),
-        filter((data) => this.getDataOnCityChangeInProgress = !!data)
       )
       .subscribe((data) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
-        this.getDataOnCityChangeInProgress = false;
       });
   }
 
-  subscribeConnected() {
-    const that = this;
-    this.connected$
-      .pipe(
-        filter((connected) => this.getDataOnConnectedInProgress = connected && !this.getDataOnCityChangeInProgress && !this.getDataOnBackFromAwayInProgress),
-        switchMap(that.getDataMemoryOnConnected.bind(that)),
-        filter((data) => this.getDataOnConnectedInProgress = !!data)
-      )
-      .subscribe((data) => {
-        this._store.dispatch(new SetOwmDataCacheState(data));
-        this.getDataOnConnectedInProgress = false;
-      });
-  }
-
-  subscribeAway() {
-    const that = this;
-    this.away$
-      .pipe(
-        filter((away) => away !== undefined),
-        filter(
-          (away) => {
-            const connected = this._store.selectSnapshot(AppStatusState.connected);
-            this.getDataOnBackFromAwayInProgress = !away && !this.getDataOnCityChangeInProgress && !this.getDataOnConnectedInProgress && connected;
-            return this.getDataOnBackFromAwayInProgress;
-          }
-        ),
-        switchMap(that.getDataMemoryOnAway.bind(that)),
-        filter((data) => this.getDataOnBackFromAwayInProgress = !!data)
-      )
-      .subscribe((data) => {
-        this._store.dispatch(new SetOwmDataCacheState(data));
-        this.getDataOnBackFromAwayInProgress = false;
-      });
-  }
-
-  getDataMemoryOnAway(): Observable<IOwmDataModel | null> {
-    const owmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
-    this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on back from away' });
-    if (owmData && this.isNotExpired(owmData)) {
-      return of(null);
-    }
-    const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
-    return this.getDataDB(selectedCityId);
-  }
-
-  getDataMemoryOnConnected(): Observable<IOwmDataModel | null> {
-    const owmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
-    this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory on connected' });
-    if (owmData && this.isNotExpired(owmData)) {
-      return of(null);
-    }
-    const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
-    return this.getDataDB(selectedCityId);
-  }
-
-  getDataMemoryOnCityChange(cityId: string): Observable<IOwmDataModel | null> {
+  getDataMemory(status: string | boolean): Observable<IOwmDataModel | null> {
     const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory' });
     if (lastOwmData && this.isNotExpired(lastOwmData)) {
       return of(null);
     }
-    return this.getDataDB(cityId);
+    return this.getDataDB(status || null);
   }
 
-  getDataDB(cityId: string): Observable<IOwmDataModel | null> {
+  getDataDB(cityId: string | boolean): Observable<IOwmDataModel | null> {
     const connected = this._store.selectSnapshot(AppStatusState.connected);
     const liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
+    const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
     
-    if (connected) {
-      if (liveDataUpdate) { 
-        return this.getDataOWM(cityId); 
-      }
-      this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
-
-      return this.getDataServiceOrTimeout(this._dbOwmData.getData(cityId)).pipe(
-        tap(() => this.updateStatsDBRequests(cityId)),
-        switchMap((fbdata: IOwmDataModel) => {
-          if (fbdata !== null && this.isNotExpired(fbdata)) {
-            return of(fbdata);
-          } else {
-            return this.getDataOWM(cityId);
-          }
-        }),
-        catchError((err) => {
-          this._errors.add({
-            userMessage: 'Connection or service problem',
-            logMessage: 'DBDataService: getDataDB: ' + err,
-          });
-          return of(null);
-        })
-      );
-    } else {
+    if (!connected) {
       return of(null);
     }
+    if (liveDataUpdate && cityId === null) { 
+      return this.getDataOWM(selectedCityId); 
+    }
+
+    this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
+
+    return this.getDataServiceOrTimeout(this._dbOwmData.getData(selectedCityId)).pipe(
+      tap(() => this.updateStatsDBRequests(selectedCityId)),
+      switchMap((fbdata: IOwmDataModel) => {
+        if (fbdata !== null && this.isNotExpired(fbdata)) {
+          return of(fbdata);
+        } else {
+          return this.getDataOWM(selectedCityId);
+        }
+      }),
+      catchError((err) => {
+        this._errors.add({
+          userMessage: 'Connection or service problem',
+          logMessage: 'DBDataService: getDataDB: ' + err,
+        });
+        return of(null);
+      })
+    );
+    
   }
 
   getDataOWM(cityId: string): Observable<IOwmDataModel | null> {
@@ -190,7 +137,7 @@ export class OwmDataManagerService {
   }
 
   updateStatsDBRequests(cityId: string) {
-    this._stats.updateStatsDBRequests(cityId);
+    this._statsUpdate.updateStatsDBRequests(cityId);
   }
 
   setListByDate(data: IOwmDataModel): IOwmDataModel {
@@ -244,28 +191,3 @@ export class OwmDataManagerService {
     );
   }
 }
-
-/*
-@Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$
-@Select(AppStatusState.connected) connected$
-@Select(AppStatusState.away) away$
-
-constructor
-                                                                          <-----\
-selectedCityId$            connected$                 away$                     |
-|                          |                          |                         |
-getDataMemoryOnCityChange  getDataMemoryOnConnected   getDataMemoryOnAway       |
-|                       \     /                   \    /                \       |
-|------------------------\-------------------------\---                  \      |
-|                         \                         \                     \     |
-|                          \----------------------------------------------------|
-|                                                                               |
-getDataDB ----------- (updateStatsDBRequests)                                   |
-|       \                                                                       |
-|        \----------------------------------------------------------------------|
-|                                                                               |
-getDataOWM ----------- setListByDate -------------------------------------------|
-|                                                                               |
-\---- null ---------------------------------------------------------------------/
-
-*/

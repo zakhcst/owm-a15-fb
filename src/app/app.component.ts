@@ -25,8 +25,8 @@ export class AppComponent implements OnInit, OnDestroy {
   setSubscribeDebounceLoadingActions() {
     this.subscriptions = this.showLoading$
       .pipe(
+        distinctUntilChanged(),
         debounceTime(50),
-        distinctUntilChanged()
        )
       .subscribe((loading) => {
         this.loading = loading;
