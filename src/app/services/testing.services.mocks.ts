@@ -1,4 +1,4 @@
-import { of, throwError } from 'rxjs';
+import { EMPTY, of, throwError } from 'rxjs';
 
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
@@ -95,6 +95,11 @@ export class MockOwmStatsService {
     const lsError = localStorage.getItem('mockOwmStatsServiceError');
     const stats = JSON.parse(localStorage.getItem('mockOwmStatsService'));
     return error || lsError ? throwError(new Error('MockOwmStatsService:getData')) : of(stats || sample);
+  }
+}
+export class MockStatsUpdateService {
+  updateStatsDBRequests(cityId) {
+    return cityId === 'Error' ? throwError(new Error('MockOwmStatsService:getData')) : undefined;
   }
 }
 export class MockGetBrowserIpService {

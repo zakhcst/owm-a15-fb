@@ -55,11 +55,7 @@ export class OwmDataManagerService {
               this._store.dispatch(new SetStatusShowLoading(false));
             }),
           );
-
-
-        }
-        , {leading: true, trailing: false}
-        ),
+        }, {leading: true, trailing: false}),
         switchMap(this.getDataMemory.bind(that)),
         tap(() => {
           this._store.dispatch(new SetStatusShowLoading(false));
@@ -103,10 +99,7 @@ export class OwmDataManagerService {
         }
       }),
       catchError((err) => {
-        this._errors.add({
-          userMessage: 'Connection or service problem',
-          logMessage: 'DBDataService: getDataDB: ' + err,
-        });
+        this.addError(err);
         return of(null);
       })
     );
@@ -119,10 +112,7 @@ export class OwmDataManagerService {
       switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
       tap((newOwmData: IOwmDataModel) => this._dbOwmData.setData(cityId, newOwmData)),
       catchError((err) => {
-        this._errors.add({
-          userMessage: 'Connection or service problem',
-          logMessage: 'DbOwmService: getDataOWM: ' + err,
-        });
+        this.addError(err);
         return of(null);
       })
     );
@@ -190,4 +180,13 @@ export class OwmDataManagerService {
       })
     );
   }
+
+  addError(message) {
+    this._errors.add({
+      userMessage: 'Connection or service problem',
+      logMessage: 'DbOwmService: getDataOWM: ' + message,
+    });    
+  }
+
+
 }
