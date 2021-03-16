@@ -53,7 +53,7 @@ export class SetStatusShowLoading {
   static readonly type = '[status] set Show Loading';
   constructor(public payload: boolean) {}
 }
-export class SetStatusShowChartIcons {
+export class SetStatusShowGChartIcons {
   static readonly type = '[status] set Show Chart Icons';
   constructor(public payload: boolean) {}
 }

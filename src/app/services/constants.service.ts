@@ -31,7 +31,6 @@ export class ConstantsService {
         'detail-pressure': true,
         'detail-wind': true,
         'detail-humidity': true,
-        chartIcons: false,
         dialogMaxHeight: 470,
       },
     },
@@ -48,7 +47,7 @@ export class ConstantsService {
         'gchart-wind': true,
         'gchart-humidity': true,
         'gchart-icons': true,
-        dialogMaxHeight: 195,
+        dialogMaxHeight: 320,
       },
     },
     stats: {

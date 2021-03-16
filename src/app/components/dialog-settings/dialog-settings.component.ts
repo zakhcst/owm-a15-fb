@@ -7,7 +7,7 @@ import {
   SetStatusShowDetailHumidity,
   SetStatusShowDetailWind,
   SetStatusShowDetailPressure,
-  SetStatusShowChartIcons,
+  SetStatusShowGChartIcons,
   SetStatusShowGChartWind,
   SetStatusShowGChartHumidity,
 } from 'src/app/states/app.actions';
@@ -90,7 +90,7 @@ export class DialogSettingsComponent implements OnInit {
     this._store.dispatch(new SetStatusShowTimeSlotBgPicture(this.showDetailTimeSlotBgPicture));
   }
 
-  toggleShowPressure() {
+  toggleShowDetailPressure() {
     this.showDetailPressure = !this.showDetailPressure;
     this._store.dispatch(new SetStatusShowDetailPressure(this.showDetailPressure));
   }
@@ -112,7 +112,7 @@ export class DialogSettingsComponent implements OnInit {
   }
   toggleShowGChartIcons() {
     this.showGChartIcons = !this.showGChartIcons;
-    this._store.dispatch(new SetStatusShowChartIcons(this.showGChartIcons));
+    this._store.dispatch(new SetStatusShowGChartIcons(this.showGChartIcons));
   }
 
   isXs() {

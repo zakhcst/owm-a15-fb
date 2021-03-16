@@ -21,7 +21,7 @@ import {
   SetStatusShowDetailWind,
   SetStatusShowGChartHumidity,
   SetStatusShowGChartWind,
-  SetStatusShowChartIcons,
+  SetStatusShowGChartIcons,
   SetStatusShowLoading,
   SetStatusBuildInfo,
 } from './app.actions';
@@ -196,8 +196,8 @@ export class AppStatusState {
     context.patchState({ showLoading: action.payload });
   }
 
-  @Action(SetStatusShowChartIcons)
-  setStatusShowChartIcons(context: StateContext<AppStatusModel>, action: SetStatusShowChartIcons) {
+  @Action(SetStatusShowGChartIcons)
+  setStatusShowGChartIcons(context: StateContext<AppStatusModel>, action: SetStatusShowGChartIcons) {
     context.patchState({ showGChartIcons: action.payload });
   }
 
