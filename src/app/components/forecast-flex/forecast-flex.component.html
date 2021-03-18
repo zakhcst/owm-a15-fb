@@ -1,7 +1,8 @@
 <mat-card class="forecast-card">
   <div fxFlex fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
-    <div fxFlex fxLayout="row" *ngIf="loadingOwmData === false">
+    <!-- <div fxFlex fxLayout="row" *ngIf="loadingOwmData === false"> -->
+    <div fxFlex fxLayout="row" *ngIf="listByDate">
       <!-- Date's column-->
       <div #fullHeightColumn class="table-column-date" fxLayout="column">
         <div
@@ -74,7 +75,7 @@
                 | sliceArray: daysForecast;
               index as ind
             "
-            [@showTimeSlot]="listByDateLength * timeTemplate.length"
+            [@showTimeSlot]="ind"
           >
             <ng-container
               *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn"

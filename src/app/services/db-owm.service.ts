@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ConstantsService } from './constants.service';
 import { IOwmDataModel } from '../models/owm-data.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../states/app.state';
-import { switchMap } from 'rxjs/operators';
+import { delay, filter, switchMap } from 'rxjs/operators';
 import { SetOwmDataCacheState } from '../states/app.actions';
+import { OwmDataUtilsService } from './owm-data-utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class DbOwmService {
   @Select(AppStatusState.liveDataUpdate) liveDataUpdate$: Observable<boolean>;
   @Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$: Observable<string>;
   subscription: Subscription;
-  
-  constructor(private _db: AngularFireDatabase, private _store: Store) {
+
+  constructor(private _db: AngularFireDatabase, private _store: Store, private _utils: OwmDataUtilsService) {
     this.activateLiveDataUpdateDB();
   }
 
@@ -37,12 +38,20 @@ export class DbOwmService {
       }
       if (liveDataUpdate) {
         this.subscription = this.selectedCityId$.pipe(
-          switchMap(cityId => this.getData(cityId))
+          switchMap(cityId => this.getData(cityId)),
+          filter(data => !!data),
+          switchMap(data => {
+            if (this._utils.isNotExpired(data)) {
+              return of(data);
+            }
+            return of(data).pipe(delay(ConstantsService.loadingDataDebounceTime_ms));
+          }),
+
 
         ).subscribe((owmData) => {
           this.dispatch(owmData);
         });
-      } 
+      }
     });
   }
 

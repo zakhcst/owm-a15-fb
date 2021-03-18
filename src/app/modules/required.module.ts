@@ -19,8 +19,8 @@ import {
 } from '../states/app.state';
 import { ConstantsService } from '../services/constants.service';
 
-function setRequiredKeysAfterDeserialize(obj, key) {
-  if (key === 'status') {
+function setRequiredKeysAfterDeserialize(obj, state: string) {
+  if (state === 'status') {
     const keysToBeSet = [
       'showDetailTimeSlotBgPicture',
       'showDetailSecondary',
@@ -32,7 +32,7 @@ function setRequiredKeysAfterDeserialize(obj, key) {
       'showGChartIcons'
     ];
     keysToBeSet.forEach(key => {
-        obj[key] = obj[key] ?? true;
+      obj[key] = obj[key] ?? true;
     });
     obj['daysForecast'] = obj['daysForecast'] ?? 5;
     obj['selectedCityId'] = obj['selectedCityId'] ?? ConstantsService.defaultCityId;
@@ -60,7 +60,7 @@ function setRequiredKeysAfterDeserialize(obj, key) {
       { developmentMode: !environment.production }
     ),
     NgxsStoragePluginModule.forRoot({
-      key: ['status', 'owmDataCache', 'cities',  'stats', 'historyLog', 'fallbackData'],
+      key: ['status', 'owmDataCache', 'cities', 'stats', 'historyLog', 'fallbackData'],
       afterDeserialize: setRequiredKeysAfterDeserialize
     }),
   ],
@@ -73,4 +73,4 @@ function setRequiredKeysAfterDeserialize(obj, key) {
     NgxsModule,
   ],
 })
-export class RequiredModules {}
+export class RequiredModules { }

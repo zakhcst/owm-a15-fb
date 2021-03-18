@@ -92,7 +92,7 @@ export class ConstantsService {
   public static readonly iconArrowWindDirection = 'assets/icons-misc/wind-arrow.svg';
   // public static readonly arrow000Deg = String.fromCodePoint(8593);
   public static readonly arrow000Deg = String.fromCodePoint(11165);
-  public static readonly snackbarDuration = 2500;
+  public static readonly snackbarDuration = 1500;
   public static readonly redirectDelay = 5;
   public static readonly connectedResponseTimeout_ms = 1500;
   public static readonly dataResponseTimeout_ms = 1500;

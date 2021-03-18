@@ -15,9 +15,9 @@ import { AppStatusState } from '../../states/app.state';
 import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ChartReadyEvent } from 'angular-google-charts';
-import { OwmDataManagerService } from 'src/app/services/owm-data-manager.service';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
+import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -54,9 +54,9 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     private _populateGchartData: PopulateGchartDataService,
     private _breakpointObserver: BreakpointObserver,
     private _store: Store,
-    private _data: OwmDataManagerService,
+    private _utils: OwmDataUtilsService,
     public dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.subscribeResizeObservable();
@@ -122,7 +122,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     });
   }
 
-  subscribeShowChartIcons(){
+  subscribeShowChartIcons() {
     const showGChartIconsSubscription = this.showGChartIcons$.subscribe(showGChartIcons => {
       this.showGChartIcons = showGChartIcons;
     });
@@ -131,8 +131,8 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
 
   subscribeOwmData() {
     const weatherDataSubscription = combineLatest([
-      this._data.getOwmDataDebounced$({ showLoading: true }),
-      this.showGChartWind$, 
+      this._utils.getOwmDataDebounced$({ showLoading: true }),
+      this.showGChartWind$,
       this.showGChartHumidity$
     ]).subscribe(
       ([data, wind, humidity]) => {

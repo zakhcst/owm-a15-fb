@@ -20,11 +20,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
-import { OwmDataManagerService } from '../../services/owm-data-manager.service';
 import { AppCitiesState, AppStatusState } from '../../states/app.state';
 import { SetStatusSelectedCityId } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
+import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -70,7 +70,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _router: Router,
-    private _data: OwmDataManagerService, // Instantiate service to start listeners
+    private _utils: OwmDataUtilsService, // Instantiate service to start listeners
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
@@ -128,11 +128,11 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   subscribeOwmData() {
-    const subscriptionOwmData = this._data.getOwmDataDebounced$({ showLoading: false })
+    const subscriptionOwmData = this._utils.getOwmDataDebounced$({ showLoading: false })
       .pipe(
         tap((data: IOwmDataModel) => {
           this.owmData = data;
-          this.owmDataExpired = !this._data.isNotExpired(data);
+          this.owmDataExpired = !this._utils.isNotExpired(data);
         }),
         map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data.list[0])),
         filter((newDataImgPath: string) => {
@@ -177,7 +177,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     this.showActionButtonsXS = false;
   }
 
-  showSettings(settingsButton, isXs: boolean) {
+  showSettings(settingsButton) {
     const dialogWidth = 300;
     const dialogPositionTop = 60;
     const dialogMargin = 75;

@@ -1,107 +1,78 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-
 import { ForecastFlexComponent } from './forecast-flex.component';
-import { AppSnackBarInnerComponent } from '../app-snack-bar-inner/app-snack-bar-inner.component';
 import { SortCitiesPipe } from '../../pipes/sort-cities.pipe';
-
-import { OwmDataManagerService } from '../../services/owm-data-manager.service';
 import { ErrorsService } from '../../services/errors.service';
-
-import {
-  MockDbOwmService,
-  MockHistoryService,
-  MockErrorsService,
-  getNewDataObject,
-} from '../../services/testing.services.mocks';
+import { MockErrorsService, getNewDataObject } from '../../services/testing.services.mocks';
 import { DebugElement } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
 import { DataCellComponent } from '../data-cell/data-cell.component';
 import { AppModule } from 'src/app/app.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
+import { of, throwError } from 'rxjs';
 
 describe('ForecastFlexComponent services', () => {
-  let mockDbOwmService: MockDbOwmService;
   let mockErrorsService: MockErrorsService;
-
-  let owmDbOwmService: OwmDataManagerService;
-  let errorsService: ErrorsService;
+  let _utils: OwmDataUtilsService;
 
   let component: ForecastFlexComponent;
   let fixture: ComponentFixture<ForecastFlexComponent>;
   let debugElement: DebugElement;
 
-  function resetLocalStorage() {
-    localStorage.removeItem('mockGetBrowserIpServiceError');
-    localStorage.removeItem('mockOwmStatsServiceError');
-    localStorage.removeItem('mockCitiesServiceError');
-    localStorage.removeItem('OwmDataManagerService');
-    localStorage.removeItem('mockIp');
-  }
-
   beforeEach(
     waitForAsync(() => {
-      mockDbOwmService = new MockDbOwmService();
       mockErrorsService = new MockErrorsService();
       TestBed.configureTestingModule({
         imports: [AppModule],
         declarations: [ForecastFlexComponent, SortCitiesPipe, DataCellComponent],
         providers: [
           ForecastFlexComponent,
-          MatSnackBarModule,
-          { provide: OwmDataManagerService, useValue: mockDbOwmService },
           { provide: ErrorsService, useValue: mockErrorsService },
+          OwmDataUtilsService,
         ],
-      })
-        // .overrideModule(BrowserDynamicTestingModule, {
-        //   set: {
-        //     entryComponents: [AppSnackBarInnerComponent],
-        //   },
-        // })
-        .compileComponents();
+      }).compileComponents();
     })
   );
 
   beforeEach(
     waitForAsync(() => {
-      resetLocalStorage();
       fixture = TestBed.createComponent(ForecastFlexComponent);
       component = fixture.componentInstance;
       debugElement = fixture.debugElement;
+      _utils = TestBed.inject(OwmDataUtilsService);
     })
   );
-
-  afterEach(() => {
-    resetLocalStorage();
-  });
 
   it('should create', () => {
     expect(component).toBeDefined();
   });
 
-  it('should have all async data', waitForAsync(() => {
-      owmDbOwmService = TestBed.inject(OwmDataManagerService);
-      errorsService = TestBed.inject(ErrorsService);
+  it(
+    'should get data from getOwmDataDebounced$',
+    waitForAsync(() => {
+      const owmData = getNewDataObject();
+      const spyOnUtils = spyOn(_utils, 'getOwmDataDebounced$').and.returnValue(of(owmData));
       fixture.detectChanges();
-
       fixture.whenStable().then(() => {
-        expect(component.weatherData).toBeTruthy('component.weatherData');
-
-        expect(component.loadingOwmData).toBe(false);
-        expect(component).toBeTruthy('expect(component)');
-        expect(owmDbOwmService).toBeTruthy('expect(owmDbOwmService)');
-        expect(errorsService).toBeTruthy('expect(errorsService)');
+        expect(spyOnUtils).toHaveBeenCalledTimes(1);
+        expect(component.weatherData).toEqual(owmData);
       });
     })
   );
 
-  it('should get data from DbOwmService', waitForAsync(() => {
+  it(
+    'should get error from getOwmDataDebounced$',
+    waitForAsync(() => {
+      const errMessage = 'getOwmDataDebounced$ error';
+      const owmData = getNewDataObject();
+      const spyOnUtils = spyOn(_utils, 'getOwmDataDebounced$').and.returnValue(throwError(new Error(errMessage)));
+      const spyAddErrors = spyOn(component, 'addError');
+
       fixture.detectChanges();
       fixture.whenStable().then(() => {
-        expect(component.weatherData).toEqual(getNewDataObject());
+        expect(component.weatherData).toBeFalsy();
+        expect(spyOnUtils).toHaveBeenCalledTimes(1);
+        expect(spyAddErrors).toHaveBeenCalledTimes(1);
+        expect(spyAddErrors).toHaveBeenCalledWith('ngOnInit: onChange: subscribe', errMessage);
       });
     })
   );
-
 });

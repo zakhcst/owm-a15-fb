@@ -6,7 +6,7 @@ import { IHistoryLog } from '../../models/history-log.model';
 import { Select } from '@ngxs/store';
 import { AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState } from 'src/app/states/app.state';
 import { Observable, of, Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { delay, filter, switchMap } from 'rxjs/operators';
 import { ConstantsService } from '../../services/constants.service';
 
 @Component({
@@ -31,6 +31,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   checkedCities = true;
   showDetails = {};
   subscriptions: Subscription;
+  historyLog: any = null;
   historyLog$: Observable<any[]>;
 
   @Select(AppStatusState.selectStatusIp) ip$: Observable<string>;
@@ -44,6 +45,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     this.subscribeStats();
     this.subscribeCities();
     this.setHistoryLog$();
+    this.subscribeHistoryLog();
   }
 
   ngOnDestroy() {
@@ -53,34 +55,44 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   subscribeStats() {
-    this.subscriptions = this.stats$.pipe(filter(stats => !!stats)).subscribe((stats) => {
-        this.stats = stats;
+    this.subscriptions = this.stats$.pipe(filter((stats) => !!stats)).subscribe((stats) => {
+      this.stats = stats;
     });
   }
 
   subscribeCities() {
     this.subscriptions.add(
-      this.cities$.pipe(filter(cities => !!cities)).subscribe((cities) => {
-          this.cities = cities;
-          this.citiesLength = Object.keys(this.cities).length;
+      this.cities$.pipe(filter((cities) => !!cities)).subscribe((cities) => {
+        this.cities = cities;
+        this.citiesLength = Object.keys(this.cities).length;
       })
     );
   }
 
   setHistoryLog$() {
-    this.historyLog$ = this.historyLogState$.pipe(filter(historyLog => !!historyLog)).pipe(
+    this.historyLog$ = this.historyLogState$.pipe(filter((historyLog) => !!historyLog)).pipe(
       switchMap((historyLog: IHistoryLog) => {
         const sortedTrimmedEntries = Object.entries(historyLog)
-        .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
-        .map((ent: any[]) => {
-          ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
-          ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
-          return ent;
-        })
-        .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1))
+          .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
+          .map((ent: any[]) => {
+            ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
+            ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
+            return ent;
+          })
+          .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1));
 
         return of(sortedTrimmedEntries);
       })
     );
   }
+
+  subscribeHistoryLog() {
+    this.subscriptions.add(
+      this.historyLog$.subscribe((historyLog) => {
+        this.historyLog = historyLog;
+      })
+    );
+  }
+
+
 }

@@ -9,7 +9,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('CitiesService', () => {
   let service: CitiesService;
-  let angularFireService: MockAngularFireService;
   let store: Store;
 
   const testData: ICity = {

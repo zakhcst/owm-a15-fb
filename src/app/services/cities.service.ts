@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
-import { take} from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { ICities } from '../models/cities.model';
 import { SetCitiesState } from '../states/app.actions';
 import { AppCitiesState, AppStatusState } from '../states/app.state';
@@ -31,8 +31,8 @@ export class CitiesService {
           this.dispatch(cities);
         });
       } else {
-        const cities = this._store.selectSnapshot(AppCitiesState.selectCities);
-        if (!cities) {
+        const citiesCache = this._store.selectSnapshot(AppCitiesState.selectCities);
+        if (!citiesCache) {
           this.getData()
             .pipe(take(1))
             .subscribe((cities) => this.dispatch(cities));

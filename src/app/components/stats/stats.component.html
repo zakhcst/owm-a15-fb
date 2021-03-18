@@ -16,6 +16,12 @@
       </span>
     </div>
     <br />
+    
+    <div fxFlex fxLayout="column" 
+      *ngIf="(checkedCities === false && !historyLog) || (checkedCities && !stats)"
+      >
+      No data
+    </div>
 
     <div fxFlex fxLayout="column" *ngIf="checkedCities === false">
       <div fxFlex="0 0 auto" fxLayout="row">
@@ -34,7 +40,7 @@
         class="scroll-this"
         [@showStats]="citiesLength"
       >
-        <ng-container *ngFor="let logEntryIp of historyLog$ | async; let odd = odd">
+        <ng-container *ngFor="let logEntryIp of historyLog; let odd = odd">
           <div
             fxLayout="row"
             fxLayoutAlign="start center"
@@ -89,7 +95,7 @@
       </div>
     </div>
 
-    <div fxFlex fxLayout="column" *ngIf="checkedCities">
+    <div fxFlex fxLayout="column" *ngIf="checkedCities && stats">
       <div fxLayout="row">
         <span fxFlex class="pl5">Requests</span>
         <span fxFlex></span>

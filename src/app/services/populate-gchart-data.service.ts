@@ -10,7 +10,7 @@ export class PopulateGchartDataService {
   textColor = '#FFF';
   weatherParams = ConstantsService.weatherParams;
   graphsKeys = ConstantsService.graphsKeys;
-  constructor() {}
+  constructor() { }
 
   setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[], showGraphs): any {
     this.chart = {};
@@ -58,7 +58,7 @@ export class PopulateGchartDataService {
   addMissingSlotsAtTheBeginingOfTheDay(data, hoursKeys: number[], showGraphs) {
     let i = 0;
     while (ConstantsService.timeTemplate[i].hour < hoursKeys[0]) {
-      const row: any[] = [ConstantsService.timeTemplate[i++].hour + ':00']
+      const row: any[] = [ConstantsService.timeTemplate[i++].hour + ':00'];
       this.graphsKeys.forEach(graphKey => {
         if (showGraphs[graphKey]) {
           row.push(undefined);
@@ -126,7 +126,7 @@ export class PopulateGchartDataService {
 
     if (dayKIndex < weatherDataDateKeys.length - 1) {
       const nextDay0Hour = weatherDataListByDate[weatherDataDateKeys[dayKIndex + 1]]['0'];
-      const last: any[] = ['23:59'];
+      last = ['23:59'];
       this.graphsKeys.forEach(graphKey => {
         if (showGraphs[graphKey]) {
           switch (graphKey) {
@@ -149,10 +149,10 @@ export class PopulateGchartDataService {
           }
         }
       });
-      data.push(last);
     } else {
       last = JSON.parse(JSON.stringify([...data[data.length - 1]]).replace(/21:00/g, '23:59'));
     }
+    data.push(last);
   }
 
   setGChartDayOptions(showGraphs) {
@@ -243,8 +243,8 @@ export class PopulateGchartDataService {
       const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
       const tooltipTxt = this.formatTooltipIcon(hour);
       const iconStyle = {
-        'background-position': 
-        '0 ' + (iconIndex ? '-' : '') + (iconIndex === undefined ? 1 : iconIndex) * iconSize + 'px',
+        'background-position':
+          '0 ' + (iconIndex ? '-' : '') + (iconIndex === undefined ? 1 : iconIndex) * iconSize + 'px',
       };
       icons.push({ hourK, iconIndex, tooltipTxt, iconStyle });
     });
@@ -265,7 +265,7 @@ export class PopulateGchartDataService {
 
   formatTooltipIcon(hour: IOwmDataModelTimeSlotUnit) {
     const description = hour.weather[0].description.split(' ').map((word) => word[0].toUpperCase() + word.slice(1).toLocaleLowerCase()).join(' ') + '\n\n';
-    const temperature ='Temperature'.padEnd(15, ' ') +(Math.round(hour.main.temp) + ' C' + String.fromCodePoint(176) + '  ').padStart(10, ' ') + '\n';
+    const temperature = 'Temperature'.padEnd(15, ' ') + (Math.round(hour.main.temp) + ' C' + String.fromCodePoint(176) + '  ').padStart(10, ' ') + '\n';
     const wind = 'Wind'.padEnd(21, ' ') + (Math.round(hour.wind.speed) + ' m/s').padStart(10, ' ') + '\n';
     const humidity = 'Humidity'.padEnd(17, ' ') + (hour.main.humidity + ' %  ').padStart(10, ' ') + '\n';
     const pressure = 'Pressure'.padEnd(15, ' ') + (hour.main.pressure + ' hPa').padStart(10, ' ');

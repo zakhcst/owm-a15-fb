@@ -12,7 +12,7 @@ import { AppStatusState } from 'src/app/states/app.state';
 import { AppErrorPayloadModel } from '../../states/app.models';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
-import { OwmDataManagerService } from 'src/app/services/owm-data-manager.service';
+import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 
 @Component({
   selector: 'app-forecast-flex',
@@ -34,9 +34,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
   cardBackground: string;
   dateColumnTextColor: string;
-
-  loadingOwmData = true;
-
   weatherData: IOwmDataModel;
   listByDateLength = 0;
   scrollbarHeight = 0;
@@ -49,11 +46,11 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   constructor(
     private _errors: ErrorsService,
     public dialog: MatDialog,
-    private _data: OwmDataManagerService
+    private _utils: OwmDataUtilsService
   ) {}
-
+  
   ngOnInit() {
-    this.onInit();
+    this.subscribeOwmData();
   }
 
   ngOnDestroy() {
@@ -62,21 +59,14 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     }
   }
 
-  onInit() {
-    this.loadingOwmData = true;
-    this.subscribeOwmData();
-  }
-
   subscribeOwmData() {
-    this.subscriptions = this._data.getOwmDataDebounced$({ showLoading: true }).subscribe(
+    this.subscriptions = this._utils.getOwmDataDebounced$({ showLoading: true }).subscribe(
       (data) => {
         this.weatherData = data;
         this.listByDate = data.listByDate;
         this.listByDateLength = Object.keys(data.listByDate).length;
-        this.loadingOwmData = false;
       },
       (err) => {
-        this.loadingOwmData = false;
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );

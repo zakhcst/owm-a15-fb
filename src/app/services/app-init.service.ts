@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { SetStatusBuildInfo, SetStatusShowLoading, SetStatusUpdatesAvailable } from '../states/app.actions';
 import { AppStatusState } from '../states/app.state';
 import { ConstantsService } from './constants.service';
-import { DbOwmService } from './db-owm.service';
+import { OwmDataManagerService } from './owm-data-manager.service';
 import { PresenceService } from './presence.service';
 
 @Injectable({
@@ -14,15 +14,15 @@ import { PresenceService } from './presence.service';
 })
 export class AppInitService {
   subscriptions: Subscription;
-  
+
   constructor(
     private _router: Router,
     private _presence: PresenceService,
     private _updates: SwUpdate,
     private _store: Store,
-    private _dbOwmData: DbOwmService
+    private _owmDataManager: OwmDataManagerService
 
-  ) { 
+  ) {
     this.initCss();
     this.setSubscribeOnRouterEvents();
     this.setSubscribeOnConnected();

@@ -5,7 +5,7 @@ import { IStats } from '../models/stats.model';
 import { Select, Store } from '@ngxs/store';
 import { SetStatsState } from '../states/app.actions';
 import { AppStatsState, AppStatusState } from '../states/app.state';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { ConstantsService } from './constants.service';
 @Injectable({
   providedIn: 'root',
@@ -32,9 +32,9 @@ export class StatsService {
           this.dispatch(stats);
         });
       } else {
-        const stats = this._store.selectSnapshot(AppStatsState.selectStats);
-        if (!stats) {
-          this.getData().pipe(take(1)).subscribe((stats) => this.dispatch(stats));
+        const statsStore = this._store.selectSnapshot(AppStatsState.selectStats);
+        if (!statsStore) {
+          this.getData().pipe(take(1)).subscribe((statsDB) => this.dispatch(statsDB));
         }
       }
     });

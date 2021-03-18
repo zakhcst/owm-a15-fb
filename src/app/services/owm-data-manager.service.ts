@@ -1,32 +1,36 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, timer, merge, throwError } from 'rxjs';
-import { switchMap, catchError, tap, take, filter, debounce, mapTo, distinctUntilChanged, throttle } from 'rxjs/operators';
+import { of, Observable, combineLatest } from 'rxjs';
+import { switchMap, catchError, tap, filter, distinctUntilChanged, timestamp } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
-import { IOwmDataModel } from '../models/owm-data.model';
+import { SnackbarService } from './snackbar.service';
+import { OwmDataUtilsService } from './owm-data-utils.service';
 import { Store, Select } from '@ngxs/store';
 import { SetOwmDataCacheState, SetStatusShowLoading } from '../states/app.actions';
-import { SnackbarService } from './snackbar.service';
+import { IOwmDataModel } from '../models/owm-data.model';
 import { ISnackbarData } from '../models/snackbar.model';
 import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
 import { StatsUpdateService } from './stats-update-dbrequests.service';
-import { ConstantsService } from './constants.service';
 
+export interface IStatusChanges {
+  selectedCityId: string;
+  previousSelectedCityId: string;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class OwmDataManagerService {
+
   snackbarOptions: ISnackbarData = {
     message: '',
     class: 'snackbar__warn',
-    delay: 1000,
+    delay: 500,
   };
-  
+
   @Select(AppStatusState.selectStatusSelectedCityId) selectedCityId$: Observable<string>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
   @Select(AppStatusState.away) away$: Observable<boolean>;
-  @Select(AppOwmDataCacheState.selectOwmDataCacheSelectedCity) selectedCityOwmDataCache$: Observable<IOwmDataModel>;
 
   constructor(
     private _owm: OwmService,
@@ -35,6 +39,8 @@ export class OwmDataManagerService {
     private _errors: ErrorsService,
     private _store: Store,
     private _snackbar: SnackbarService,
+    private _utils: OwmDataUtilsService,
+
   ) {
     this.setSubscriptions();
   }
@@ -45,54 +51,58 @@ export class OwmDataManagerService {
 
   subscribeOnStatusChange() {
     const that = this;
-    merge(this.selectedCityId$, this.connected$, this.away$.pipe(switchMap(status => of(!status))))
+    let first = true;
+    let prev: any;
+    combineLatest([this.selectedCityId$, this.connected$, this.away$])
       .pipe(
-        filter(status => !!status),
-        tap(_ => this._store.dispatch(new SetStatusShowLoading(true))),
-        throttle((status: string | boolean) => {
-          return timer(ConstantsService.loadingDataDebounceTime_ms*2).pipe(
-            tap(() => {
-              this._store.dispatch(new SetStatusShowLoading(false));
-            }),
-          );
-        }, {leading: true, trailing: false}),
-        switchMap(this.getDataMemory.bind(that)),
-        tap(() => {
-          this._store.dispatch(new SetStatusShowLoading(false));
+        distinctUntilChanged((previous, current) => {
+          prev = previous;
+          const [prevCityId, prevConn, prevAway] = previous;
+          const [currCityId, currConn, currAway] = current;
+          if (
+            (currAway === true) ||
+            (currConn === false)
+           ) {
+            return true;
+          }
         }),
-      )
-      .subscribe((data) => {
+        filter(() => first ? first = false : true),
+        switchMap(status => of({ selectedCityId: status[0], previousSelectedCityId: prev[0] })),
+        tap(() => this._store.dispatch(new SetStatusShowLoading(true))),
+        switchMap(this.getDataMemory.bind(that)),
+        tap(() => this._store.dispatch(new SetStatusShowLoading(false))),
+        filter((data) => !!data)
+      ).subscribe((data) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
       });
   }
 
-  getDataMemory(status: string | boolean): Observable<IOwmDataModel | null> {
+  getDataMemory(status: IStatusChanges): Observable<IOwmDataModel | null> {
     const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
-    this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory' });
-    if (lastOwmData && this.isNotExpired(lastOwmData)) {
+    this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory cache' });
+    if (lastOwmData && this._utils.isNotExpired(lastOwmData)) {
       return of(null);
     }
-    return this.getDataDB(status || null);
+    return this.getDataDB(status);
   }
 
-  getDataDB(cityId: string | boolean): Observable<IOwmDataModel | null> {
-    const connected = this._store.selectSnapshot(AppStatusState.connected);
+  getDataDB({ selectedCityId, previousSelectedCityId }: IStatusChanges): Observable<IOwmDataModel | null> {
     const liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
-    const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
     
-    if (!connected) {
-      return of(null);
-    }
-    if (liveDataUpdate && cityId === null) { 
-      return this.getDataOWM(selectedCityId); 
+    if (liveDataUpdate && selectedCityId === previousSelectedCityId) {
+      return this.getDataOWM(selectedCityId);
     }
 
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
 
-    return this.getDataServiceOrTimeout(this._dbOwmData.getData(selectedCityId)).pipe(
+    return this._utils.getDataServiceOrTimeout(this._dbOwmData.getData(selectedCityId)).pipe(
       tap(() => this.updateStatsDBRequests(selectedCityId)),
       switchMap((fbdata: IOwmDataModel) => {
-        if (fbdata !== null && this.isNotExpired(fbdata)) {
+        if (fbdata !== null && this._utils.isNotExpired(fbdata)) {
+          // concurent case with DbOwmService, on liveDataUpdate DbOwmService to handle data update
+          if (liveDataUpdate) { 
+            return of(null);
+          }
           return of(fbdata);
         } else {
           return this.getDataOWM(selectedCityId);
@@ -103,13 +113,12 @@ export class OwmDataManagerService {
         return of(null);
       })
     );
-    
   }
 
   getDataOWM(cityId: string): Observable<IOwmDataModel | null> {
     this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
-    return this.getDataServiceOrTimeout(this._owm.getData(cityId)).pipe(
-      switchMap((newOwmData: IOwmDataModel) => of(this.setListByDate(newOwmData))),
+    return this._utils.getDataServiceOrTimeout(this._owm.getData(cityId)).pipe(
+      switchMap((newOwmData: IOwmDataModel) => of(this._utils.setListByDate(newOwmData))),
       tap((newOwmData: IOwmDataModel) => this._dbOwmData.setData(cityId, newOwmData)),
       catchError((err) => {
         this.addError(err);
@@ -118,75 +127,15 @@ export class OwmDataManagerService {
     );
   }
 
-  getDataServiceOrTimeout(service: Observable<IOwmDataModel>) {
-    const timeout = timer(ConstantsService.dataResponseTimeout_ms * 2).pipe(mapTo('timedout'));
-    return merge(service, timeout).pipe(
-      take(1),
-      switchMap((data) => (data  === 'timedout') ? throwError('Service Timeout Error') : of(data))
-    );
-  }
-
   updateStatsDBRequests(cityId: string) {
     this._statsUpdate.updateStatsDBRequests(cityId);
-  }
-
-  setListByDate(data: IOwmDataModel): IOwmDataModel {
-    data.listByDate = data.list.reduce((accumulator: any, item: any) => {
-      const dateObj = new Date(item.dt * 1000);
-      const hour = dateObj.getUTCHours();
-      const date = dateObj.setHours(0);
-
-      if (accumulator[date]) {
-        accumulator[date][hour] = item;
-      } else {
-        accumulator[date] = {};
-        accumulator[date][hour] = item;
-      }
-      return accumulator;
-    }, {});
-    data.updated = new Date().valueOf();
-    return data;
-  }
-
-  // Caching the data for 3h
-  // in order to prevent exceeding OWM requests dev quota.
-
-  isNotExpired(data: IOwmDataModel): boolean {
-    // expired data is when either [0] || .updated is older than 3 hours
-    const now = new Date().valueOf();
-    const firstDateTime = data.list && data.list.length > 0 && data.list[0].dt ? data.list[0].dt * 1000 : 0;
-    const diff = now - (data.updated || firstDateTime || 0);
-    return diff < 3 * 3600 * 1000; // < 3 hours
-  }
-
-  getOwmDataDebounced$({ showLoading }) {
-    if (showLoading) {
-      this._store.dispatch(new SetStatusShowLoading(true));
-    }
-    
-    return this.selectedCityOwmDataCache$.pipe(
-      tap(() => {
-        if (showLoading) {
-          this._store.dispatch(new SetStatusShowLoading(true));
-        }
-      }),
-      filter((data) => !!data),
-      distinctUntilChanged((prev, curr) => prev.updated === curr.updated),
-      debounce((data: IOwmDataModel) => (data.updated && this.isNotExpired(data) ? of(null) : timer(ConstantsService.loadingDataDebounceTime_ms))),
-      tap(() => {
-        if (showLoading) {
-          this._store.dispatch(new SetStatusShowLoading(false));
-        }
-      })
-    );
   }
 
   addError(message) {
     this._errors.add({
       userMessage: 'Connection or service problem',
       logMessage: 'DbOwmService: getDataOWM: ' + message,
-    });    
+    });
   }
-
 
 }

@@ -20,7 +20,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
-import { OwmDataManagerService } from '../../services/owm-data-manager.service';
+import { OwmDataUtilsService } from '../../services/owm-data-utils.service';
 import { AppCitiesState, AppStatusState } from '../../states/app.state';
 import { SetStatusSelectedCityId } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
@@ -70,7 +70,7 @@ export class MockHeaderToolbarComponent implements OnInit, OnDestroy, AfterViewI
 
   constructor(
     private _router: Router,
-    private _data: OwmDataManagerService, // Instantiate service to start listeners
+    private _utils: OwmDataUtilsService, // Instantiate service to start listeners
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
@@ -109,11 +109,11 @@ export class MockHeaderToolbarComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   subscribeOwmData() {
-    const subscriptionOwmData = this._data.getOwmDataDebounced$( { showLoading: false })
+    const subscriptionOwmData = this._utils.getOwmDataDebounced$( { showLoading: false })
       .pipe(
         tap((data: IOwmDataModel) => {
           this.owmData = data;
-          this.owmDataExpired = !this._data.isNotExpired(data);
+          this.owmDataExpired = !this._utils.isNotExpired(data);
         }),
         map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data.list[0])),
         filter((newDataImgPath: string) => {

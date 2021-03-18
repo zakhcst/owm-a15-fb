@@ -54,7 +54,7 @@ export class DialogSettingsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogSettingsComponent>,
     private _store: Store,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.showDetailTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showDetailTimeSlotBgPicture);
@@ -79,7 +79,7 @@ export class DialogSettingsComponent implements OnInit {
     this.daysForecastOld = this.daysForecast;
     this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
   }
-  
+
   toggleLiveDataUpdate() {
     this.liveDataUpdate = !this.liveDataUpdate;
     this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));

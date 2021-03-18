@@ -46,7 +46,7 @@ import { IHistoryLog } from '../models/history-log.model';
     connected: true,
     away: false,
     updatesAvailable: false,
-    liveDataUpdate: false,
+    liveDataUpdate: true,
     daysForecast: 5,
     showLoading: false,
     buildInfo: null,
@@ -63,7 +63,11 @@ import { IHistoryLog } from '../models/history-log.model';
 })
 @Injectable()
 export class AppStatusState {
-  constructor(private normalizedData: NormalizeDataService) { }
+  constructor(
+    private normalizedData: NormalizeDataService,
+    private _store: Store,
+    private _snackbar: SnackbarService,
+  ) { }
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -78,27 +82,27 @@ export class AppStatusState {
   static selectStatusNormalizedIp(state: AppStatusModel) {
     return state.normalizedIp;
   }
-  
+
   @Selector()
   static connected(state: AppStatusModel) {
     return state.connected;
   }
-  
+
   @Selector()
   static away(state: AppStatusModel) {
     return state.away;
   }
-  
+
   @Selector()
   static updatesAvailable(state: AppStatusModel) {
     return state.updatesAvailable;
   }
-  
+
   @Selector()
   static liveDataUpdate(state: AppStatusModel) {
     return state.liveDataUpdate;
   }
-  
+
   @Selector()
   static daysForecast(state: AppStatusModel) {
     return state.daysForecast;
@@ -157,7 +161,15 @@ export class AppStatusState {
   @Action(SetStatusSelectedCityId)
   setStatusSelectedCityId(context: StateContext<AppStatusModel>, action: SetStatusSelectedCityId) {
     const selectedCityId = action.payload || context.getState().selectedCityId;
-    localStorage.setItem('selectedCityId', selectedCityId);
+    const cities = this._store.selectSnapshot(AppCitiesState.selectCities);
+    const cityName = cities[selectedCityId].name;
+    const countryISO2 = cities[selectedCityId].iso2;
+    if (cities && cityName && countryISO2) {
+      this._snackbar.show({
+        message: `Selected: ${cityName}, ${countryISO2}`,
+        class: 'snackbar__info',
+      });
+    }
     context.patchState({ selectedCityId });
   }
 
@@ -260,7 +272,7 @@ export class AppFallbackDataState {
 
 @State<IOwmDataCacheModel>({
   name: 'owmDataCache',
-  defaults: {},
+  defaults: null,
 })
 @Injectable()
 export class AppOwmDataCacheState {
@@ -272,33 +284,41 @@ export class AppOwmDataCacheState {
 
   @Selector([AppStatusState, AppFallbackDataState])
   static selectOwmDataCacheSelectedCity(state: IOwmDataModel, status: AppStatusModel, fallbackData: IOwmDataModel) {
-    return state[status.selectedCityId] || fallbackData || null;
+    return (state && state[status.selectedCityId]) || fallbackData || null;
   }
 
   @Action(SetOwmDataCacheState)
   setOwmDataCacheState(context: StateContext<IOwmDataCacheModel>, action: SetOwmDataCacheState) {
     const owmData = action.payload;
-    if (!owmData || !owmData.updated) return;
-
+    if (!owmData || !owmData.updated) {
+      return;
+    }
     const updatesPromiseArray = [];
     const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
-    const existingSnapshot = context.getState()[selectedCityId];
-    
-    if (!existingSnapshot || existingSnapshot.updated < owmData.updated) {
-      const update = { ...context.getState(), [selectedCityId]: owmData };
+    const state = context.getState() ?? {};
+    const cachedCityOwmData = state[selectedCityId];
+    // console.log('%cSetOwmDataCacheState', 'color: orange',
+    //   (!!cachedCityOwmData ? 'there is' : 'no') + ' cached data',
+    //   selectedCityId,
+    //   new Date(owmData.updated),
+    //   owmData.updated
+    // )
+
+    if (!cachedCityOwmData || cachedCityOwmData.updated < owmData.updated) {
+      const update = { ...state, [selectedCityId]: owmData };
       context.setState(update);
-      
+
       const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
       const newEntry: HistoryLogModel = {
         cityId: selectedCityId,
         time: new Date().valueOf(),
       };
       updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
-      
+
       const cityName = owmData.city.name;
       const countryISO2 = owmData.city.country;
       this._snackbar.show({
-        message: `Selected: ${cityName}, ${countryISO2}`,
+        message: `Refreshed: ${cityName}, ${countryISO2}`,
         class: 'snackbar__info',
       });
       return Promise.all(updatesPromiseArray);

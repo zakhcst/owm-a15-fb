@@ -170,9 +170,10 @@ export class MockAngularFireService {
   }
 
   valueChanges() {
-    return this.fbdata && !this.error ? of(this.fbdata) : throwError('No data');
+    return (this.fbdata && (!this.error ? of(this.fbdata) : throwError('No data MockAngularFireService'))) || of(null);
   }
 }
+
 export class MockSnackbarService {
   data: ISnackbarData[] = [];
 
