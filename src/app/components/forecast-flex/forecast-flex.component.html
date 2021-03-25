@@ -1,7 +1,6 @@
 <mat-card class="forecast-card">
   <div fxFlex fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
-    <!-- <div fxFlex fxLayout="row" *ngIf="loadingOwmData === false"> -->
     <div fxFlex fxLayout="row" *ngIf="listByDate">
       <!-- Date's column-->
       <div #fullHeightColumn class="table-column-date" fxLayout="column">
@@ -15,13 +14,7 @@
         <div fxFlex fxFill fxLayout="column" id="daycolumn">
           <div
             fxFlex
-            *ngFor="
-              let dataDaily of listByDate
-                | keyvalue
-                | sliceArray: daysForecast;
-              trackBy: trackByIdFn;
-              index as ind
-            "
+            *ngFor="let dataDaily of listByDate | keyvalue | sliceArray: daysForecast"
           >
             <span fxFlex fxLayout="column" fxLayoutAlign="center center">
               <span>{{ dataDaily.key | date: "EEE" }}&nbsp;</span>
@@ -51,11 +44,7 @@
             fxFlex
             fxLayoutAlign="center center"
             class="table-header-time-slot"
-            *ngFor="
-              let timeSlot of timeTemplate;
-              index as ind;
-              trackBy: trackByIdFn
-            "
+            *ngFor="let timeSlot of timeTemplate; index as ind"
             [ngStyle]="{ 'background-color': timeTemplate[ind].bgColor }"
           >
             {{ (timeSlot.hour > 9 ? "" : "0") + timeSlot.hour + ":00" }}
@@ -69,16 +58,11 @@
             fxLayout="row"
             class="table-row"
             fxLayoutAlign="start center"
-            *ngFor="
-              let dataDaily of listByDate
-                | keyvalue
-                | sliceArray: daysForecast;
-              index as ind
-            "
-            [@showTimeSlot]="ind"
+            *ngFor="let dataDaily of listByDate | keyvalue | sliceArray: daysForecast"
+            @showTimeSlot
           >
             <ng-container
-              *ngFor="let timeSlot of timeTemplate; trackBy: trackByIdFn"
+              *ngFor="let timeSlot of timeTemplate"
             >
               <app-data-cell
                 fxFlex
@@ -86,7 +70,12 @@
                 class="table-cell_data"
                 [dataDaily]="dataDaily.value"
                 [timeSlot]="timeSlot"
-                (click)="showDataCellExpanded(dataDaily.value[timeSlot.hour], timeSlot.bgColor)"
+                (click)="
+                  showDataCellExpanded(
+                    dataDaily.value[timeSlot.hour],
+                    timeSlot.bgColor
+                  )
+                "
               ></app-data-cell>
             </ng-container>
           </div>
@@ -94,6 +83,5 @@
       </div>
       <!-- Hours columns-->
     </div>
-
   </div>
 </mat-card>

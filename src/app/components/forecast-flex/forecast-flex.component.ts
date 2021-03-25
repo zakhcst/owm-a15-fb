@@ -40,6 +40,8 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   listByDate: IListByDateModel;
   subscriptions: Subscription;
   daysForecast = 5;
+  frames = 10;
+  scrolling = false;
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
@@ -79,21 +81,19 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   }
 
   onMouseWheel(event: any) {
+    if (this.scrolling) return;
     if (this.gridContainer && !event.shiftKey) {
-      const frames = 20;
-      const step = event.deltaY / frames;
-      let count = 0;
+      const step = event.deltaY * 2 / this.frames;
+      let frameCount = 1;
+      this.scrolling = true;
       const interval = setInterval(() => {
         this.gridContainer.nativeElement.scrollLeft += step;
-        if (++count >= frames) {
+        if (this.frames < frameCount++) {
           clearInterval(interval);
+          this.scrolling = false;
         }
-      }, 10);
+      }, 20);
     }
-  }
-
-  trackByIdFn(index: any, item: any) {
-    return index;
   }
 
   showDataCellExpanded(timeSlotData, bgColor: string) {
