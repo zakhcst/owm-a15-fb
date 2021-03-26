@@ -95,7 +95,7 @@ export class ConstantsService {
   public static readonly snackbarDuration = 1500;
   public static readonly redirectDelay = 5;
   public static readonly connectedResponseTimeout_ms = 1500;
-  public static readonly dataResponseTimeout_ms = 1500;
+  public static readonly dataResponseTimeout_ms = 2500;
   public static readonly loadingDispatechesDebounceTime_ms = 100;
   public static readonly loadingDataDebounceTime_ms = 1000;
 
