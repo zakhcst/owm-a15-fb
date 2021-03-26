@@ -23,6 +23,12 @@
 .width-50 {
   width: 50px;
 }
+.width-100 {
+  width: 100px;
+}
+.width-200 {
+  width: 200px;
+}
 .right {
    text-align: right;
 }

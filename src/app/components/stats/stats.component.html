@@ -16,14 +16,12 @@
       </span>
     </div>
     <br />
-    
-    <div fxFlex fxLayout="column" 
-      *ngIf="(checkedCities === false && !historyLog) || (checkedCities && !stats)"
-      >
+
+    <div *ngIf="(checkedCities === false && !historyLog) || (checkedCities && !stats) || (showErrors && !errorsLog)">
       No data
     </div>
 
-    <div fxFlex fxLayout="column" *ngIf="checkedCities === false">
+    <div fxFlex fxLayout="column" *ngIf="checkedCities === false && historyLog && !showErrors">
       <div fxFlex="0 0 auto" fxLayout="row">
         <span fxFlex>IP</span>
         <span fxFlex>Date</span>
@@ -65,11 +63,7 @@
 
           <ng-container *ngIf="showDetails[logEntryIp[0]]">
             <ng-container
-              *ngFor="
-                let logEntryTime of logEntryIp[2];
-                let oddsub = odd;
-                let ind = index
-              "
+              *ngFor="let logEntryTime of logEntryIp[2];let oddsub = odd"
             >
               <div
                 fxLayout="row"
@@ -79,9 +73,7 @@
                   'selected-even': oddsub && !odd,
                   hovered: true
                 }"
-                (click)="
-                  showDetails[logEntryIp[0]] = !showDetails[logEntryIp[0]]
-                "
+                (click)="showDetails[logEntryIp[0]] = !showDetails[logEntryIp[0]]"
               >
                 <span fxFlex></span>
                 <span fxFlex>{{ logEntryTime[0] | date: "dd/MM/yyyy" }}</span>
@@ -95,7 +87,7 @@
       </div>
     </div>
 
-    <div fxFlex fxLayout="column" *ngIf="checkedCities && stats">
+    <div fxFlex fxLayout="column" *ngIf="checkedCities && stats && !showErrors">
       <div fxLayout="row">
         <span fxFlex class="pl5">Requests</span>
         <span fxFlex></span>
@@ -112,7 +104,7 @@
         <span fxFlex></span>
         <span class="width-50 right">{{ stats?.u || ''}}</span>
         <span fxFlex></span>
-        <span  class="width-50 right">{{ stats?.r || ''}}</span>
+        <span class="width-50 right">{{ stats?.r || ''}}</span>
         <span fxFlex></span>
       </div>
 
@@ -135,12 +127,68 @@
           <span fxFlex class="truncate pl5">{{ city.value.name }}</span>
           <span fxFlex class="truncate">{{ city.value.country }}</span>
           <span fxFlex></span>
-          <span class="width-50 right">{{ (stats[city.key]?.u ||0) + (city.value?.u || 0)}}</span>
+          <span class="width-50 right">{{(stats[city.key]?.u || 0) + (city.value?.u || 0)}}</span>
           <span fxFlex></span>
-          <span class="width-50 right">{{ (stats[city.key]?.r ||0) + (city.value?.r || 0)}}</span>
+          <span class="width-50 right">{{(stats[city.key]?.r || 0) + (city.value?.r || 0)}}</span>
           <span fxFlex></span>
         </div>
       </div>
     </div>
+
+    <div fxFlex fxLayout="column" *ngIf="showErrors && errorsLog">
+      <div fxFlex="0 0 auto" fxLayout="row">
+        <span class="width-200">IP/Date/Time</span>
+        <span fxFlex>Error</span>
+      </div>
+
+      <hr />
+
+      <div
+        fxFlex
+        fxLayout="column"
+        class="scroll-this"
+        [@showStats]="citiesLength"
+      >
+        <ng-container *ngFor="let logEntryIp of errorsLog; let odd = odd">
+          <div
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="hovered"
+            [ngClass]="{
+              odd: odd && !showErrorsDetails[logEntryIp[0]],
+              selected: odd && showErrorsDetails[logEntryIp[0]],
+              'selected-even': !odd && showErrorsDetails[logEntryIp[0]],
+              hovered: true
+            }"
+            (click)="showErrorsDetails[logEntryIp[0]] = !showErrorsDetails[logEntryIp[0]]"
+          >
+            <span>
+              {{ showErrorsDetails[logEntryIp[0]] ? "&#x23F7;" : "&#x23F5;" }}
+              {{ logEntryIp[0] | replace: "-":"." }}
+            </span>
+          </div>
+
+          <ng-container *ngIf="showErrorsDetails[logEntryIp[0]]">
+            <ng-container *ngFor="let logEntryTime of logEntryIp[2]; let oddsub = odd; let ind = index">
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                [ngClass]="{
+                  selected: oddsub && odd,
+                  'selected-even': oddsub && !odd,
+                  hovered: true
+                }"
+                (click)="showDetails[logEntryIp[0]] = !showDetails[logEntryIp[0]]"
+              >
+                <span class="width-100">{{ logEntryTime[0] | date: "dd/MM/yyyy" }}</span>
+                <span class="width-100">{{ logEntryTime[0] | date: "HH:mm:ss" }}</span>
+                <span fxFlex>{{ logEntryTime[1] }}</span>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
   </div>
 </mat-card>

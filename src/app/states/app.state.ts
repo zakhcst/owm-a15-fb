@@ -297,12 +297,6 @@ export class AppOwmDataCacheState {
     const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
     const state = context.getState() ?? {};
     const cachedCityOwmData = state[selectedCityId];
-    // console.log('%cSetOwmDataCacheState', 'color: orange',
-    //   (!!cachedCityOwmData ? 'there is' : 'no') + ' cached data',
-    //   selectedCityId,
-    //   new Date(owmData.updated),
-    //   owmData.updated
-    // )
 
     if (!cachedCityOwmData || cachedCityOwmData.updated < owmData.updated) {
       const update = { ...state, [selectedCityId]: owmData };

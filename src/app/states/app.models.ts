@@ -49,3 +49,10 @@ export interface AppErrorPayloadModel {
   userMessage: string;
   logMessage: string;
 }
+
+export interface ErrorMessageLogModel {
+  [time: number]: string;
+}
+export interface ErrorLogModel {
+  [ip: string]: ErrorMessageLogModel;
+}

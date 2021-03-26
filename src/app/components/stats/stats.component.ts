@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { IStats } from '../../models/stats.model';
 import { ICities } from '../../models/cities.model';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
@@ -6,8 +6,9 @@ import { IHistoryLog } from '../../models/history-log.model';
 import { Select } from '@ngxs/store';
 import { AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState } from 'src/app/states/app.state';
 import { Observable, of, Subscription } from 'rxjs';
-import { delay, filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { ConstantsService } from '../../services/constants.service';
+import { ErrorsService } from 'src/app/services/errors.service';
 
 @Component({
   selector: 'app-stats',
@@ -27,24 +28,35 @@ export class StatsComponent implements OnInit, OnDestroy {
   stats: IStats[] | {};
   cities: ICities;
   citiesLength = 0;
-  loadingError = false;
   checkedCities = true;
   showDetails = {};
   subscriptions: Subscription;
   historyLog: any = null;
-  historyLog$: Observable<any[]>;
+  showErrors = false;
+  firstShowErrors = true;
+  showErrorsDetails = {};
+  errorsLog: any = null;
 
   @Select(AppStatusState.selectStatusIp) ip$: Observable<string>;
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
   @Select(AppHistoryLogState) historyLogState$: Observable<IHistoryLog>;
   @Select(AppStatsState) stats$: Observable<IStats[]>;
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'e') {
+      this.showErrors = !this.showErrors;
+      if (this.showErrors && this.firstShowErrors) {
+        this.firstShowErrors = false;
+        this.subscribeErrorsLog();
+      }
+    }
+  }
 
-  constructor() {}
+  constructor(private errorsService: ErrorsService) {}
 
   ngOnInit() {
     this.subscribeStats();
     this.subscribeCities();
-    this.setHistoryLog$();
     this.subscribeHistoryLog();
   }
 
@@ -69,11 +81,11 @@ export class StatsComponent implements OnInit, OnDestroy {
     );
   }
 
-  setHistoryLog$() {
-    this.historyLog$ = this.historyLogState$.pipe(filter((historyLog) => !!historyLog)).pipe(
+  setLog$(log$: Observable<any>, filterIp: boolean) {
+    return  log$.pipe(filter((historyLog) => !!historyLog)).pipe(
       switchMap((historyLog: IHistoryLog) => {
         const sortedTrimmedEntries = Object.entries(historyLog)
-          .filter((ent: any[]) => !ConstantsService.reservedIps.includes(ent[0]))
+          .filter((ent: any[]) => !filterIp || !ConstantsService.reservedIps.includes(ent[0]))
           .map((ent: any[]) => {
             ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
             ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
@@ -86,9 +98,17 @@ export class StatsComponent implements OnInit, OnDestroy {
     );
   }
 
+  subscribeErrorsLog() {
+    this.subscriptions.add(
+      this.setLog$(this.errorsService.getData(), false).subscribe(errorsLog => {
+        this.errorsLog = errorsLog;
+      })
+    );
+  }
+
   subscribeHistoryLog() {
     this.subscriptions.add(
-      this.historyLog$.subscribe((historyLog) => {
+      this.setLog$(this.historyLogState$, true).subscribe((historyLog) => {
         this.historyLog = historyLog;
       })
     );
