@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
 
@@ -28,14 +28,13 @@ import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
     ]),
   ],
 })
-export class ForecastFlexComponent implements OnInit, OnDestroy {
+export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('gridContainer', { static: false }) gridContainer: ElementRef;
 
   timeTemplate: ITimeTemplate[] = ConstantsService.timeTemplate;
   cardBackground: string;
   dateColumnTextColor: string;
   weatherData: IOwmDataModel;
-  listByDateLength = 0;
   scrollbarHeight = 0;
   listByDate: IListByDateModel;
   subscriptions: Subscription;
@@ -45,14 +44,14 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
-  constructor(
-    private _errors: ErrorsService,
-    public dialog: MatDialog,
-    private _utils: OwmDataUtilsService
-  ) {}
-  
+  constructor(private _errors: ErrorsService, public dialog: MatDialog, private _utils: OwmDataUtilsService) {}
+
   ngOnInit() {
     this.subscribeOwmData();
+  }
+
+  ngAfterViewInit() {
+    this.scrollTodaySlotsInViewport();
   }
 
   ngOnDestroy() {
@@ -61,12 +60,42 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
     }
   }
 
+  scrollTodaySlotsInViewport() {
+    const maxSlotsPerDay = this.timeTemplate.length;
+    const gridContainer = this.gridContainer?.nativeElement;
+    if (!gridContainer || gridContainer.scrollWidth === gridContainer.clientWidth) { return; }
+    
+    const slotWidth = Math.round(gridContainer.scrollWidth / maxSlotsPerDay);
+    const viewportSlots = Math.round(gridContainer.clientWidth / slotWidth);
+
+    const listByDateKeysSorted = Object.keys(this.listByDate).sort();
+    const todayKey = listByDateKeysSorted[0];
+    const todaySlots = this.listByDate[todayKey];
+    const todaySlotsCount = Object.keys(todaySlots).length;
+
+    if (viewportSlots + todaySlotsCount > maxSlotsPerDay) { return; }
+
+    let scrollPositions = maxSlotsPerDay - todaySlotsCount;
+    this.animateScroll(gridContainer, scrollPositions, slotWidth);
+  }
+
+  animateScroll(gridContainer, scrollPositions, slotWidth) {
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        gridContainer.scrollLeft += slotWidth;
+        scrollPositions--;
+        if (scrollPositions < 1) {
+          clearInterval(interval);
+        }
+      }, 100);
+    }, 1100);
+  }
+
   subscribeOwmData() {
     this.subscriptions = this._utils.getOwmDataDebounced$({ showLoading: true }).subscribe(
       (data) => {
         this.weatherData = data;
         this.listByDate = data.listByDate;
-        this.listByDateLength = Object.keys(data.listByDate).length;
       },
       (err) => {
         this.addError('ngOnInit: onChange: subscribe', err.message);
@@ -83,7 +112,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy {
   onMouseWheel(event: any) {
     if (this.scrolling) return;
     if (this.gridContainer && !event.shiftKey) {
-      const step = event.deltaY * 2 / this.frames;
+      const step = (event.deltaY * 2) / this.frames;
       let frameCount = 1;
       this.scrolling = true;
       const interval = setInterval(() => {
