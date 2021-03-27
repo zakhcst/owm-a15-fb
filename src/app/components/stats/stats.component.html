@@ -162,10 +162,12 @@
             }"
             (click)="showErrorsDetails[logEntryIp[0]] = !showErrorsDetails[logEntryIp[0]]"
           >
-            <span>
+            <span class="width-200">
               {{ showErrorsDetails[logEntryIp[0]] ? "&#x23F7;" : "&#x23F5;" }}
               {{ logEntryIp[0] | replace: "-":"." }}
             </span>
+            <span class="width-100">{{ logEntryIp[2][0][0] | date: "dd/MM/yyyy" }}</span>
+            <span class="width-100">{{ logEntryIp[2][0][0] | date: "HH:mm" }}</span>
           </div>
 
           <ng-container *ngIf="showErrorsDetails[logEntryIp[0]]">
