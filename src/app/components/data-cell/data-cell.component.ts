@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ITimeTemplate } from 'src/app/models/hours.model';
 import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from 'src/app/services/constants.service';
@@ -10,6 +10,7 @@ import { Observable, Subscription } from 'rxjs';
   selector: 'app-data-cell',
   templateUrl: './data-cell.component.html',
   styleUrls: ['./data-cell.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataCellComponent implements OnInit, OnDestroy {
   @Input() dataDaily: IOwmDataModelTimeSlotUnit;
@@ -27,11 +28,9 @@ export class DataCellComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setIcons();
-    this.subscription = this.showDetailTimeSlotBgPicture$.subscribe((showDetailTimeSlotBgPicture) => {
-      this.setBackground(showDetailTimeSlotBgPicture);
-    });
+    this.subscribeShowBackgroundPictire();
   }
-
+  
   setIcons() {
     if (this.dataDaily[this.timeSlot.hour]) {
       const iconCode = this.dataDaily[this.timeSlot.hour].weather[0].icon;
@@ -42,6 +41,13 @@ export class DataCellComponent implements OnInit, OnDestroy {
       };
     }
   }
+
+  subscribeShowBackgroundPictire() {
+    this.subscription = this.showDetailTimeSlotBgPicture$.subscribe((showDetailTimeSlotBgPicture) => {
+      this.setBackground(showDetailTimeSlotBgPicture);
+    });
+  }
+  
   setBackground(showDetailTimeSlotBgPicture: boolean) {
     if (this.dataDaily[this.timeSlot.hour] && showDetailTimeSlotBgPicture) {
       const bgImgPath = ConstantsService.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]);
