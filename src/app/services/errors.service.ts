@@ -4,7 +4,7 @@ import { ConstantsService } from './constants.service';
 import { Store } from '@ngxs/store';
 import { SetErrorsState } from '../states/app.actions';
 import { AppErrorPayloadModel, ErrorLogModel, ErrorRecordModel } from '../states/app.models';
-import { Observable, of } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class ErrorsService {
         userMessage: 'Connection or service problem',
         logMessage: 'ErrorsService: getData: ' + error,
       });
-      return of(error);
+      return throwError(error);
     }));
   }
 

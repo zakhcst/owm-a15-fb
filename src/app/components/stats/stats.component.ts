@@ -82,7 +82,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   setLog$(log$: Observable<any>, filterIp: boolean) {
-    return  log$.pipe(filter((historyLog) => !!historyLog)).pipe(
+    return log$.pipe(filter((historyLog) => !!historyLog)).pipe(
       switchMap((historyLog: IHistoryLog) => {
         const sortedTrimmedEntries = Object.entries(historyLog)
           .filter((ent: any[]) => !filterIp || !ConstantsService.reservedIps.includes(ent[0]))
@@ -100,7 +100,7 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   subscribeErrorsLog() {
     this.subscriptions.add(
-      this.setLog$(this.errorsService.getData(), false).subscribe(errorsLog => {
+      this.setLog$(this.errorsService.getData(), false).subscribe((errorsLog) => {
         this.errorsLog = errorsLog;
       })
     );
@@ -113,6 +113,4 @@ export class StatsComponent implements OnInit, OnDestroy {
       })
     );
   }
-
-
 }
