@@ -96,7 +96,7 @@ describe('OwmDataManagerService', () => {
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
       const spyOnGetDataDB = spyOn(service, 'getDataDB').and.returnValue(of({ ...owmData, cod: 'data from db' }));
 
-      service.getDataMemory({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataMemory({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnLastData).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -121,7 +121,7 @@ describe('OwmDataManagerService', () => {
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.returnValue(true);
       const spyOnGetDataDB = spyOn(service, 'getDataDB').and.returnValue(of({ ...owmData, cod: 'data from db' }));
 
-      service.getDataMemory({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataMemory({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnLastData).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -144,7 +144,7 @@ describe('OwmDataManagerService', () => {
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
       const spyOnGetDataDB = spyOn(service, 'getDataDB').and.returnValue(of({ ...owmData, cod: 'data from db' }));
 
-      service.getDataMemory({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataMemory({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnLastData).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -167,7 +167,7 @@ describe('OwmDataManagerService', () => {
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
       const spyOnGetDataDB = spyOn(service, 'getDataDB').and.returnValue(of({ ...owmData, cod: 'data from db' }));
 
-      service.getDataMemory({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataMemory({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnLastData).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -190,41 +190,13 @@ describe('OwmDataManagerService', () => {
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.returnValue(false);
       const spyOnGetDataDB = spyOn(service, 'getDataDB').and.returnValue(of({ ...owmData, cod: 'data from db' }));
 
-      service.getDataMemory({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataMemory({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnLastData).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
           expect(spyOnIsNotExpired).toHaveBeenCalledTimes(1);
           expect(spyOnGetDataDB).toHaveBeenCalledTimes(1);
           expect(responseData).toEqual({ ...owmData, cod: 'data from db' });
-        },
-        (error) => fail(error)
-      );
-    })
-  );
-
-  it(
-    'getDataDB: should return null when no db connecton',
-    waitForAsync(() => {
-      const owmData = getNewDataObject();
-      const spyOnLiveUpdate = spyOn(store, 'selectSnapshot').and.returnValues(true);
-      const spyOnSnackbarShow = spyOn(snackbarService, 'show').and.callFake(() => {});
-      const spyOnMockDbOwmService = spyOn(mockDbOwmService, 'getData').and.returnValue(
-        of({ ...owmData, cod: 'expired from db' })
-      );
-      const spyOnUpdateStatsDBRequests = spyOn(service, 'updateStatsDBRequests').and.returnValue(null);
-      const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
-      const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
-
-      service.getDataDB({ selectedCityId: '123456', connected: false, previousSelectedCityId: '123456' }).subscribe(
-        (responseData) => {
-          expect(spyOnLiveUpdate).toHaveBeenCalledTimes(1);
-          expect(spyOnSnackbarShow).toHaveBeenCalledTimes(0);
-          expect(spyOnMockDbOwmService).toHaveBeenCalledTimes(0);
-          expect(spyOnUpdateStatsDBRequests).toHaveBeenCalledTimes(0);
-          expect(spyOnIsNotExpired).toHaveBeenCalledTimes(0);
-          expect(spyOnGetDataOwm).toHaveBeenCalledTimes(0);
-          expect(responseData).toEqual(null);
         },
         (error) => fail(error)
       );
@@ -247,7 +219,7 @@ describe('OwmDataManagerService', () => {
       const spyGetDataServiceOrTimeout = spyOn(utils, 'getDataServiceOrTimeout').and.returnValue(throwError(new Error(errMessage)));
       const spyAddErrors = spyOn(service, 'addError');
 
-      service.getDataDB({ selectedCityId: '123456', connected: true, previousSelectedCityId: '654321' }).subscribe(
+      service.getDataDB({ selectedCityId: '123456', previousSelectedCityId: '654321' }).subscribe(
         (responseData) => {
           expect(spyOnLiveUpdate).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -277,7 +249,7 @@ describe('OwmDataManagerService', () => {
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
 
-      service.getDataDB({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataDB({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnLiveUpdate).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(0);
@@ -306,7 +278,7 @@ describe('OwmDataManagerService', () => {
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
 
-      service.getDataDB({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataDB({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -335,7 +307,7 @@ describe('OwmDataManagerService', () => {
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
 
-      service.getDataDB({ selectedCityId: '123456', connected: true, previousSelectedCityId: '564321' }).subscribe(
+      service.getDataDB({ selectedCityId: '123456', previousSelectedCityId: '564321' }).subscribe(
         (responseData) => {
           expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -364,7 +336,7 @@ describe('OwmDataManagerService', () => {
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.returnValue(true);
 
-      service.getDataDB({ selectedCityId: '123456', connected: true, previousSelectedCityId: '654321' }).subscribe(
+      service.getDataDB({ selectedCityId: '123456', previousSelectedCityId: '654321' }).subscribe(
         (responseData) => {
           expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);
@@ -393,7 +365,7 @@ describe('OwmDataManagerService', () => {
       const spyOnGetDataOwm = spyOn(service, 'getDataOWM').and.returnValue(of({ ...owmData, cod: 'fresh from owm' }));
       const spyOnIsNotExpired = spyOn(utils, 'isNotExpired').and.callThrough();
 
-      service.getDataDB({ selectedCityId: '123456', connected: true, previousSelectedCityId: '123456' }).subscribe(
+      service.getDataDB({ selectedCityId: '123456', previousSelectedCityId: '123456' }).subscribe(
         (responseData) => {
           expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(1);
           expect(spyOnSnackbarShow).toHaveBeenCalledTimes(1);

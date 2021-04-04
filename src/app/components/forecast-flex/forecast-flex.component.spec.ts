@@ -75,4 +75,16 @@ describe('ForecastFlexComponent services', () => {
       });
     })
   );
+  
+  it(
+    'scrollTodaySlotsInViewport should return when no gridContainer',
+    waitForAsync(() => {
+      const spyOnAnimateScroll = spyOn(component, 'animateScroll');
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(spyOnAnimateScroll).toHaveBeenCalledTimes(0);
+      });
+    })
+  );
+
 });

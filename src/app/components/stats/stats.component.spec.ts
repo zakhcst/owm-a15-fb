@@ -4,7 +4,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule, Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { SharedModule } from 'src/app/modules/shared.module';
+import { ErrorsService } from 'src/app/services/errors.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
+import { MockErrorsService } from 'src/app/services/testing.services.mocks';
 import { AppCitiesState, AppHistoryLogState, AppStatsState, AppStatusState } from 'src/app/states/app.state';
 
 import { StatsComponent } from './stats.component';
@@ -24,7 +26,8 @@ describe('StatsComponent', () => {
           NgxsModule.forRoot([AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState]),
         ],
         declarations: [StatsComponent],
-        providers: [SnackbarService, Store],
+        providers: [SnackbarService, Store, 
+          {provide: ErrorsService, useClass: MockErrorsService}],
       }).compileComponents();
       store = TestBed.inject(Store);
     })

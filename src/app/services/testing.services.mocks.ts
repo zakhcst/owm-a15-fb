@@ -119,9 +119,23 @@ export class MockOwmFallbackDataService {
 
 export class MockErrorsService {
   messages: AppErrorPayloadModel[] = [];
+  errorLog = {
+    '1-1-1-1' : {
+      '1610000000011' : 'err message11',
+      '1610000000012' : 'err message12'
+    },
+    '2-2-2-2' : {
+      '1610000000021' : 'err message21',
+      '1610000000022' : 'err message22'
+    }
+  };
   constructor() {
     this.messages = [];
   }
+  getData() {
+    return of(this.errorLog);
+  }
+
   setDataToFB(newData: AppErrorPayloadModel) {
     return newData ? Promise.resolve() : Promise.reject();
   }
