@@ -1,7 +1,7 @@
 <mat-card class="stats-card">
   <div fxLayout="column" fxFill>
     <div fxFlex="0 0 auto" fxLayout="row">
-      <p>Current client IPv4: {{ ip$ | async }}</p>
+      <p (click)="toggleShowErrors()">Current client IPv4: {{ ip$ | async }}</p>
       <span fxFlex></span>
       <span fxLayout="row" fxLayoutAlign="start center">
         Cities&nbsp;
@@ -89,7 +89,7 @@
 
     <div fxFlex fxLayout="column" *ngIf="checkedCities && stats && !showErrors">
       <div fxLayout="row">
-        <span fxFlex class="pl5">Requests</span>
+        <span fxFlex class="padding-left-5">Requests</span>
         <span fxFlex></span>
         <span fxFlex></span>
         <span class="width-50 right">OWM</span>
@@ -99,7 +99,7 @@
       </div>
       <hr />
       <div fxLayout="row">
-        <span fxFlex class="pl5">All</span>
+        <span fxFlex class="padding-left-5">All</span>
         <span fxFlex></span>
         <span fxFlex></span>
         <span class="width-50 right">{{ stats?.u || ''}}</span>
@@ -124,7 +124,7 @@
           [class.odd]="odd"
           class="hovered"
         >
-          <span fxFlex class="truncate pl5">{{ city.value.name }}</span>
+          <span fxFlex class="truncate padding-left-5">{{ city.value.name }}</span>
           <span fxFlex class="truncate">{{ city.value.country }}</span>
           <span fxFlex></span>
           <span class="width-50 right">{{(stats[city.key]?.u || 0) + (city.value?.u || 0)}}</span>
@@ -147,7 +147,7 @@
         fxFlex
         fxLayout="column"
         class="scroll-this"
-        [@showStats]="citiesLength"
+        @showStats
       >
         <ng-container *ngFor="let logEntryIp of errorsLog; let odd = odd">
           <div
@@ -164,7 +164,9 @@
           >
             <span class="width-200">
               {{ showErrorsDetails[logEntryIp[0]] ? "&#x23F7;" : "&#x23F5;" }}
-              {{ logEntryIp[0] | replace: "-":"." }}
+              <span class="padding-left-5">
+                {{ logEntryIp[0] | replace: "-":"." }}
+              </span>
             </span>
             <span class="width-100">{{ logEntryIp[2][0][0] | date: "dd/MM/yyyy" }}</span>
             <span class="width-100">{{ logEntryIp[2][0][0] | date: "HH:mm" }}</span>
@@ -175,6 +177,7 @@
               <div
                 fxLayout="row"
                 fxLayoutAlign="start center"
+                class="margin-left-15"
                 [ngClass]="{
                   selected: oddsub && odd,
                   'selected-even': oddsub && !odd,
@@ -182,7 +185,7 @@
                 }"
                 (click)="showDetails[logEntryIp[0]] = !showDetails[logEntryIp[0]]"
               >
-                <span class="width-100">{{ logEntryTime[0] | date: "dd/MM/yyyy" }}</span>
+                <span class="padding-left-5 width-100">{{ logEntryTime[0] | date: "dd/MM/yyyy" }}</span>
                 <span class="width-100">{{ logEntryTime[0] | date: "HH:mm:ss" }}</span>
                 <span fxFlex>{{ logEntryTime[1] }}</span>
               </div>

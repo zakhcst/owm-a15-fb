@@ -44,11 +44,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if (event.key === 'e') {
-      this.showErrors = !this.showErrors;
-      if (this.showErrors && this.firstShowErrors) {
-        this.firstShowErrors = false;
-        this.subscribeErrorsLog();
-      }
+      this.toggleShowErrors();
     }
   }
 
@@ -88,7 +84,7 @@ export class StatsComponent implements OnInit, OnDestroy {
           .filter((ent: any[]) => !filterIp || !ConstantsService.reservedIps.includes(ent[0]))
           .map((ent: any[]) => {
             ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
-            ent[2] = ent[1].length > 10 ? ent[1].splice(0, 10) : ent[1];
+            ent[2] = ent[1].length > 11 ? ent[1].splice(0, 11) : ent[1];
             return ent;
           })
           .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1));
@@ -113,4 +109,13 @@ export class StatsComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  toggleShowErrors() {
+    this.showErrors = !this.showErrors;
+      if (this.showErrors && this.firstShowErrors) {
+        this.firstShowErrors = false;
+        this.subscribeErrorsLog();
+      }
+  }
+
 }
