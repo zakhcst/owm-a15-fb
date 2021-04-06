@@ -62,6 +62,10 @@
   white-space: nowrap;
 }
 
+.white-space-pre-wrap {
+  white-space: pre-wrap;
+}
+
 @media only screen and (max-height: 599px) {
   .stats-card {
     font-size: 50%;

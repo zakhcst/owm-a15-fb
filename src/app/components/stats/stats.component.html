@@ -176,7 +176,7 @@
             <ng-container *ngFor="let logEntryTime of logEntryIp[2]; let oddsub = odd; let ind = index">
               <div
                 fxLayout="row"
-                fxLayoutAlign="start center"
+                fxLayoutAlign="start start"
                 class="margin-left-15"
                 [ngClass]="{
                   selected: oddsub && odd,
@@ -187,7 +187,7 @@
               >
                 <span class="padding-left-5 width-100">{{ logEntryTime[0] | date: "dd/MM/yyyy" }}</span>
                 <span class="width-100">{{ logEntryTime[0] | date: "HH:mm:ss" }}</span>
-                <span fxFlex>{{ logEntryTime[1] }}</span>
+                <span class="white-space-pre-wrap" fxFlex>{{ logEntryTime[1] }}</span>
               </div>
             </ng-container>
           </ng-container>
