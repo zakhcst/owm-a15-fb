@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ITimeTemplate } from 'src/app/models/hours.model';
 import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from 'src/app/services/constants.service';
@@ -24,7 +24,7 @@ export class DataCellComponent implements OnInit, OnDestroy {
 
   @Select(AppStatusState.showDetailTimeSlotBgPicture) showDetailTimeSlotBgPicture$: Observable<boolean>;
 
-  constructor() {}
+  constructor(private ref: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.setIcons();
@@ -59,6 +59,7 @@ export class DataCellComponent implements OnInit, OnDestroy {
         'background-color': this.timeSlot.bgColor,
       };
     }
+    this.ref.detectChanges();
   }
 
   ngOnDestroy() {
