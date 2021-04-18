@@ -1,9 +1,4 @@
-.table-cell_data_empty-background {
-  min-width: var(--hour-slot-min-width);
-}
-
 .table-cell_data-background {
-  min-width: var(--hour-slot-min-width);
   padding: 2px 0 2px 0;
   box-sizing: border-box;
   overflow: hidden;

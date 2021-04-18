@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { ITimeTemplate } from 'src/app/models/hours.model';
 import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from 'src/app/services/constants.service';
@@ -24,14 +24,16 @@ export class DataCellComponent implements OnInit, OnDestroy {
 
   @Select(AppStatusState.showDetailTimeSlotBgPicture) showDetailTimeSlotBgPicture$: Observable<boolean>;
 
-  constructor(private ref: ChangeDetectorRef) {}
+  constructor(private hostElementRef: ElementRef) {}
 
   ngOnInit() {
-    this.setIcons();
-    this.subscribeShowBackgroundPictire();
+    if (this.dataDaily[this.timeSlot.hour]) {
+      this.setWeatherConditionIcon();
+      this.subscribeShowBackgroundPictire();
+    }
   }
   
-  setIcons() {
+  setWeatherConditionIcon() {
     if (this.dataDaily[this.timeSlot.hour]) {
       const iconCode = this.dataDaily[this.timeSlot.hour].weather[0].icon;
       const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
@@ -49,17 +51,11 @@ export class DataCellComponent implements OnInit, OnDestroy {
   }
   
   setBackground(showDetailTimeSlotBgPicture: boolean) {
-    if (this.dataDaily[this.timeSlot.hour] && showDetailTimeSlotBgPicture) {
-      const bgImgPath = ConstantsService.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]);
-      this.timeSlotBgStyle = {
-        'background-image': `url(${bgImgPath})`,
-      };
-    } else {
-      this.timeSlotBgStyle = {
-        'background-color': this.timeSlot.bgColor,
-      };
+    if (this.dataDaily[this.timeSlot.hour]) {
+      const bgImgPath = showDetailTimeSlotBgPicture ? ConstantsService.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]) : '';
+      this.hostElementRef.nativeElement.style['background-image'] = showDetailTimeSlotBgPicture ? `url(${bgImgPath})` : '';
+      this.hostElementRef.nativeElement.style['background-color'] = showDetailTimeSlotBgPicture ? '' : this.timeSlot.bgColor;
     }
-    this.ref.detectChanges();
   }
 
   ngOnDestroy() {

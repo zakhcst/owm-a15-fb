@@ -1,16 +1,10 @@
-<span
-  fxFlex
-  *ngIf="!dataDaily[timeSlot.hour]"
-  class="table-cell_data_empty-background"
-></span>
 <div
   fxFlex
   fxLayout="column"
   fxLayoutAlign="center center"
   *ngIf="dataDaily[timeSlot.hour]"
   class="table-cell_data-background"
-  [ngStyle]="timeSlotBgStyle"
->
+  >
   <div fxFlex fxLayout="column" fxLayoutAlign="center center">
     <div fxFlex fxLayout="row" fxLayoutAlign="center center">
       <div class="icons-weather" [ngStyle]="conditionStyle"></div>
