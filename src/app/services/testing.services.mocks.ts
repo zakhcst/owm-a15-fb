@@ -6,7 +6,7 @@ import { AppErrorPayloadModel, AppHistoryPayloadModel } from '../states/app.mode
 
 import dataJSON from '../../assets/owm-fallback-data.json';
 import citiesJSON from '../../../misc/cities-obj.json';
-import { ISnackbarData } from '../models/snackbar.model';
+import { IPopupModel } from '../models/snackbar.model';
 
 export const data = <IOwmDataModel>(<any>dataJSON);
 
@@ -189,9 +189,9 @@ export class MockAngularFireService {
 }
 
 export class MockSnackbarService {
-  data: ISnackbarData[] = [];
+  data: IPopupModel[] = [];
 
-  show(newData: ISnackbarData) {
+  show(newData: IPopupModel) {
     this.data.push(newData);
   }
 }

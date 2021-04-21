@@ -4,6 +4,7 @@ import { ICities } from '../models/cities.model';
 import { IStats } from '../models/stats.model';
 import { IHistoryLog } from '../models/history-log.model';
 import { IStatusBuildInfo } from '../models/build-info.model';
+import { IPopupModel, PopupType } from '../models/snackbar.model';
 
 export class SetOwmDataCacheState {
   static readonly type = '[owmDataCache] set';
@@ -109,4 +110,13 @@ export class SetFallbackDataState {
 export class SetStatusBuildInfo {
   static readonly type = '[build info] set';
   constructor(public payload: IStatusBuildInfo) {}
+}
+
+export class SetPopupMessage {
+  static readonly type = '[popup message] set';
+  constructor(public payload: IPopupModel) {}
+}
+export class SetStatusPopupType {
+  static readonly type = '[status] set Popup Type';
+  constructor(public payload: PopupType) {}
 }

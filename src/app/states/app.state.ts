@@ -24,9 +24,16 @@ import {
   SetStatusShowGChartIcons,
   SetStatusShowLoading,
   SetStatusBuildInfo,
+  SetPopupMessage,
+  SetStatusPopupType,
 } from './app.actions';
-import { AppStatusModel, AppErrorsStateModel, HistoryLogModel, ErrorRecordModel, IOwmDataCacheModel } from './app.models';
-import { SnackbarService } from '../services/snackbar.service';
+import {
+  AppStatusModel,
+  AppErrorsStateModel,
+  HistoryLogModel,
+  ErrorRecordModel,
+  IOwmDataCacheModel,
+} from './app.models';
 import { HistoryLogUpdateService } from '../services/history-log-update.service';
 import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
@@ -35,6 +42,7 @@ import { NormalizeDataService } from '../services/normalize-data.service';
 import { ICities } from '../models/cities.model';
 import { IStats } from '../models/stats.model';
 import { IHistoryLog } from '../models/history-log.model';
+import { IPopupModel, PopupType } from '../models/snackbar.model';
 
 @State<AppStatusModel>({
   name: 'status',
@@ -48,6 +56,7 @@ import { IHistoryLog } from '../models/history-log.model';
     updatesAvailable: false,
     liveDataUpdate: true,
     daysForecast: 5,
+    popupType: PopupType.TOAST,
     showLoading: false,
     buildInfo: null,
 
@@ -66,8 +75,7 @@ export class AppStatusState {
   constructor(
     private normalizedData: NormalizeDataService,
     private _store: Store,
-    private _snackbar: SnackbarService,
-  ) { }
+  ) {}
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -106,6 +114,11 @@ export class AppStatusState {
   @Selector()
   static daysForecast(state: AppStatusModel) {
     return state.daysForecast;
+  }
+
+  @Selector()
+  static popupType(state: AppStatusModel) {
+    return state.popupType;
   }
 
   @Selector()
@@ -165,10 +178,10 @@ export class AppStatusState {
     const cityName = cities[selectedCityId].name;
     const countryISO2 = cities[selectedCityId].iso2;
     if (cities && cityName && countryISO2) {
-      this._snackbar.show({
+      this._store.dispatch(new SetPopupMessage({
         message: `Selected: ${cityName}, ${countryISO2}`,
-        class: 'snackbar__info',
-      });
+        class: 'popup__info',
+      }));
     }
     context.patchState({ selectedCityId });
   }
@@ -181,6 +194,11 @@ export class AppStatusState {
   @Action(SetStatusDaysForecast)
   setStatusDaysForecast(context: StateContext<AppStatusModel>, action: SetStatusDaysForecast) {
     context.patchState({ daysForecast: action.payload });
+  }
+
+  @Action(SetStatusPopupType)
+  setStatusPopupType(context: StateContext<AppStatusModel>, action: SetStatusPopupType) {
+    context.patchState({ popupType: action.payload });
   }
 
   @Action(SetStatusConnected)
@@ -279,8 +297,7 @@ export class AppOwmDataCacheState {
   constructor(
     private _store: Store,
     private _historyLogUpdate: HistoryLogUpdateService,
-    private _snackbar: SnackbarService,
-  ) { }
+  ) {}
 
   @Selector([AppStatusState, AppFallbackDataState])
   static selectOwmDataCacheSelectedCity(state: IOwmDataModel, status: AppStatusModel, fallbackData: IOwmDataModel) {
@@ -311,10 +328,10 @@ export class AppOwmDataCacheState {
 
       const cityName = owmData.city.name;
       const countryISO2 = owmData.city.country;
-      this._snackbar.show({
+      this._store.dispatch(new SetPopupMessage({
         message: `Refreshed: ${cityName}, ${countryISO2}`,
-        class: 'snackbar__info',
-      });
+        class: 'popup__info',
+      }));
       return Promise.all(updatesPromiseArray);
     }
   }
@@ -336,7 +353,7 @@ const defaultErrorsRecord = {
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(private _errors: ErrorsService, private _snackbar: SnackbarService, private _store: Store) { }
+  constructor(private _errors: ErrorsService, private _store: Store) {}
 
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
@@ -351,10 +368,11 @@ export class AppErrorsState {
       sessionErrors: [...context.getState().sessionErrors, newEntry],
     };
     context.patchState(update);
-    this._snackbar.show({
+    this._store.dispatch(new SetPopupMessage({
       message: `Error: ${action.payload.userMessage}`,
-      class: 'snackbar__error',
-    });
+      class: 'popup__error',
+    }));
+
     return this._errors.setDataToFB(normalizedIp, newEntry);
   }
 }
@@ -407,5 +425,24 @@ export class AppHistoryLogState {
   @Action(SetHistoryLogState)
   setHistoryLogState(context: StateContext<IHistoryLog>, action: SetHistoryLogState) {
     context.setState(action.payload);
+  }
+}
+@State<IPopupModel>({
+  name: 'popupMessages',
+  defaults: null,
+})
+@Injectable()
+export class AppPopupMessages {
+  @Selector()
+  static selectPopupMessages(state: IPopupModel) {
+    return state;
+  }
+
+  @Action(SetPopupMessage)
+  setPopupMessage(context: StateContext<IPopupModel>, action: SetPopupMessage) {
+    const state = context.getState();
+    if (!state || state.message !== action.payload.message) {
+      context.setState(action.payload);
+    }
   }
 }

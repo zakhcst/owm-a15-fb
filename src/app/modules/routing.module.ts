@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { SharedModule } from './shared.module';
+
+import { ConstantsService } from '../services/constants.service';
 import { HeaderToolbarComponent } from '../components/header-toolbar/header-toolbar.component';
 import { HeaderToolbarModule } from '../components/header-toolbar/header-toolbar.module';
 import { ErrorPageComponent } from '../components/error-page/error-page.component';
-import { ConstantsService } from '../services/constants.service';
 import { ResolverCitiesService } from './routing-resolvers/resolver-cities.service';
 import { ResolverRegisterIconsService } from './routing-resolvers/resolver-register-icons.service';
 import { ResolverIpService } from './routing-resolvers/resolver-ip.service';
 import { ResolverFallbackService } from './routing-resolvers/resolver-fallback.service';
-import { CanActivateGchart, CanLoadGChart } from './routing-guards/gchart.guard';
+import { CanActivateGchart, CanLoadGchart } from './routing-guards/gchart.guard';
 
 export const appRoutes: Routes = [
   {
@@ -36,7 +36,7 @@ export const appRoutes: Routes = [
       {
         path: ConstantsService.toolbarElements.forecastGChart.path,
         canActivate: [CanActivateGchart],
-        canLoad: [CanLoadGChart],
+        canLoad: [CanLoadGchart],
         loadChildren: () =>
           import('src/app/components/forecast-gchart/forecast-gchart.module').then((m) => m.ForecastGChartModule),
         pathMatch: 'full',
@@ -70,7 +70,7 @@ export const appRoutes: Routes = [
     }),
     HeaderToolbarModule,
   ],
-  exports: [SharedModule, RouterModule],
-  providers: [CanActivateGchart, CanLoadGChart],
+  exports: [RouterModule],
+  providers: [CanActivateGchart, CanLoadGchart],
 })
 export class AppRoutingModule {}

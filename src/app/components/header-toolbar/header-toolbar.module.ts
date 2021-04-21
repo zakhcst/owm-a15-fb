@@ -5,13 +5,14 @@ import { SharedModule } from '../../modules/shared.module';
 import { HeaderToolbarComponent } from './header-toolbar.component';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { RequiredModules } from 'src/app/modules/required.module';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+// import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ToastOverlayComponent } from '../toast-overlay/toast-overlay.component';
 
 @NgModule({
-  declarations: [HeaderToolbarComponent, DialogSettingsComponent],
+  declarations: [HeaderToolbarComponent, DialogSettingsComponent, ToastOverlayComponent],
 
-  imports: [RequiredModules, RouterModule, SharedModule, MatSlideToggleModule],
-  exports: [RequiredModules, DialogSettingsComponent],
+  imports: [RequiredModules, RouterModule, SharedModule],
+  exports: [RequiredModules, RouterModule, SharedModule],
   entryComponents: [DialogSettingsComponent],
 })
 export class HeaderToolbarModule { }

@@ -18,12 +18,12 @@ import { SliceArrayPipe } from '../pipes/slice-array.pipe';
     LayoutsModules,
   ],
   exports: [
-    SortCitiesPipe,
-    ReplacePipe,
-    SortKeysPipe,
     AngularMaterialModule,
     LayoutsModules,
+    ReplacePipe,
     SliceArrayPipe,
+    SortCitiesPipe,
+    SortKeysPipe,
   ]
 })
 export class SharedModule { }

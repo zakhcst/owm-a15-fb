@@ -10,6 +10,7 @@ import {
   SetStatusShowGChartIcons,
   SetStatusShowGChartWind,
   SetStatusShowGChartHumidity,
+  SetStatusPopupType,
 } from 'src/app/states/app.actions';
 import { Store, Select } from '@ngxs/store';
 import { AppStatusState } from '../../states/app.state';
@@ -19,6 +20,7 @@ import { buildInfo } from '../../../build-info';
 import { RouterState } from '@ngxs/router-plugin';
 import { ConstantsService } from 'src/app/services/constants.service';
 import { IStatusBuildInfo } from 'src/app/models/build-info.model';
+import { PopupType } from 'src/app/models/snackbar.model';
 
 @Component({
   selector: 'app-dialog-settings',
@@ -32,6 +34,7 @@ export class DialogSettingsComponent implements OnInit {
   buildVersion = buildInfo.version;
   showDetailTimeSlotBgPicture: boolean;
   liveDataUpdate: boolean;
+  popupType: PopupType;
   daysForecast: number;
   daysForecastOld: number;
   showDetailPressure: boolean;
@@ -59,6 +62,7 @@ export class DialogSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.showDetailTimeSlotBgPicture = this._store.selectSnapshot(AppStatusState.showDetailTimeSlotBgPicture);
     this.liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
+    this.popupType = this._store.selectSnapshot(AppStatusState.popupType);
     this.daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
     this.showDetailPressure = this._store.selectSnapshot(AppStatusState.showDetailPressure);
     this.showDetailWind = this._store.selectSnapshot(AppStatusState.showDetailWind);
@@ -73,16 +77,21 @@ export class DialogSettingsComponent implements OnInit {
     this.daysForecastOld = this.daysForecast;
     this.reposition();
   }
+  
+  toggleLiveDataUpdate() {
+    this.liveDataUpdate = !this.liveDataUpdate;
+    this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
+  }
+
+  togglePopupType() {
+    this.popupType = this.popupType == PopupType.TOAST ? PopupType.SNACKBAR : PopupType.TOAST;
+    this._store.dispatch(new SetStatusPopupType(this.popupType));
+  }
 
   updateDaysForecast() {
     if (this.daysForecastOld === this.daysForecast) { return; }
     this.daysForecastOld = this.daysForecast;
     this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
-  }
-
-  toggleLiveDataUpdate() {
-    this.liveDataUpdate = !this.liveDataUpdate;
-    this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
   }
 
   toggleShowTimeSlotBgPicture() {

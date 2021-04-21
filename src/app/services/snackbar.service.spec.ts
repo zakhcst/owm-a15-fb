@@ -8,14 +8,14 @@ import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app
 import { ConstantsService } from './constants.service';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { ISnackbarData } from '../models/snackbar.model';
+import { IPopupModel } from '../models/snackbar.model';
 
 describe('SnackbarService', () => {
   let service: SnackbarService;
-  const testMessage = { message: `Message: Test`, class: 'snackbar__info' };
-  const calcDelay = () => ConstantsService.snackbarDuration * (testMessage.class === 'snackbar__error' ? 2 : 1);
+  const testMessage = { message: `Message: Test`, class: 'popup__info' };
+  const calcDelay = () => ConstantsService.snackbarDuration * (testMessage.class === 'popup__error' ? 2 : 1);
   const refStub = of({ dismissedByAction: false }).pipe(delay(calcDelay()));
-  const mockRef = (data: ISnackbarData): any => {
+  const mockRef = (data: IPopupModel): any => {
     return {
       afterDismissed() {
         return refStub;

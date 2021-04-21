@@ -1,5 +1,6 @@
 import { IStatusBuildInfo } from '../models/build-info.model';
 import { IOwmDataModel } from '../models/owm-data.model';
+import { PopupType } from '../models/snackbar.model';
 
 export interface HistoryLogModel {
   cityId: string;
@@ -20,6 +21,7 @@ export interface AppStatusModel {
   updatesAvailable: boolean;
   liveDataUpdate: boolean;
   daysForecast: number;
+  popupType: PopupType;
   showLoading: boolean;
   showDetailTimeSlotBgPicture: boolean;
   showDetailSecondary: boolean;

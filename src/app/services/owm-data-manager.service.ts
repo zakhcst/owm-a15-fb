@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { of, Observable, combineLatest } from 'rxjs';
-import { switchMap, catchError, tap, filter, distinctUntilChanged, timestamp } from 'rxjs/operators';
+import { switchMap, catchError, tap, filter, distinctUntilChanged } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
-import { SnackbarService } from './snackbar.service';
 import { OwmDataUtilsService } from './owm-data-utils.service';
 import { Store, Select } from '@ngxs/store';
-import { SetOwmDataCacheState, SetStatusShowLoading } from '../states/app.actions';
+import { SetOwmDataCacheState, SetPopupMessage, SetStatusShowLoading } from '../states/app.actions';
 import { IOwmDataModel } from '../models/owm-data.model';
-import { ISnackbarData } from '../models/snackbar.model';
+import { IPopupModel } from '../models/snackbar.model';
 import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
 import { StatsUpdateService } from './stats-update-dbrequests.service';
 
@@ -22,9 +21,9 @@ export interface IStatusChanges {
 })
 export class OwmDataManagerService {
 
-  snackbarOptions: ISnackbarData = {
+  popupOptions: IPopupModel = {
     message: '',
-    class: 'snackbar__warn',
+    class: 'popup__warn',
     delay: 500,
   };
 
@@ -38,7 +37,6 @@ export class OwmDataManagerService {
     private _statsUpdate: StatsUpdateService,
     private _errors: ErrorsService,
     private _store: Store,
-    private _snackbar: SnackbarService,
     private _utils: OwmDataUtilsService,
 
   ) {
@@ -79,7 +77,7 @@ export class OwmDataManagerService {
 
   getDataMemory(status: IStatusChanges): Observable<IOwmDataModel | null> {
     const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
-    this._snackbar.show({ ...this.snackbarOptions, message: 'Query memory cache' });
+    this._store.dispatch(new SetPopupMessage({ ...this.popupOptions, message: 'Query memory cache' }));
     if (lastOwmData && this._utils.isNotExpired(lastOwmData)) {
       return of(null);
     }
@@ -93,7 +91,7 @@ export class OwmDataManagerService {
       return this.getDataOWM(selectedCityId);
     }
 
-    this._snackbar.show({ ...this.snackbarOptions, message: 'Query DB' });
+    this._store.dispatch(new SetPopupMessage({ ...this.popupOptions, message: 'Query DB' }));
 
     return this._utils.getDataServiceOrTimeout(this._dbOwmData.getData(selectedCityId)).pipe(
       tap(() => this.updateStatsDBRequests(selectedCityId)),
@@ -116,7 +114,7 @@ export class OwmDataManagerService {
   }
 
   getDataOWM(cityId: string): Observable<IOwmDataModel | null> {
-    this._snackbar.show({ ...this.snackbarOptions, message: 'Query OWM' });
+    this._store.dispatch(new SetPopupMessage({ ...this.popupOptions, message: 'Query OWM' }));
     return this._utils.getDataServiceOrTimeout(this._owm.getData(cityId)).pipe(
       switchMap((newOwmData: IOwmDataModel) => of(this._utils.setListByDate(newOwmData))),
       tap((newOwmData: IOwmDataModel) => this._dbOwmData.setData(cityId, newOwmData)),

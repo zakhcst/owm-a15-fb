@@ -1,24 +1,18 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
   selector: 'app-snack-bar-inner',
   templateUrl: './app-snack-bar-inner.component.html',
   styleUrls: ['./app-snack-bar-inner.component.css'],
 })
-export class AppSnackBarInnerComponent implements OnInit {
+export class AppSnackBarInnerComponent {
   textColor: string;
-  textColorMap = {
-    snackbar__info: 'greenyellow',
-    snackbar__warn: 'goldenrod',
-    snackbar__error: 'red',
-  };
 
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {
-    this.textColor = this.textColorMap[data.class];
+    this.textColor = ConstantsService.messageTypeColor[data.class];
   }
-
-  ngOnInit() {}
 
 }
 

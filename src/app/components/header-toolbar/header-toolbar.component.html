@@ -120,7 +120,8 @@
     ></mat-icon>
   </div>
 
-  <div class="container-toolbar-outlet" (click)="hideActionButtonsXS($event)">
+  <div class="container-toolbar-outlet" (click)="hideActionButtonsXS($event)" cdkOverlayOrigin #connectedToElement="cdkOverlayOrigin">
     <router-outlet></router-outlet>
+    <app-toast-overlay [connectedToElement]="connectedToElement"></app-toast-overlay>
   </div>
 </section>

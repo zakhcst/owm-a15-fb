@@ -24,7 +24,7 @@ export class CanActivateGchart implements CanActivate {
 @Injectable({
   providedIn: 'root',
 })
-export class CanLoadGChart implements CanLoad {
+export class CanLoadGchart implements CanLoad {
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
 
   canLoad(): Observable<boolean> {

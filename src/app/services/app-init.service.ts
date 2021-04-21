@@ -7,6 +7,7 @@ import { SetStatusBuildInfo, SetStatusShowLoading, SetStatusUpdatesAvailable } f
 import { AppStatusState } from '../states/app.state';
 import { ConstantsService } from './constants.service';
 import { OwmDataManagerService } from './owm-data-manager.service';
+import { SnackbarService } from './snackbar.service';
 import { PresenceService } from './presence.service';
 
 @Injectable({
@@ -20,7 +21,8 @@ export class AppInitService {
     private _presence: PresenceService,
     private _updates: SwUpdate,
     private _store: Store,
-    private _owmDataManager: OwmDataManagerService
+    private _owmDataManager: OwmDataManagerService,
+    private _snackbarService: SnackbarService
 
   ) {
     this.initCss();

@@ -1,0 +1,14 @@
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="connectedToElement"
+    [cdkConnectedOverlayOpen]="isOpen"
+    [cdkConnectedOverlayPanelClass]="'overlay-position'"
+    [cdkConnectedOverlayPositions]="overlayPosition"
+
+  >
+    <ul class="items">
+      <li *ngFor="let item of items trackBy:i" [style.color]="item.textColor" @popup>
+        {{ item.message }}
+      </li>
+    </ul>
+  </ng-template>

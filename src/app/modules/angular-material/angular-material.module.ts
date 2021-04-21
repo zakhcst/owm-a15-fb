@@ -13,7 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
-
+import { OverlayModule } from '@angular/cdk/overlay'
 @NgModule({
   imports: [
     CommonModule,
@@ -29,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatTooltipModule,
     FormsModule,
+    OverlayModule,
   ],
   exports: [
     CommonModule,
@@ -44,6 +45,7 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatTooltipModule,
     FormsModule,
+    OverlayModule,
   ],
 })
 export class AngularMaterialModule {}

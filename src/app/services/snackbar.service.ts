@@ -7,14 +7,28 @@ import {
 } from '@angular/material/snack-bar';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
-import { ISnackbarData } from '../models/snackbar.model';
-import { Subscription } from 'rxjs';
+import { IPopupModel, PopupType } from '../models/snackbar.model';
+import { Observable, Subscription } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { AppPopupMessages, AppStatusState } from '../states/app.state';
+import { filter } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
 export class SnackbarService {
+  @Select(AppPopupMessages.selectPopupMessages) popupMessage$: Observable<IPopupModel>;
   public q = [];
-  constructor(private _matSnackbar: MatSnackBar, private zone: NgZone) {}
+
+  constructor(private _matSnackbar: MatSnackBar, private zone: NgZone, private _store: Store) {
+    this.subscribeToMessages();
+  }
+
+  subscribeToMessages() {
+    this.popupMessage$.pipe(filter((data) => !!data && this._store.selectSnapshot(AppStatusState.popupType) === PopupType.SNACKBAR )).subscribe((data: IPopupModel) => {
+      this.show(data);
+    });
+  }
+  
 
   // The non buffered version cancels(hides) the previous message regardless of the duration
   // show(data) {
@@ -26,7 +40,7 @@ export class SnackbarService {
   // The two cases are when:
   // client calls with a new message - just pushes the new message to the q
   // or self invoked on dismissing the previous one and there are more messages.
-  show(data: ISnackbarData) {
+  show(data: IPopupModel) {
     if (this.q[0] !== data) {
       this.q.push(data);
     }
@@ -44,13 +58,13 @@ export class SnackbarService {
     }
   }
 
-  ref(data: ISnackbarData): MatSnackBarRef<AppSnackBarInnerComponent> {
+  ref(data: IPopupModel): MatSnackBarRef<AppSnackBarInnerComponent> {
     const options: MatSnackBarConfig = {
       data,
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
       panelClass: data.class,
-      duration: data.delay || ConstantsService.snackbarDuration * (data.class === 'snackbar__error' ? 2 : 1),
+      duration: data.delay || ConstantsService.snackbarDuration * (data.class === 'popup__error' ? 2 : 1),
     };
     return this._matSnackbar.openFromComponent(AppSnackBarInnerComponent, options);
   }

@@ -28,6 +28,7 @@ export class ConstantsService {
         liveDataUpdate: true,
         daysForecast: true,
         slotsBackground: true,
+        popupType: true,
         'detail-pressure': true,
         'detail-wind': true,
         'detail-humidity': true,
@@ -44,6 +45,7 @@ export class ConstantsService {
       settingsOptions: {
         liveDataUpdate: true,
         daysForecast: true,
+        popupType: true,
         'gchart-wind': true,
         'gchart-humidity': true,
         'gchart-icons': true,
@@ -177,4 +179,10 @@ export class ConstantsService {
       return ConstantsService.getWeatherDefaultBgImg();
     }
   }
+
+  public static readonly messageTypeColor = {
+    popup__info: 'greenyellow',
+    popup__warn: 'goldenrod',
+    popup__error: 'red',
+  };
 }

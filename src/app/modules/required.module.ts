@@ -16,6 +16,7 @@ import {
   AppStatsState,
   AppHistoryLogState,
   AppFallbackDataState,
+  AppPopupMessages
 } from '../states/app.state';
 import { ConstantsService } from '../services/constants.service';
 
@@ -35,6 +36,7 @@ function setRequiredKeysAfterDeserialize(obj, state: string) {
       obj[key] = obj[key] ?? true;
     });
     obj['daysForecast'] = obj['daysForecast'] ?? 5;
+    obj['popupType'] = obj['popupType'] ?? 1;
     obj['selectedCityId'] = obj['selectedCityId'] ?? ConstantsService.defaultCityId;
 
   }
@@ -56,6 +58,7 @@ function setRequiredKeysAfterDeserialize(obj, state: string) {
         AppHistoryLogState,
         AppFallbackDataState,
         AppErrorsState,
+        AppPopupMessages,
       ],
       { developmentMode: !environment.production }
     ),

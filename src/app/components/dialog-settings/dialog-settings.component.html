@@ -12,6 +12,18 @@
       </mat-slide-toggle>
     </ng-container>
 
+    <ng-container *ngIf="settingsOptions['popupType']">
+      Toast/Snackbar
+      <mat-slide-toggle
+        style="transform: rotate(180deg)"
+        [color]="'primary'"
+        [checked]="!!popupType"
+        (toggleChange)="togglePopupType()"
+        (click)="$event.stopPropagation()"
+      >
+      </mat-slide-toggle>
+    </ng-container>
+
     <ng-container *ngIf="settingsOptions['daysForecast']">
       Days forecast
       <mat-slider

@@ -18,15 +18,17 @@ import { RouterModule } from '@angular/router';
   declarations: [ AppComponent, AppSnackBarInnerComponent ],
 
   imports: [
-    HttpClientModule,
-    RequiredModules,
+    RequiredModules, 
+    SharedModule, 
     AdditionalModules,
     AppRoutingModule,
-    RouterModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    SharedModule
   ],
-  exports: [ RequiredModules, SharedModule, RouterModule, AppRoutingModule ],
+  exports: [ 
+    RequiredModules, 
+    SharedModule, 
+    AdditionalModules,
+  ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandlerService },
     {
