@@ -38,7 +38,6 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
   scrollbarHeight = 0;
   listByDate: IListByDateModel;
   subscriptions: Subscription;
-  daysForecast = 5;
   frames = 10;
   scrolling = false;
 
@@ -64,7 +63,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
     const maxSlotsPerDay = this.timeTemplate.length;
     const gridContainer = this.gridContainer?.nativeElement;
     if (!gridContainer || gridContainer.scrollWidth === gridContainer.clientWidth) { return; }
-    
+
     const slotWidth = Math.round(gridContainer.scrollWidth / maxSlotsPerDay);
     const viewportSlots = Math.round(gridContainer.clientWidth / slotWidth);
 
@@ -75,7 +74,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (viewportSlots + todaySlotsCount > maxSlotsPerDay) { return; }
 
-    let scrollPositions = maxSlotsPerDay - todaySlotsCount;
+    const scrollPositions = maxSlotsPerDay - todaySlotsCount;
     this.animateScroll(gridContainer, scrollPositions, slotWidth);
   }
 
@@ -101,16 +100,10 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.addError('ngOnInit: onChange: subscribe', err.message);
       }
     );
-
-    const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
-      this.daysForecast = daysForecast;
-    });
-
-    this.subscriptions.add(daysForecastSubscription);
   }
 
   onMouseWheel(event: any) {
-    if (this.scrolling) return;
+    if (this.scrolling) { return; }
     if (this.gridContainer && !event.shiftKey) {
       const step = (event.deltaY * 2) / this.frames;
       let frameCount = 1;

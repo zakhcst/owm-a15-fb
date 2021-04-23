@@ -1,20 +1,30 @@
 <mat-card class="forecast-card">
   <div fxFlex fxLayout="column" fxFill class="content">
     <!-- A row of Date & Hours columns-->
-    <div fxFlex fxLayout="row" *ngIf="listByDate">
-      <!-- Date's column-->
+    <div
+      fxFlex
+      fxLayout="row"
+      *ngIf="listByDate && (daysForecast$ | async) as daysForecast"
+    >
+      <!-- Dates column-->
       <div #fullHeightColumn class="table-column-date" fxLayout="column">
         <div
           fxFlex="5%"
           fxLayout="column"
           class="table-cell_00"
-          fxLayoutAlign="center"
-        ></div>
+          fxLayoutAlign="center center"
+        >
+          {{ weatherData.updated | date: "dd/MM" }}
+          <br />
+          {{ weatherData.updated | date: "HH:mm" }}
+        </div>
 
         <div fxFlex fxFill fxLayout="column" id="daycolumn">
           <div
             fxFlex
-            *ngFor="let dataDaily of listByDate | keyvalue | sliceArray: daysForecast"
+            *ngFor="
+              let dataDaily of listByDate | keyvalue | sliceArray: daysForecast
+            "
           >
             <span fxFlex fxLayout="column" fxLayoutAlign="center center">
               <span>{{ dataDaily.key | date: "EEE" }}&nbsp;</span>
@@ -28,17 +38,17 @@
           </div>
         </div>
       </div>
-      <!-- / Date's column-->
+      <!-- Dates column-->
 
-      <!-- Hours columns-->
       <div
-        fxFlex
-        fxFill
-        fxLayout="column"
-        class="scroll-this"
-        #gridContainer
-        (wheel)="onMouseWheel($event)"
+      fxFlex
+      fxFill
+      fxLayout="column"
+      class="scroll-this"
+      #gridContainer
+      (wheel)="onMouseWheel($event)"
       >
+        <!-- Hours row -->
         <div fxFlex="5%" fxLayout="row" class="table-header">
           <span
             fxFlex
@@ -50,7 +60,7 @@
             {{ (timeSlot.hour > 9 ? "" : "0") + timeSlot.hour + ":00" }}
           </span>
         </div>
-        <!-- show a row for each day -->
+        <!-- Days rows -->
         <div fxFlex fxFill fxLayout="column">
           <div
             fxFlex
@@ -61,9 +71,7 @@
             *ngFor="let dataDaily of listByDate | keyvalue | sliceArray: daysForecast"
             @showTimeSlot
           >
-            <ng-container
-              *ngFor="let timeSlot of timeTemplate"
-            >
+            <ng-container *ngFor="let timeSlot of timeTemplate">
               <app-data-cell
                 fxFlex
                 fxFill
@@ -81,7 +89,6 @@
           </div>
         </div>
       </div>
-      <!-- Hours columns-->
     </div>
   </div>
 </mat-card>
