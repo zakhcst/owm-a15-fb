@@ -7,26 +7,27 @@ import { AppComponent } from './app.component';
 import { AppSnackBarInnerComponent } from './components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { AppRoutingModule } from './modules/routing.module';
 import { AppErrorHandlerService } from './services/app-error-handler.service';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { SharedModule } from './modules/shared.module';
-import { RouterModule } from '@angular/router';
+import { InitModules } from './modules/init.module';
 
 @NgModule({
-  declarations: [ AppComponent, AppSnackBarInnerComponent ],
+  declarations: [AppComponent, AppSnackBarInnerComponent],
 
   imports: [
-    RequiredModules, 
-    SharedModule, 
+    InitModules,
+    RequiredModules,
+    SharedModule,
     AdditionalModules,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
-  exports: [ 
-    RequiredModules, 
-    SharedModule, 
+  exports: [
+    RequiredModules,
+    SharedModule,
     AdditionalModules,
   ],
   providers: [
@@ -37,7 +38,7 @@ import { RouterModule } from '@angular/router';
       multi: true
     },
   ],
-  entryComponents: [ AppSnackBarInnerComponent ],
-  bootstrap: [ AppComponent ],
+  entryComponents: [AppSnackBarInnerComponent],
+  bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

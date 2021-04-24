@@ -5,7 +5,6 @@ import { SharedModule } from '../../modules/shared.module';
 import { HeaderToolbarComponent } from './header-toolbar.component';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { RequiredModules } from 'src/app/modules/required.module';
-// import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ToastOverlayComponent } from '../toast-overlay/toast-overlay.component';
 
 @NgModule({
