@@ -11,6 +11,7 @@ import { IOwmDataModel } from '../models/owm-data.model';
 import { IPopupModel } from '../models/snackbar.model';
 import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
 import { StatsUpdateService } from './stats-update-dbrequests.service';
+import { state } from '@angular/animations';
 
 export interface IStatusChanges {
   selectedCityId: string;
@@ -48,30 +49,29 @@ export class OwmDataManagerService {
   }
 
   subscribeOnStatusChange() {
-    const that = this;
-    let first = true;
-    let prev: any;
+    let previous: any[] = [null, true, false];
     combineLatest([this.selectedCityId$, this.connected$, this.away$])
       .pipe(
-        distinctUntilChanged((previous, current) => {
-          prev = previous;
-          const [prevCityId, prevConn, prevAway] = previous;
-          const [currCityId, currConn, currAway] = current;
-          if (
-            (currAway === true)
-            || (currConn === false)
-            || (prevCityId === currCityId && prevConn === currConn && prevAway === currAway)
-           ) {
-            return true;
+        filter((status) => {
+          const passCondition = 
+            status[1] === true && 
+            status[2] === false && 
+            (status[0] !== previous[0] || status[1] !== previous[1] || status[2] !== previous[2]);
+          if (!passCondition) {
+            previous = status;
           }
-        }),
-        filter(() => first ? first = false : true),
-        switchMap(status => of({ selectedCityId: status[0], previousSelectedCityId: prev[0] })),
+          return passCondition;
+        }
+        ),
         tap(() => this._store.dispatch(new SetStatusShowLoading(true))),
-        switchMap(this.getDataMemory.bind(that)),
+        switchMap(status => { 
+          const previousCurrentCityIds = { selectedCityId: status[0], previousSelectedCityId: (previous[0] || status[0]) };
+          previous = status;
+          return this.getDataMemory(previousCurrentCityIds);
+        }),
         tap(() => this._store.dispatch(new SetStatusShowLoading(false))),
         filter((data) => !!data)
-      ).subscribe((data) => {
+      ).subscribe((data: IOwmDataModel) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
       });
   }
