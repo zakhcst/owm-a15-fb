@@ -58,8 +58,9 @@ export class OwmDataManagerService {
           const [prevCityId, prevConn, prevAway] = previous;
           const [currCityId, currConn, currAway] = current;
           if (
-            (currAway === true) ||
-            (currConn === false)
+            (currAway === true)
+            || (currConn === false)
+            || (prevCityId === currCityId && prevConn === currConn && prevAway === currAway)
            ) {
             return true;
           }

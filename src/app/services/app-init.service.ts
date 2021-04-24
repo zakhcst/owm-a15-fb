@@ -3,7 +3,7 @@ import { Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStar
 import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
-import { SetStatusBuildInfo, SetStatusShowLoading, SetStatusUpdatesAvailable } from '../states/app.actions';
+import { SetStatusAway, SetStatusBuildInfo, SetStatusConnected, SetStatusShowLoading, SetStatusUpdatesAvailable } from '../states/app.actions';
 import { AppStatusState } from '../states/app.state';
 import { ConstantsService } from './constants.service';
 import { OwmDataManagerService } from './owm-data-manager.service';
@@ -51,7 +51,6 @@ export class AppInitService {
   }
 
   setSubscribeOnUpdates() {
-    this._store.dispatch(new SetStatusUpdatesAvailable(false));
     this.subscriptions.add(
       this._updates.available.subscribe((event) => {
         console.log('Current version is', event.current);
@@ -67,12 +66,19 @@ export class AppInitService {
   }
 
   startListenerOnAway() {
-    this._presence.updateOnAway();
+    const fn = () => {
+      const away = document.visibilityState === 'hidden';
+      this._store.dispatch(new SetStatusAway(away));
+    };
+    this._presence.updateOnAway(fn);
   }
 
   setSubscribeOnConnected() {
     this.subscriptions.add(
-      this._presence.updateOnConnected().subscribe((connected) => console.log('AppComponent connected', connected))
+      this._presence.updateOnConnected().subscribe((connected) => {
+        console.log('AppComponent connected', connected);
+        this._store.dispatch(new SetStatusConnected(!!connected));
+      })
     );
   }
 
@@ -94,6 +100,12 @@ export class AppInitService {
     ) {
       this._store.dispatch(new SetStatusShowLoading(false));
     }
+  }
+
+  shutdown() {
+    this._store.dispatch(new SetStatusConnected(false));
+    this._store.dispatch(new SetStatusAway(false));
+    this.subscriptions.unsubscribe()
   }
 
 }

@@ -181,6 +181,7 @@ export class AppStatusState {
       this._store.dispatch(new SetPopupMessage({
         message: `Selected: ${cityName}, ${countryISO2}`,
         class: 'popup__info',
+        delay: 500
       }));
     }
     context.patchState({ selectedCityId });
@@ -203,7 +204,10 @@ export class AppStatusState {
 
   @Action(SetStatusConnected)
   setStatusConnected(context: StateContext<AppStatusModel>, action: SetStatusConnected) {
-    context.patchState({ connected: action.payload });
+    const connected = context.getState().connected;
+    if (connected !== action.payload) {
+      context.patchState({ connected: action.payload });
+    }
   }
 
   @Action(SetStatusAway)
@@ -331,6 +335,7 @@ export class AppOwmDataCacheState {
       this._store.dispatch(new SetPopupMessage({
         message: `Refreshed: ${cityName}, ${countryISO2}`,
         class: 'popup__info',
+        delay: 500
       }));
       return Promise.all(updatesPromiseArray);
     }
@@ -440,9 +445,6 @@ export class AppPopupMessages {
 
   @Action(SetPopupMessage)
   setPopupMessage(context: StateContext<IPopupModel>, action: SetPopupMessage) {
-    const state = context.getState();
-    if (!state || state.message !== action.payload.message) {
-      context.setState(action.payload);
-    }
+    context.setState(action.payload);
   }
 }

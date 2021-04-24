@@ -19,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setSubscribeDebounceLoadingActions();
+    window.onbeforeunload = () => this.ngOnDestroy();
   }
 
   setSubscribeDebounceLoadingActions() {
@@ -36,5 +37,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.subscriptions) {
       this.subscriptions.unsubscribe();
     }
+    this.appInitService.shutdown();
   }
 }
