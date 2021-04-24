@@ -14,7 +14,7 @@ export class PopulateGchartDataService {
 
   setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[], showGraphs): any {
     this.chart = {};
-    const showGraphsKeys = Object.keys(showGraphs).filter((key) => !!key);
+    const showGraphsKeys = Object.keys(showGraphs).filter((key) => !!showGraphs[key]);
 
     Object.entries(weatherDataListByDate).forEach(([dayK, day]) => {
       const hoursKeys: number[] = Object.keys(day)
