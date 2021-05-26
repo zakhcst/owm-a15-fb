@@ -12,6 +12,10 @@ import { IOwmDataModel } from '../models/owm-data.model';
 export class OwmService {
   constructor(private _http: HttpClient, private _errors: ErrorsService) {}
 
+  httpGet(owmRequestUrl: string) {
+    return this._http.get<IOwmDataModel>(owmRequestUrl);
+  }
+
   getData(cityId: string): Observable<IOwmDataModel> {
     const owmRequestUrl =
       ConstantsService.default5DayForecastUrl +
@@ -22,25 +26,25 @@ export class OwmService {
       '&APPID=' +
       ConstantsService.defaultAPPID;
 
-    return this._http.get<IOwmDataModel>(owmRequestUrl).pipe(
-      catchError((err) => {
+    return this.httpGet(owmRequestUrl).pipe(
+      catchError((error) => {
         // openweathermap.org/faq
         // Q: API calls return an error 429
         // A: You will get the error 429 if you have FREE tariff and make more than 60 API calls per minute
         // To do update error message at quota error
-        if (err.code === 429) {
+        if (error.code === 429) {
           this._errors.add({
-            userMessage: 'FREE tariff, make more than 60 API calls per minute exceeded!',
-            logMessage: 'OwmService: FREE tariff, make more than 60 API calls per minute exceeded!' + err.message,
+            userMessage: 'FREE tariff, 60 API calls per minute quota exceeded!',
+            logMessage: 'OwmService: FREE tariff, 60 API calls per minute quota exceeded!' + error,
           });
         } else {
           this._errors.add({
             userMessage: 'OwmService API error',
-            logMessage: 'OwmService: API error' + err,
+            logMessage: 'OwmService: API error' + error,
           });
         }
 
-        return throwError(err);
+        return throwError(error);
       })
     );
   }

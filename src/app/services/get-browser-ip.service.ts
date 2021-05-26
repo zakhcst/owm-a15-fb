@@ -11,9 +11,8 @@ import { SetStatusIp } from '../states/app.actions';
   providedIn: 'root',
 })
 export class GetBrowserIpService {
-  getIPv4Subscription: Subscription;
-
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
+  connectedSubscription: Subscription;
 
   constructor(private _http: HttpClient, private _errors: ErrorsService, private _store: Store) {
     this.refreshIpOnConnect();
@@ -54,19 +53,19 @@ export class GetBrowserIpService {
   }
 
   refreshIpOnConnect() {
-    this.connected$
-      .subscribe((connected) => {
-        if (!connected) {
-          this._store.dispatch([new SetStatusIp('0.0.0.0')]);
-          return;
-        }
-
-        if (this.getIPv4Subscription) {
-          this.getIPv4Subscription.unsubscribe();
-        }
-        this.getIPv4Subscription = this.getIPv4().subscribe((ip: string) => {
-          this._store.dispatch([new SetStatusIp(ip)]);
-        });
-      });
+    this.connectedSubscription = this.connected$.subscribe((connected) => {
+      if (!connected) {
+        this._store.dispatch([new SetStatusIp('0.0.0.0')]);
+        return;
+      }
+      this.refreshIp();
+    });
   }
+
+  refreshIp() {
+    this.getIPv4().subscribe((ip: string) => {
+      this._store.dispatch([new SetStatusIp(ip)]);
+    });
+  }
+  
 }

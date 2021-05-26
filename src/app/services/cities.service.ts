@@ -10,7 +10,8 @@ import { AppCitiesState, AppStatusState } from '../states/app.state';
   providedIn: 'root',
 })
 export class CitiesService {
-  subscription: Subscription;
+  liveDataUpdateSubscription: Subscription;
+  getDataSubscription: Subscription;
   @Select(AppStatusState.liveDataUpdate) liveDataUpdate$: Observable<boolean>;
 
   constructor(private _db: AngularFireDatabase, private _store: Store) {
@@ -21,25 +22,34 @@ export class CitiesService {
     return this._db.object<ICities>('cities').valueChanges();
   }
 
-  activateLiveDataUpdatesCities() {
-    this.liveDataUpdate$.subscribe((liveDataUpdate) => {
-      if (this.subscription) {
-        this.subscription.unsubscribe();
+  subscribeToGetData() {
+    this.getDataSubscription = this.getData().subscribe((cities) => {
+      this.dispatch(cities);
+    });
+  }
+
+  getDataOnce() {
+    const ipHistoryLog = this._store.selectSnapshot(AppCitiesState.selectCities);
+    if (!ipHistoryLog) {
+      this.getData()
+        .pipe(take(1))
+        .subscribe((cities) => this.dispatch(cities));
+    }
+  }
+
+   activateLiveDataUpdatesCities() {
+    this.liveDataUpdateSubscription = this.liveDataUpdate$.subscribe((liveDataUpdate) => {
+      if (this.getDataSubscription) {
+        this.getDataSubscription.unsubscribe();
       }
       if (liveDataUpdate) {
-        this.subscription = this.getData().subscribe((cities) => {
-          this.dispatch(cities);
-        });
+        this.subscribeToGetData();
       } else {
-        const citiesCache = this._store.selectSnapshot(AppCitiesState.selectCities);
-        if (!citiesCache) {
-          this.getData()
-            .pipe(take(1))
-            .subscribe((cities) => this.dispatch(cities));
-        }
+        this.getDataOnce();
       }
     });
   }
+
   dispatch(cities) {
     this._store.dispatch(new SetCitiesState(cities));
   }

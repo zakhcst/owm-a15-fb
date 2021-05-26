@@ -11,7 +11,8 @@ import { SetHistoryLogState } from '../states/app.actions';
   providedIn: 'root',
 })
 export class HistoryLogService {
-  subscription: Subscription;
+  liveDataUpdateSubscription: Subscription;
+  getDataSubscription: Subscription;
   @Select(AppStatusState.liveDataUpdate) liveDataUpdate$: Observable<boolean>;
 
   constructor(private _db: AngularFireDatabase, private _store: Store) {
@@ -22,25 +23,34 @@ export class HistoryLogService {
     return this._db.object<IHistoryLog>(ConstantsService.historyLog).valueChanges();
   }
 
+  subscribeToGetData() {
+    this.getDataSubscription = this.getData().subscribe((logs) => {
+      this.dispatch(logs);
+    });
+  }
+
+  getDataOnce() {
+    const ipHistoryLog = this._store.selectSnapshot(AppHistoryLogState.selectHistoryLog);
+    if (!ipHistoryLog) {
+      this.getData()
+        .pipe(take(1))
+        .subscribe((logs) => this.dispatch(logs));
+    }
+  }
+
   activateLiveDataUpdatesHistoryLog() {
-    this.liveDataUpdate$.subscribe((liveDataUpdate) => {
-      if (this.subscription) {
-        this.subscription.unsubscribe();
+    this.liveDataUpdateSubscription = this.liveDataUpdate$.subscribe((liveDataUpdate) => {
+      if (this.getDataSubscription) {
+        this.getDataSubscription.unsubscribe();
       }
       if (liveDataUpdate) {
-        this.subscription = this.getData().subscribe((logs) => {
-          this.dispatch(logs);
-        });
+        this.subscribeToGetData();
       } else {
-        const ipHistoryLog = this._store.selectSnapshot(AppHistoryLogState.selectHistoryLog);
-        if (!ipHistoryLog) {
-          this.getData()
-            .pipe(take(1))
-            .subscribe((logs) => this.dispatch(logs));
-        }
+        this.getDataOnce();
       }
     });
   }
+
   dispatch(logs) {
     this._store.dispatch(new SetHistoryLogState(logs));
   }

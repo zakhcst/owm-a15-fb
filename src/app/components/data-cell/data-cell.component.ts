@@ -5,6 +5,7 @@ import { ConstantsService } from 'src/app/services/constants.service';
 import { AppStatusState } from 'src/app/states/app.state';
 import { Select } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
+import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 
 @Component({
   selector: 'app-data-cell',
@@ -24,7 +25,7 @@ export class DataCellComponent implements OnInit, OnDestroy {
 
   @Select(AppStatusState.showDetailTimeSlotBgPicture) showDetailTimeSlotBgPicture$: Observable<boolean>;
 
-  constructor(private hostElementRef: ElementRef) {}
+  constructor(private hostElementRef: ElementRef, private _utils: OwmDataUtilsService) {}
 
   ngOnInit() {
     if (this.dataDaily[this.timeSlot.hour]) {
@@ -52,7 +53,7 @@ export class DataCellComponent implements OnInit, OnDestroy {
   
   setBackground(showDetailTimeSlotBgPicture: boolean) {
     if (this.dataDaily[this.timeSlot.hour]) {
-      const bgImgPath = showDetailTimeSlotBgPicture ? ConstantsService.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]) : '';
+      const bgImgPath = showDetailTimeSlotBgPicture ? this._utils.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]) : '';
       this.hostElementRef.nativeElement.style['background-image'] = showDetailTimeSlotBgPicture ? `url(${bgImgPath})` : '';
       this.hostElementRef.nativeElement.style['background-color'] = showDetailTimeSlotBgPicture ? '' : this.timeSlot.bgColor;
     }

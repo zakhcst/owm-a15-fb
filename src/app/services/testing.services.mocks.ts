@@ -1,12 +1,14 @@
-import { EMPTY, of, throwError } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
-import { AppErrorPayloadModel, AppHistoryPayloadModel } from '../states/app.models';
+import { AppErrorPayloadModel, AppHistoryPayloadModel, HistoryLogModel } from '../states/app.models';
 
 import dataJSON from '../../assets/owm-fallback-data.json';
 import citiesJSON from '../../../misc/cities-obj.json';
 import { IPopupModel } from '../models/snackbar.model';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { IHistoryLog } from '../models/history-log.model';
 
 export const data = <IOwmDataModel>(<any>dataJSON);
 
@@ -51,28 +53,15 @@ export class MockDbOwmService {
     this.dbData = getNewDataObject();
     return cityId ? of(this.dbData) : throwError(new Error('MockDbOwmService:getData'));
   }
+  setData(data: IOwmDataModel) {
+    this.dbData = data;
+  }
 
   getOwmDataDebounced$({ showLoading }) {
     this.dbData = getNewDataObject();
-    // if (showLoading) {
-    //   this._store.dispatch(new SetStatusShowLoading(true));
-    // }
-    // return this.owmData$.pipe(
-    //   tap(() => {
-    //     if (showLoading) {
-    //       this._store.dispatch(new SetStatusShowLoading(true));
-    //     }
-    //   }),
-    //   filter((data) => !!data),
-    //   debounce((data: IOwmDataModel) => (data.updated ? of(null) : timer(1000))),
-    //   tap(() => {
-    //     if (showLoading) {
-    //       this._store.dispatch(new SetStatusShowLoading(false));
-    //     }
-    //   })
-    //   );
     return of(this.dbData);
   }
+
 }
 
 export class MockCitiesService {
@@ -143,6 +132,30 @@ export class MockErrorsService {
     this.messages.push(message);
   }
 }
+
+export class MockHttpBackend {
+  errorConnectionMessage: string;
+  errorHttpMessage: string;
+  responseMessage: string;
+  
+  setMessages(errorConnectionMessage, errorHttpMessage, responseMessage) {
+    this.errorConnectionMessage = errorConnectionMessage;
+    this.errorHttpMessage = errorHttpMessage;
+    this.responseMessage = responseMessage;
+  }
+
+  handle(request): Observable<any> {
+    if (request.url === 'error') {
+      return throwError(new Error(this.errorConnectionMessage));
+    } else if (request.url === 'http-error') {
+      return throwError(new HttpErrorResponse({error: new Error(this.errorHttpMessage) }));
+    } else {
+      return of(new HttpResponse({ status: 200, body: { message: this.responseMessage }} ));
+    }
+  }
+}
+
+
 export class MockHistoryService {
   messages: AppHistoryPayloadModel[] = [];
   constructor() {
@@ -159,7 +172,7 @@ export class MockHistoryService {
 export class MockAngularFireService {
   fbdata: any;
   refkey: any = '';
-  error = false;
+  error: any = false;
   ref = {
     valueChanges: this.valueChanges.bind(this),
     set: this.setData.bind(this),
@@ -177,14 +190,14 @@ export class MockAngularFireService {
     this.fbdata = fbdata;
     return fbdata ? Promise.resolve('Resolved') : Promise.reject('Rejected');
   }
-
+  
   update(fbdata: any) {
     this.fbdata = { ...this.fbdata, ...fbdata };
     return fbdata ? Promise.resolve('Resolved') : Promise.reject('Rejected');
   }
 
   valueChanges() {
-    return (this.fbdata && (!this.error ? of(this.fbdata) : throwError('No data MockAngularFireService'))) || of(null);
+    return (this.fbdata && (this.error ? throwError('MockAngularFireService Error: ' + this.error) : of(this.fbdata))) || of(null);
   }
 }
 
@@ -195,3 +208,76 @@ export class MockSnackbarService {
     this.data.push(newData);
   }
 }
+
+export class MockPresenceService  {
+  connected = new BehaviorSubject(false);
+  connectedUpdate(newValue) {
+    this.connected.next(newValue);
+  }
+  connectedComplete() {
+    this.connected.complete();
+  }
+  updateOnConnected() {
+    return this.connected;
+  }
+
+  updateOnAway(fn) {
+    fn();
+  }
+}
+
+export class MockSwUpdate {
+  eventUpdate = {
+    type: 'UPDATE_AVAILABLE',
+    current: {
+      hash: 'string',
+      appData: {
+        buildInfo: {
+          hash: '123456',
+          timeStamp: 1234567890123,
+          version: '0.11.1',
+        }
+      },
+    },
+    available: {
+      hash: 'string',
+      appData: { 
+        buildInfo: {
+          hash: '234567',
+          timeStamp: 1234567890987,
+          version: '0.11.2',
+        }
+       },
+    },
+  };
+
+  available = new Subject();
+
+  availableUpdate(event) {
+    this.available.next(event);
+  }
+
+  availableComplete() {
+    this.available.complete();
+  }
+}
+
+export class MockDocument { 
+  visibilityState = 'hidden';
+  documentElement = {
+    style: {
+      setProperty: (property: string, value: any) => {}
+    }
+  }
+};
+
+export const historyLogMockData: IHistoryLog  = { 
+  'dashed-ip1': {
+    'timeStamp1': 'cityId1'
+  }
+};
+
+export const historyLogMockModelData: HistoryLogModel  = { 
+  cityId: 'cityId',
+  time: 1234567890132
+};

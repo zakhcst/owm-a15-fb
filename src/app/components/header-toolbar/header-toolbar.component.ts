@@ -11,8 +11,8 @@ import {
 import { ICities } from '../../models/cities.model';
 import { Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
-import { debounce, filter, map, tap } from 'rxjs/operators';
-import { Subscription, Observable, timer, of } from 'rxjs';
+import { catchError, debounce, filter, map, switchMap, tap } from 'rxjs/operators';
+import { Subscription, Observable, timer, of, throwError } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { AppErrorPayloadModel } from '../../states/app.models';
@@ -58,6 +58,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   owmDataExpired = false;
   connected = true;
   updatesAvailable = false;
+  currentPageKey: (string | null) = null;
 
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
@@ -85,23 +86,26 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
     const subscriptionAvailableUpdates = this.updatesAvailable$.subscribe(updatesAvailable => {
       this.updatesAvailable = updatesAvailable;
     });
-    this.subscriptions.add(subscriptionAvailableUpdates);
+    this.subscriptions = subscriptionAvailableUpdates;
   }
 
   subscribeRouterEvents() {
+
     this.subscriptions = this._router.events
       .pipe(
         filter((event: Event) => event instanceof NavigationEnd),
-        map((event: ChildActivationEnd) => event['urlAfterRedirects'].split('/').pop() || event['url'].split('/').pop())
+        map((event: ChildActivationEnd) => event['urlAfterRedirects'].split('/').pop() || event['url'].split('/').pop()),
+        filter(eventPathEndSegment => eventPathEndSegment && (eventPathEndSegment in ConstantsService.toolbar)),
+        tap(eventPathEndSegment => this.currentPageKey = eventPathEndSegment),
+        // filter(eventPathEndSegment => (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment])),
       )
       .subscribe(
         (eventPathEndSegment) => {
-          if (eventPathEndSegment in ConstantsService.toolbar) {
-            if (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]) {
-              this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions;
-              this.settingsOptions = ConstantsService.toolbar[eventPathEndSegment].settingsOptions;
-              this.toolbarShow = true;
-            }
+          // if (eventPathEndSegment in ConstantsService.toolbar) {
+          if (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]) {
+            this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions;
+            // this.settingsOptions = ConstantsService.toolbar[eventPathEndSegment].settingsOptions;
+            this.toolbarShow = true;
           } else {
             this.toolbarShow = false;
           }
@@ -134,7 +138,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
           this.owmData = data;
           this.owmDataExpired = !this._utils.isNotExpired(data);
         }),
-        map((data: IOwmDataModel) => ConstantsService.getWeatherBgImg(data.list[0])),
+        map((data: IOwmDataModel) => this._utils.getWeatherBgImg(data.list[0])),
         filter((newDataImgPath: string) => {
           const currentBgImgPath = this.container.nativeElement.style['background-image'].split('"')[1];
           return currentBgImgPath !== newDataImgPath;
@@ -178,27 +182,30 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   showSettings(settingsButton) {
-    const dialogWidth = 300;
-    const dialogPositionTop = 60;
-    const dialogMargin = 75;
+    const { width, positionTop, margin } = ConstantsService.settingsDialogConfig;
+    const { collapsibleHeight } = ConstantsService.toolbar[this.currentPageKey].settingsDialog;
     const settingsButtonLeft = settingsButton._elementRef.nativeElement.offsetLeft;
     const settingsButtonoffsetWidth = settingsButton._elementRef.nativeElement.offsetWidth;
-    const dialogPositionLeft = settingsButtonLeft + (this.isXs() ? settingsButtonoffsetWidth + 10 : - (dialogWidth + 10));
+    const dialogPositionLeft = settingsButtonLeft + (this.isXs() ? settingsButtonoffsetWidth + 10 : - (width + 10));
     const config = {
       panelClass: 'dialog-settings',
       position: {
-        top: dialogPositionTop + 'px',
+        top: positionTop + 'px',
         left: dialogPositionLeft + 'px',
       },
-      width: dialogWidth + 'px',
-      data: { settingsButton, dialogPositionTop, dialogWidth, dialogMargin, mediaObserver: this.mediaObserver },
+      width: width + 'px',
+      data: {
+        settingsButton, positionTop, width, margin, collapsibleHeight,
+        mediaObserver: this.mediaObserver,
+        currentPageKey: this.currentPageKey
+
+      },
       hasBackdrop: true,
     };
 
     const windowHeight = window.innerHeight;
-    if (windowHeight < this.settingsOptions['dialogMaxHeight']) {
-      config['height'] = (windowHeight - dialogMargin) + 'px';
-    }
+    const dialogHeight = (windowHeight < collapsibleHeight) ? (windowHeight - margin + 'px') : 'auto';
+    config['height'] = dialogHeight;
 
     return this.dialog.open(DialogSettingsComponent, config);
   }

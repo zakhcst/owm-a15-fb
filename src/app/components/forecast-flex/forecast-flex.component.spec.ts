@@ -77,7 +77,7 @@ describe('ForecastFlexComponent services', () => {
   );
   
   it(
-    'scrollTodaySlotsInViewport should return when no gridContainer',
+    'should scrollTodaySlotsInViewport return when no gridContainer',
     waitForAsync(() => {
       const spyOnAnimateScroll = spyOn(component, 'animateScroll');
       fixture.detectChanges();

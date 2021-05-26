@@ -8,10 +8,15 @@ import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app
 import { ConstantsService } from './constants.service';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { IPopupModel } from '../models/snackbar.model';
+import { IPopupModel, PopupType } from '../models/snackbar.model';
+import { InitModules } from '../modules/init.module';
+import { Store } from '@ngxs/store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('SnackbarService', () => {
   let service: SnackbarService;
+  let store: Store;
+  let matSnackBar: MatSnackBar;
   const testMessage = { message: `Message: Test`, class: 'popup__info' };
   const calcDelay = () => ConstantsService.snackbarDuration * (testMessage.class === 'popup__error' ? 2 : 1);
   const refStub = of({ dismissedByAction: false }).pipe(delay(calcDelay()));
@@ -22,13 +27,19 @@ describe('SnackbarService', () => {
       },
     };
   };
+  const testData:IPopupModel  = {
+    message: 'message',
+    class: 'class',
+    delay: 100,
+  }
+  
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [AppSnackBarInnerComponent],
-        imports: [RequiredModules, AngularMaterialModule],
-        providers: [SnackbarService],
+        imports: [InitModules, RequiredModules, AngularMaterialModule],
+        providers: [SnackbarService, Store, MatSnackBar],
       })
         .overrideModule(BrowserDynamicTestingModule, {
           set: {
@@ -36,20 +47,37 @@ describe('SnackbarService', () => {
           },
         })
         .compileComponents();
+      store = TestBed.inject(Store);
     })
   );
 
   beforeEach(waitForAsync(() => {
-      service = TestBed.inject(SnackbarService);
-    })
+    service = TestBed.inject(SnackbarService);
+    matSnackBar = TestBed.inject(MatSnackBar);
+  })
   );
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should subscribeToMessages', fakeAsync(() => {
+    const spyOnStoreSelect = spyOn(store, 'selectSnapshot').and.returnValue(PopupType.SNACKBAR);
+    const spyOnPopupMessage = spyOnProperty(service, 'popupMessage$').and.returnValue(of(testData));
+    const spyOnShow = spyOn(service, 'show');
+    service.subscribeToMessages();
+    expect(spyOnShow).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should subscribeToMessages filter non snackbar', fakeAsync(() => {
+    const spyOnStoreSelect = spyOn(store, 'selectSnapshot').and.returnValue(PopupType.TOAST);
+    const spyOnPopupMessage = spyOnProperty(service, 'popupMessage$').and.returnValue(of(testData));
+    const spyOnShow = spyOn(service, 'show');
+    service.subscribeToMessages();
+    expect(spyOnShow).toHaveBeenCalledTimes(0);
+  }));
+
   it('should manage message queue', fakeAsync(() => {
-    // const spy = spyOn(service, 'ref').and.callThrough();
     const spy = spyOn(service, 'ref').and.callFake(mockRef);
 
     // Setting 3 elements
@@ -71,4 +99,20 @@ describe('SnackbarService', () => {
     tick(calcDelay() + 100);
     expect(service.q.length).toBe(0);
   }));
+
+  it('should ref when no delay', () => {
+    delete testData.delay;
+    const spyOnShow = spyOn(matSnackBar, 'openFromComponent');
+    service.ref(testData);
+    expect(spyOnShow).toHaveBeenCalledTimes(1);
+  });
+
+  it('should ref when error no delay', () => {
+    delete testData.delay;
+    testData.class = 'popup__error';
+    const spyOnShow = spyOn(matSnackBar, 'openFromComponent');
+    service.ref(testData);
+    expect(spyOnShow).toHaveBeenCalledTimes(1);
+  });
+
 });

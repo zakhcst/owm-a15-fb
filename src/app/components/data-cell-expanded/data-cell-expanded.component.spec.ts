@@ -1,10 +1,18 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Store } from '@ngxs/store';
 import { RequiredModules } from 'src/app/modules/required.module';
 import { DataCellExpandedComponent } from './data-cell-expanded.component';
 import { getNewDataObject } from '../../services/testing.services.mocks';
+import { InitModules } from 'src/app/modules/init.module';
+import { SharedModule } from 'src/app/modules/shared.module';
+
+export class MatDialogRefMock {
+  close() { }
+  open() { }
+  updatePosition() { }
+  updateSize() { }
+}
 
 
 describe('DataCellExpandedComponent', () => {
@@ -14,12 +22,15 @@ describe('DataCellExpandedComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ RequiredModules, MatSnackBarModule ],
+        imports: [InitModules, RequiredModules, SharedModule],
         declarations: [DataCellExpandedComponent],
 
-        providers: [ Store,
-          { provide: MatDialogRef, useValue: { close: function () {}} },
-          { provide: MAT_DIALOG_DATA, useValue: { timeSlotData: getNewDataObject().list[0]} },
+        providers: [Store,
+          { provide: MatDialogRef, useClass: MatDialogRefMock },
+          { provide: MAT_DIALOG_DATA, useValue: { 
+            timeSlotData: getNewDataObject().list[0],
+            bgColor: '#30509050'
+          } },
         ],
       }).compileComponents();
     })
@@ -33,6 +44,25 @@ describe('DataCellExpandedComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
+
+  it('should setBackground image', () => {
+    component.setBackground(true);
+    fixture.detectChanges();
+    expect(component.timeSlotBgStyle['background-image']).toBeTruthy();
+  });
+  it('should setBackground color', () => {
+    component.setBackground(false);
+    fixture.detectChanges();
+    expect(component.timeSlotBgStyle['background-color']).toBeTruthy();
+  });
+
+  it('should close dialog', () => {
+    const spyOnClose = spyOn(component.dialogRef, 'close');
+    component.closeDialog();
+    expect(spyOnClose).toHaveBeenCalled();
+  });
+
+
 });

@@ -17,10 +17,9 @@ import { AppStatusState } from '../../states/app.state';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { buildInfo } from '../../../build-info';
-import { RouterState } from '@ngxs/router-plugin';
-import { ConstantsService } from 'src/app/services/constants.service';
 import { IStatusBuildInfo } from 'src/app/models/build-info.model';
 import { PopupType } from 'src/app/models/snackbar.model';
+import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
   selector: 'app-dialog-settings',
@@ -28,6 +27,7 @@ import { PopupType } from 'src/app/models/snackbar.model';
   styleUrls: ['./dialog-settings.component.css'],
 })
 export class DialogSettingsComponent implements OnInit {
+
   buildName = environment.name;
   buildTime = buildInfo.timeStamp;
   buildHash = buildInfo.hash;
@@ -36,7 +36,7 @@ export class DialogSettingsComponent implements OnInit {
   liveDataUpdate: boolean;
   popupType: PopupType;
   daysForecast: number;
-  daysForecastOld: number;
+  daysForecastPrevious: number;
   showDetailPressure: boolean;
   showDetailWind: boolean;
   showDetailHumidity: boolean;
@@ -55,7 +55,8 @@ export class DialogSettingsComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<DialogSettingsComponent>,
+    // public dialogRef: MatDialogRef<DialogSettingsComponent>,
+    public dialogRef: MatDialogRef<any>,
     private _store: Store,
   ) { }
 
@@ -71,34 +72,28 @@ export class DialogSettingsComponent implements OnInit {
     this.showGChartHumidity = this._store.selectSnapshot(AppStatusState.showGChartHumidity);
     this.showGChartIcons = this._store.selectSnapshot(AppStatusState.showGChartIcons);
 
-    const routePathEndSegment = this._store.selectSnapshot(RouterState.url)?.split('/').pop() || ConstantsService.toolbarElements.forecastFlex.path;
-    this.settingsOptions = ConstantsService.toolbar[routePathEndSegment].settingsOptions;
-
-    this.daysForecastOld = this.daysForecast;
+    this.settingsOptions = ConstantsService.toolbar[this.data.currentPageKey].settingsOptions;
+    this.daysForecastPrevious = this.daysForecast;
     this.reposition();
   }
-  
+
   toggleLiveDataUpdate() {
     this.liveDataUpdate = !this.liveDataUpdate;
     this._store.dispatch(new SetStatusLiveDataUpdate(this.liveDataUpdate));
   }
-
   togglePopupType() {
     this.popupType = this.popupType == PopupType.TOAST ? PopupType.SNACKBAR : PopupType.TOAST;
     this._store.dispatch(new SetStatusPopupType(this.popupType));
   }
-
   updateDaysForecast() {
-    if (this.daysForecastOld === this.daysForecast) { return; }
-    this.daysForecastOld = this.daysForecast;
+    if (this.daysForecastPrevious === this.daysForecast) { return; }
+    this.daysForecastPrevious = this.daysForecast;
     this._store.dispatch(new SetStatusDaysForecast(this.daysForecast));
   }
-
   toggleShowTimeSlotBgPicture() {
     this.showDetailTimeSlotBgPicture = !this.showDetailTimeSlotBgPicture;
     this._store.dispatch(new SetStatusShowTimeSlotBgPicture(this.showDetailTimeSlotBgPicture));
   }
-
   toggleShowDetailPressure() {
     this.showDetailPressure = !this.showDetailPressure;
     this._store.dispatch(new SetStatusShowDetailPressure(this.showDetailPressure));
@@ -124,28 +119,34 @@ export class DialogSettingsComponent implements OnInit {
     this._store.dispatch(new SetStatusShowGChartIcons(this.showGChartIcons));
   }
 
-  isXs() {
+  get isXs() {
     return this.data.mediaObserver.isActive('xs500w');
   }
 
-  reposition() {
+  get dialogHeight() {
+    const windowHeight = window.innerHeight;
+    return (windowHeight < this.data.collapsibleHeight) ? (windowHeight - this.data.margin + 'px') : 'auto';
+  }
+
+  get dialogPositionLeft() {
+    const settingsButtonLeft = this.data.settingsButton._elementRef.nativeElement.offsetLeft || document.body.clientWidth;
+    const settingsButtonoffsetWidth = this.data.settingsButton._elementRef.nativeElement.offsetWidth;
+    return (settingsButtonLeft + (this.isXs ? settingsButtonoffsetWidth + 10 : -(this.data.width + 10)));
+  }
+
+  checkButtonVisibility() {
     const settingsButtonTop = this.data.settingsButton._elementRef.nativeElement.offsetTop;
     if (!settingsButtonTop) {
       this.closeDialog();
     }
-    const settingsButtonLeft =
-      this.data.settingsButton._elementRef.nativeElement.offsetLeft || document.body.clientWidth;
-    const isXs = this.isXs();
-    const settingsButtonoffsetWidth = this.data.settingsButton._elementRef.nativeElement.offsetWidth;
-    const dialogPositionLeft =
-      settingsButtonLeft + (isXs ? settingsButtonoffsetWidth + 10 : -(this.data.dialogWidth + 10));
-    const windowHeight = window.innerHeight;
-    if (windowHeight < this.settingsOptions['dialogMaxHeight']) {
-      this.dialogRef.updateSize(this.data.dialogWidth + 'px', windowHeight - this.data.dialogMargin + 'px');
-    }
+  }
+
+  reposition() {
+    this.checkButtonVisibility();
+    this.dialogRef.updateSize(this.data.width + 'px', this.dialogHeight);
     this.dialogRef.updatePosition({
       top: this.data.dialogPositionTop + 'px',
-      left: dialogPositionLeft + 'px',
+      left: this.dialogPositionLeft + 'px',
     });
   }
 

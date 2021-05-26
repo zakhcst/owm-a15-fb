@@ -32,7 +32,9 @@ export class ConstantsService {
         'detail-pressure': true,
         'detail-wind': true,
         'detail-humidity': true,
-        dialogMaxHeight: 470,
+      },
+      settingsDialog: {
+        collapsibleHeight: 470,
       },
     },
     'forecast-gchart': {
@@ -49,7 +51,9 @@ export class ConstantsService {
         'gchart-wind': true,
         'gchart-humidity': true,
         'gchart-icons': true,
-        dialogMaxHeight: 320,
+      },
+      settingsDialog: {
+        collapsibleHeight: 380,
       },
     },
     stats: {
@@ -60,9 +64,17 @@ export class ConstantsService {
       ],
       settingsOptions: {
         liveDataUpdate: true,
-        dialogMaxHeight: 122,
       },
+      settingsDialog: {
+        collapsibleHeight: 122,
+      }
     },
+  };
+
+  public static readonly settingsDialogConfig = {
+    width: 300,
+    positionTop: 60,
+    margin: 75,
   };
 
   public static readonly owmData = 'owm';
@@ -86,12 +98,26 @@ export class ConstantsService {
   );
   public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly iconsOwm = 'assets/icons-list/';
-  public static readonly iconsMeasures = 'assets/icons-measures/icons16x16-measures.png';
-  public static readonly iconsWeather = 'assets/icons-weather/icons-weather.png';
   public static readonly iconGithub = 'assets/icons-logo/icon32-github.svg';
   public static readonly iconExtLink = 'assets/icons-links/icon24-external-link.svg';
   public static readonly iconSettings = 'assets/icons-misc/settings-black-48dp.svg';
+
+  public static readonly initCssIconsList = [
+    'iconArrowWindDirection',
+    'iconsMeasures',
+    'iconsWeather'
+  ];
+  public static readonly iconsMeasures = 'assets/icons-measures/icons16x16-measures.png';
+  public static readonly iconsWeather = 'assets/icons-weather/icons-weather.png';
   public static readonly iconArrowWindDirection = 'assets/icons-misc/wind-arrow.svg';
+
+  public static readonly initCssShowPropertiesList = [
+    'showDetailPressure',
+    'showDetailWind',
+    'showDetailHumidity',
+    'showDetailSecondary'
+  ];
+
   // public static readonly arrow000Deg = String.fromCodePoint(8593);
   public static readonly arrow000Deg = String.fromCodePoint(11165);
   public static readonly snackbarDuration = 1500;
@@ -100,6 +126,7 @@ export class ConstantsService {
   public static readonly dataResponseTimeout_ms = 2500;
   public static readonly loadingDispatechesDebounceTime_ms = 100;
   public static readonly loadingDataDebounceTime_ms = 1000;
+  public static readonly popupDelay_ms = 2500;
 
   public static readonly iconsWeatherSize2 = 50;
   public static readonly iconsWeatherMap = {
@@ -158,31 +185,13 @@ export class ConstantsService {
     { hour: 21, bgColor: '#5080dd50', textColor: 'white' },
   ];
 
-  public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');
-  public static readonly weatherDefaultBgImgFileName = 'default.jpg';
-  public static readonly weatherBgImgPath = 'assets/backgrounds/';
-  public static readonly getWeatherDefaultBgImg = () =>
-    ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName
-
-  public static readonly getWeatherBgImg = (dataListHour: IOwmDataModelTimeSlotUnit) => {
-    const main = dataListHour.weather[0].main;
-    const syspod = dataListHour.sys.pod;
-
-    if (
-      main &&
-      main !== '' &&
-      ConstantsService.bgImgTypes.includes(main.toLocaleLowerCase()) &&
-      (syspod === 'd' || syspod === 'n')
-    ) {
-      return ConstantsService.weatherBgImgPath + main.toLocaleLowerCase() + '_' + syspod + '.jpg';
-    } else {
-      return ConstantsService.getWeatherDefaultBgImg();
-    }
-  }
-
   public static readonly messageTypeColor = {
     popup__info: 'greenyellow',
     popup__warn: 'goldenrod',
     popup__error: 'red',
   };
+  public static readonly bgImgTypes: string[] = 'clear clouds fog rain snow'.split(' ');
+  public static readonly weatherDefaultBgImgFileName = 'default.jpg';
+  public static readonly weatherBgImgPath = 'assets/backgrounds/';
+
 }

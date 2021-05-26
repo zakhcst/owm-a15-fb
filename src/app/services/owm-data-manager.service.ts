@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { of, Observable, combineLatest } from 'rxjs';
-import { switchMap, catchError, tap, filter, distinctUntilChanged } from 'rxjs/operators';
+import { switchMap, catchError, tap, filter } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
@@ -11,7 +11,7 @@ import { IOwmDataModel } from '../models/owm-data.model';
 import { IPopupModel } from '../models/snackbar.model';
 import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
 import { StatsUpdateService } from './stats-update-dbrequests.service';
-import { state } from '@angular/animations';
+
 
 export interface IStatusChanges {
   selectedCityId: string;
@@ -48,9 +48,9 @@ export class OwmDataManagerService {
     this.subscribeOnStatusChange();
   }
 
-  subscribeOnStatusChange() {
+  combineLatestStatus() {
     let previous: any[] = [null, true, false];
-    combineLatest([this.selectedCityId$, this.connected$, this.away$])
+    return combineLatest([this.selectedCityId$, this.connected$, this.away$])
       .pipe(
         filter((status) => {
           const passCondition = 
@@ -71,7 +71,11 @@ export class OwmDataManagerService {
         }),
         tap(() => this._store.dispatch(new SetStatusShowLoading(false))),
         filter((data) => !!data)
-      ).subscribe((data: IOwmDataModel) => {
+      );
+  }
+
+  subscribeOnStatusChange() {
+    this.combineLatestStatus().subscribe((data: IOwmDataModel) => {
         this._store.dispatch(new SetOwmDataCacheState(data));
       });
   }

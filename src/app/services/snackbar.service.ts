@@ -24,7 +24,11 @@ export class SnackbarService {
   }
 
   subscribeToMessages() {
-    this.popupMessage$.pipe(filter((data) => !!data && this._store.selectSnapshot(AppStatusState.popupType) === PopupType.SNACKBAR )).subscribe((data: IPopupModel) => {
+    this.popupMessage$.pipe(
+      filter((data) => 
+        !!data && this._store.selectSnapshot(AppStatusState.popupType) === PopupType.SNACKBAR 
+      )
+    ).subscribe((data: IPopupModel) => {
       this.show(data);
     });
   }

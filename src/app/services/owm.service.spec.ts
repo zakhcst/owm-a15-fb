@@ -42,7 +42,7 @@ describe('OwmService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return value', waitForAsync(() => {
+  it('should getData', waitForAsync(() => {
     spyOn(service, 'getData').and.returnValue(of(getNewDataObject()));
     service.getData(cityId).subscribe(
       (response) => {
@@ -56,6 +56,26 @@ describe('OwmService', () => {
     const errorMessage = 'Network or Server error';
     mockErrorsService.messages = [];
     const spyHttpClient = spyOn(httpClient, 'get').and.returnValue(throwError(errorMessage));
+    const spyMockErrorsServiceAdd = spyOn(mockErrorsService, 'add').and.callThrough();
+
+    service.getData(cityId).subscribe(
+      (response) => {
+        fail('service should have thrown error');
+        console.log(response);
+      },
+      (error) => {
+        expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);
+        expect(mockErrorsService.messages.length).toBe(1);
+        expect(mockErrorsService.messages[0].logMessage).toContain('OwmService:');
+        expect(mockErrorsService.messages[0].logMessage).toContain(errorMessage);
+      }
+    );
+  });
+
+  it('should catch, log and re-throw quota error', () => {
+    const errorMessage = 'quota';
+    mockErrorsService.messages = [];
+    const spyHttpClient = spyOn(httpClient, 'get').and.returnValue(throwError({ message: errorMessage, code: 429 }));
     const spyMockErrorsServiceAdd = spyOn(mockErrorsService, 'add').and.callThrough();
 
     service.getData(cityId).subscribe(

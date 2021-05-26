@@ -13,15 +13,8 @@ import { catchError } from 'rxjs/operators';
 export class ErrorsService {
   constructor(private _db: AngularFireDatabase, private _store: Store) {}
 
-
   getData(): Observable<ErrorLogModel> {
-    return this._db.object<ErrorLogModel>(ConstantsService.errorsLog).valueChanges().pipe(catchError(error => {
-      this.add({
-        userMessage: 'Connection or service problem',
-        logMessage: 'ErrorsService: getData: ' + error,
-      });
-      return throwError(error);
-    }));
+    return this._db.object<ErrorLogModel>(ConstantsService.errorsLog).valueChanges();
   }
 
   setDataToFB(normIp: string, data: ErrorRecordModel) {

@@ -97,7 +97,11 @@
               "src/assets",
               "src/manifest.webmanifest"
             ],
-            "codeCoverage": true
+            "codeCoverage": true,
+            "codeCoverageExclude": [
+              "**/*mock*.ts",
+              "src/app/modules/routing.module.ts"
+            ]
           }
         },
         "lint": {

@@ -18,7 +18,7 @@ describe('SortCitiesPipe', () => {
     pipe = new SortCitiesPipe();
   });
 
-  it('create an instance', () => {
+  it('should create', () => {
     expect(pipe).toBeTruthy();
   });
 

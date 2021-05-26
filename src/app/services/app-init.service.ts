@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
@@ -22,8 +23,8 @@ export class AppInitService {
     private _updates: SwUpdate,
     private _store: Store,
     private _owmDataManager: OwmDataManagerService,
-    private _snackbarService: SnackbarService
-
+    private _snackbarService: SnackbarService,
+    @Inject(DOCUMENT) private _document: Document,
   ) {
     this.initCss();
     this.setSubscribeOnRouterEvents();
@@ -33,28 +34,20 @@ export class AppInitService {
   }
 
   initCss() {
-    [
-      'iconArrowWindDirection',
-      'iconsMeasures',
-      'iconsWeather'
-    ].forEach((property) => {
-      document.documentElement.style.setProperty(`--${property}Url`, `url("../../../${ConstantsService[property]}")`);
+    ConstantsService.initCssIconsList.forEach((property) => {
+      this._document.documentElement.style.setProperty(`--${property}Url`, `url("../../../${ConstantsService[property]}")`);
     });
-    [
-      'showDetailPressure',
-      'showDetailWind',
-      'showDetailHumidity',
-      'showDetailSecondary'
-    ].forEach((property) => {
-      document.documentElement.style.setProperty('--' + property, this._store.selectSnapshot(AppStatusState[property]) ? 'flex' : 'none');
+    ConstantsService.initCssShowPropertiesList.forEach((property) => {
+      const display = this._store.selectSnapshot(AppStatusState[property]) && 'flex' || 'none';
+      this._document.documentElement.style.setProperty('--' + property, display);
     });
   }
 
   setSubscribeOnUpdates() {
     this.subscriptions.add(
       this._updates.available.subscribe((event) => {
-        console.log('Current version is', event.current);
-        console.log('New available version is', event.available);
+        console.log('Current version:', event.current);
+        console.log('New available version:', event.available);
         this._store.dispatch(new SetStatusUpdatesAvailable(true));
         const buildInfo = {
           current: (event.current?.appData as any)?.buildInfo,
@@ -67,7 +60,7 @@ export class AppInitService {
 
   startListenerOnAway() {
     const fn = () => {
-      const away = document.visibilityState === 'hidden';
+      const away = this._document.visibilityState === 'hidden';
       this._store.dispatch(new SetStatusAway(away));
     };
     this._presence.updateOnAway(fn);
@@ -91,6 +84,7 @@ export class AppInitService {
   checkRouterEvent(routerEvent: Event) {
     if (routerEvent instanceof NavigationStart) {
       this._store.dispatch(new SetStatusShowLoading(true));
+      return;
     }
 
     if (
@@ -99,13 +93,14 @@ export class AppInitService {
       routerEvent instanceof NavigationError
     ) {
       this._store.dispatch(new SetStatusShowLoading(false));
+      return;
     }
   }
 
   shutdown() {
     this._store.dispatch(new SetStatusConnected(false));
     this._store.dispatch(new SetStatusAway(false));
-    this.subscriptions.unsubscribe()
+    this.subscriptions.unsubscribe();
   }
 
 }

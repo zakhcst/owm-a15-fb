@@ -3,22 +3,25 @@ import { RequiredModules } from '../modules/required.module';
 import { GetBrowserIpService } from './get-browser-ip.service';
 import { of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { SharedModule } from '../modules/shared.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ErrorsService } from './errors.service';
 import { MockErrorsService } from './testing.services.mocks';
+import { InitModules } from '../modules/init.module';
+import { Store } from '@ngxs/store';
+import { cold } from 'jasmine-marbles';
+import { delay } from 'rxjs/operators';
 
 describe('GetBrowserIpService', () => {
   let service: GetBrowserIpService;
   let httpClient: HttpClient;
-  let httpTestingController: HttpTestingController;
   let mockErrorsService: MockErrorsService;
+  let store: Store;
 
   beforeEach(() => {
     mockErrorsService = new MockErrorsService();
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RequiredModules, SharedModule],
+      imports: [InitModules, HttpClientTestingModule, RequiredModules],
       providers: [
         {
           provide: ErrorsService,
@@ -28,8 +31,7 @@ describe('GetBrowserIpService', () => {
     });
 
     httpClient = TestBed.inject(HttpClient);
-    httpTestingController = TestBed.inject(HttpTestingController);
-
+    store = TestBed.inject(Store);
     service = TestBed.inject(GetBrowserIpService);
   });
 
@@ -54,12 +56,12 @@ describe('GetBrowserIpService', () => {
   });
 
   it('should getIP', waitForAsync(() => {
-      const validIP = '1.1.1.1';
-      spyOn(service, 'requestIPv4').and.returnValue(of(validIP));
-      service.getIPv4().subscribe((ip) => {
-        expect(ip).toBe(validIP);
-      });
-    })
+    const validIP = '1.1.1.1';
+    spyOn(service, 'requestIPv4').and.returnValue(of(validIP));
+    service.getIPv4().subscribe((ip) => {
+      expect(ip).toBe(validIP);
+    });
+  })
   );
 
   it('should return 255.255.255.255 on receiving invalid ipv4', () => {
@@ -94,4 +96,46 @@ describe('GetBrowserIpService', () => {
       }
     );
   });
+
+  it('should refreshIpOnConnect on not connected', waitForAsync(() => {
+    const q$ = cold('-f|', { t: true, f: false });
+    service.connectedSubscription.unsubscribe();
+    const spyOnDispatch = spyOn(store, 'dispatch');
+    const spyOnConnected$ = spyOnProperty(service, 'connected$').and.returnValue(q$);
+    const spyOnRefreshIP = spyOn(service, 'refreshIp');
+    
+    service.refreshIpOnConnect()
+    q$.pipe(delay(10)).subscribe(() => {
+      expect(spyOnDispatch).toHaveBeenCalledTimes(1);
+      expect(spyOnRefreshIP).toHaveBeenCalledTimes(0);
+    });
+    expect(spyOnConnected$).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should refreshIpOnConnect on connected', waitForAsync(() => {
+    const q$ = cold('-t|', { t: true, f: false });
+    service.connectedSubscription.unsubscribe();
+    const spyOnDispatch = spyOn(store, 'dispatch');
+    const spyOnConnected$ = spyOnProperty(service, 'connected$').and.returnValue(q$);
+    const spyOnRefreshIP = spyOn(service, 'refreshIp');
+    
+    service.refreshIpOnConnect();
+    q$.pipe(delay(10)).subscribe(() => {
+      expect(spyOnDispatch).toHaveBeenCalledTimes(0);
+      expect(spyOnRefreshIP).toHaveBeenCalledTimes(1);
+    });
+    expect(spyOnConnected$).toHaveBeenCalledTimes(1);
+  }));
+  
+  it('should refreshIp', waitForAsync(() => {
+    const q$ = cold('-d|', { d: 'test data' });
+    const spyOnDispatch = spyOn(store, 'dispatch');
+    const spyOnGetIPv4 = spyOn(service, 'getIPv4').and.returnValue(q$);
+    
+    service.refreshIp();
+    q$.pipe(delay(10)).subscribe(() => {
+      expect(spyOnDispatch).toHaveBeenCalledTimes(1);
+    });
+    expect(spyOnGetIPv4).toHaveBeenCalledTimes(1);
+  }));
 });

@@ -3,11 +3,10 @@
     [cdkConnectedOverlayOrigin]="connectedToElement"
     [cdkConnectedOverlayOpen]="isOpen"
     [cdkConnectedOverlayPanelClass]="'overlay-position'"
-    [cdkConnectedOverlayPositions]="overlayPosition"
-
+    [cdkConnectedOverlayPositions]="connectedPosition"
   >
     <ul class="items">
-      <li *ngFor="let item of items trackBy:i" [style.color]="item.textColor" @popup>
+      <li *ngFor="let item of items" [style.color]="item.textColor" @popup>
         {{ item.message }}
       </li>
     </ul>

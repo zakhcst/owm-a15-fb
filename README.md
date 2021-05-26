@@ -43,7 +43,7 @@ Run `. set-emu-env.sh` and in `firebase` `./start-emulator`
 
 ### Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ### Live instance
 
@@ -64,7 +64,9 @@ Development build is depolyed at: https://owm-a11-fb.web.app
 ![preview6](/misc/Screenshot_20210130_020912.jpg)
 
 
+
 ### Coverage
 
 ![coverage-all](/misc/owm-a11-fb-coverage-all.jpg)
 
+![coverage-services](/misc/owm-a11-coverage-services-Screenshot_20210526_142950.jpg)

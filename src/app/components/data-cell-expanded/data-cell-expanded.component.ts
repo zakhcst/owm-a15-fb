@@ -4,6 +4,7 @@ import { ConstantsService } from '../../services/constants.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
 import { AppStatusState } from 'src/app/states/app.state';
+import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 
 @Component({
   selector: 'app-data-cell-expanded',
@@ -21,7 +22,8 @@ export class DataCellExpandedComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DataCellExpandedComponent>,
-    private _store: Store
+    private _store: Store,
+    private _utils: OwmDataUtilsService,
   ) {
     this.timeSlotData = data.timeSlotData;
     this.dateTime = this.timeSlotData.dt * 1000;
@@ -40,7 +42,7 @@ export class DataCellExpandedComponent implements OnInit {
 
   setBackground(showDetailTimeSlotBgPicture: boolean) {
     if (showDetailTimeSlotBgPicture) {
-      const bgImgPath = ConstantsService.getWeatherBgImg(this.timeSlotData);
+      const bgImgPath = this._utils.getWeatherBgImg(this.timeSlotData);
       const urlBgImgPath = `url(${bgImgPath})`;
       this.timeSlotBgStyle = {
         'background-image': urlBgImgPath,

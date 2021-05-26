@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { AppInitService } from './services/app-init.service';
 import { AppStatusState } from './states/app.state';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators';
+import { WindowRefService } from './services/window.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,32 +12,23 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'owm-a11-fb';
-  loading = false;
-  subscriptions: Subscription;
+  loading: Observable<boolean>;
+
   @Select(AppStatusState.showLoading) showLoading$: Observable<boolean>;
 
-  constructor(private appInitService: AppInitService) { }
-
-  ngOnInit() {
-    this.setSubscribeDebounceLoadingActions();
-    window.onbeforeunload = () => this.ngOnDestroy();
+  constructor(private appInitService: AppInitService, private _windowRef: WindowRefService) {
+    this.loading = this.showLoading$.pipe(
+      startWith(false),
+      distinctUntilChanged(), 
+      debounceTime(50)
+    );
   }
 
-  setSubscribeDebounceLoadingActions() {
-    this.subscriptions = this.showLoading$
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(50),
-      )
-      .subscribe((loading) => {
-        this.loading = loading;
-      });
+  ngOnInit() {
+    this._windowRef.nativeWindow.onbeforeunload = () => this.ngOnDestroy();
   }
 
   ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.unsubscribe();
-    }
     this.appInitService.shutdown();
   }
 }

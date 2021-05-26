@@ -23,12 +23,12 @@ export class HttpInterceptorService implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           const _errors = this.injector.get(ErrorsService);
           let errorMessage = '';
-          if (error.error instanceof ErrorEvent) {
-            errorMessage = `Client Error: ${JSON.stringify(error.error.message)}`;
+          
+          if (error.error) {
+            errorMessage = `Client Error: ${JSON.stringify(error.error.message)} \n ${error.error}`;
           } else {
             errorMessage = `Server Error Code: ${error.status}\nMessage: ${error.message}`;
           }
-          console.log(errorMessage);
           _errors.add({
             userMessage: 'Connection or service problem',
             logMessage: 'HttpInterceptorService: ' + errorMessage

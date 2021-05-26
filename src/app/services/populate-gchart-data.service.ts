@@ -88,8 +88,8 @@ export class PopulateGchartDataService {
     if (i === 1) {
       data.push(data[0].slice(0));
       data[1][0] = '3:00';
+      i++;
     }
-    i++;
     while (i < timeTemplate.length && timeTemplate[i].hour > hoursKeys[hoursKeys.length - 1]) {
       const row: any[] = [timeTemplate[i++].hour + ':00'];
       this.setSlotNoData(row, showGraphsKeys);
@@ -107,7 +107,7 @@ export class PopulateGchartDataService {
       if (nextDay['0']) {
         nextDay1stSlot = nextDay['0'];
       } else {
-        const nextDay1stSlotKey = Object.keys(nextDay).sort()[0];
+        const nextDay1stSlotKey = Object.keys(nextDay).sort((a,b) => +(+a > +b))[0];
         nextDay1stSlot = nextDay[nextDay1stSlotKey];
       }
       last = ['23:59'];
@@ -129,22 +129,26 @@ export class PopulateGchartDataService {
     showGraphsKeys.forEach((graphKey: string) => {
       switch (graphKey) {
         case 'temperature':
-          row.push(slot.main.temp);
+          const roundTemp = Math.round(slot.main.temp);
+          row.push(roundTemp);
           row.push(
-            this.formatTooltipPoint(time, 'Temperature', Math.round(slot.main.temp), 'C' + String.fromCodePoint(176))
+            this.formatTooltipPoint(time, 'Temperature', roundTemp, 'C' + String.fromCodePoint(176))
           );
           break;
         case 'wind':
-          row.push(slot.wind.speed);
-          row.push(this.formatTooltipPoint(time, 'Wind', Math.round(slot.wind.speed), '&nbsp;m/s'));
+          const roundWind = Math.round(slot.wind.speed);
+          row.push(roundWind);
+          row.push(this.formatTooltipPoint(time, 'Wind', roundWind, '&nbsp;m/s'));
           break;
         case 'humidity':
-          row.push(slot.main.humidity);
-          row.push(this.formatTooltipPoint(time, 'Humidity', slot.main.humidity, '%'));
+          const roundHumidity = Math.round(slot.main.humidity);
+          row.push(roundHumidity);
+          row.push(this.formatTooltipPoint(time, 'Humidity', roundHumidity, '%'));
           break;
         case 'pressure':
-          row.push(slot.main.pressure);
-          row.push(this.formatTooltipPoint(time, 'Pressure', slot.main.pressure, '&nbsp;hPa'));
+          const roundPressure = Math.round(slot.main.pressure);
+          row.push(roundPressure);
+          row.push(this.formatTooltipPoint(time, 'Pressure', roundPressure, '&nbsp;hPa'));
           break;
       }
     });
@@ -233,12 +237,9 @@ export class PopulateGchartDataService {
     // copy existing slots
     Object.entries(day).forEach(([hourK, hour]) => {
       const iconCode = day[hourK].weather[0].icon;
-      const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
+      const iconIndex = ConstantsService.iconsWeatherMap[iconCode] ?? 0;
       const tooltipTxt = this.formatTooltipIcon(hour);
-      const iconStyle = {
-        'background-position':
-          '0 ' + (iconIndex ? '-' : '') + (iconIndex === undefined ? 1 : iconIndex) * iconSize + 'px',
-      };
+      const iconStyle = { 'background-position': '0 ' + iconIndex * (-iconSize) + 'px' };
       icons.push({ hourK, iconIndex, tooltipTxt, iconStyle });
     });
 

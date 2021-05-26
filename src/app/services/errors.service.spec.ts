@@ -1,19 +1,12 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { InitModules } from '../modules/init.module';
 import { RequiredModules } from '../modules/required.module';
-
-import { NgxsModule, Store } from '@ngxs/store';
-import {
-  AngularFireDatabaseModule,
-  AngularFireDatabase
-} from '@angular/fire/database';
-import { AngularFireModule } from '@angular/fire';
-import { environment } from '../../environments/environment.prod';
-
+import { AngularFireDatabase } from '@angular/fire/database';
+import { Store } from '@ngxs/store';
 
 import { ErrorsService } from './errors.service';
 import { MockAngularFireService } from './testing.services.mocks';
 import { ErrorRecordModel, AppErrorPayloadModel } from '../states/app.models';
-import { AppModule } from '../app.module';
 
 describe('ErrorsService', () => {
 
@@ -30,9 +23,7 @@ describe('ErrorsService', () => {
     mockAngularFireService = new MockAngularFireService();
 
     TestBed.configureTestingModule({
-      imports: [
-        AppModule,
-      ],
+      imports: [InitModules, RequiredModules],
       providers: [
         ErrorsService,
         { provide: AngularFireDatabase, useValue: mockAngularFireService },
@@ -40,13 +31,24 @@ describe('ErrorsService', () => {
       ]
     });
     service = TestBed.inject(ErrorsService);
+    TestBed.inject(AngularFireDatabase);
   }));
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call AngularFireDatabase set', waitForAsync(() => {
+  it('should getData', waitForAsync(() => {
+    mockAngularFireService.fbdata = 'test data';
+    const spyOnmockAngularFireService = spyOn(mockAngularFireService.ref, 'valueChanges').and.callThrough();
+    service.getData().subscribe((responseData) => {
+      expect(spyOnmockAngularFireService).toHaveBeenCalledTimes(1);
+      expect(responseData).toBe(mockAngularFireService.fbdata);
+    });
+  }));
+
+
+  it('should setDataToFB', waitForAsync(() => {
     const serviceFB = TestBed.inject(AngularFireDatabase);
     const afsObject = spyOn(serviceFB, 'object').and.callThrough();
 

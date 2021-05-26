@@ -136,16 +136,16 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       this.showGChartHumidity$
     ]).subscribe(
       ([data, wind, humidity]) => {
-        const showGraphs = { wind, humidity, temperature: true, pressure: true };
+        const showGraphs = { temperature: true, wind, humidity, pressure: true };
         this.weatherData = data;
         const dataDays = Object.keys(this.weatherData.listByDate).sort();
+        this.weatherDataDateKeys = [...dataDays];
         if (this.activeDays.length === 1) {
           if (!dataDays.includes(this.activeDays[0])) {
             this.activeDays[0] = dataDays[0];
           }
         } else {
           this.activeDays = dataDays;
-          this.weatherDataDateKeys = [...dataDays];
         }
         this.chart = this._populateGchartData.setGChartData(this.weatherData.listByDate, this.weatherDataDateKeys, showGraphs);
         this.resizeGraphs(this.activeDays);
