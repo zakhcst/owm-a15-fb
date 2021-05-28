@@ -128,7 +128,9 @@
       New version {{ (buildInfo$ | async)?.available?.version || "" }} is
       available
     </div>
-    <div>Please reload to update</div>
+    <div>Please 
+      <button mat-raised-button onclick="location.reload();" class="reload-button">Reload</button>
+      to update</div>
   </div>
   <div class="build-text">
     <div>Ver {{ buildVersion }} Rev {{ buildHash }} {{ buildName }}<br /></div>
