@@ -1,11 +1,11 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Store } from '@ngxs/store';
 import { InitModules } from '../modules/init.module';
 import { RequiredModules } from '../modules/required.module';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { cold } from 'jasmine-marbles';
 import { delay } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { ICity } from '../models/cities.model';
 import { CitiesService } from './cities.service';
 import { MockAngularFireService } from './testing.services.mocks';
@@ -56,35 +56,42 @@ describe('CitiesService', () => {
   }));
 
   it('should activateLiveDataUpdatesCities subscribeToGetData when liveDataUpdate$ is true', waitForAsync(() => {
-    const q$ = cold('-t|', { t: true, f: false });
-    service.getDataSubscription.unsubscribe();
+    service.getDataSubscription = new Subscription();
     service.liveDataUpdateSubscription.unsubscribe();
     const spyOnSubscribeToGetData = spyOn(service, 'subscribeToGetData');
     const spyOnGetDataOnce = spyOn(service, 'getDataOnce');
-    const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(q$);
+    const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(of(true));
 
-    q$.pipe(delay(10)).subscribe(() => {
-      expect(spyOnGetDataOnce).toHaveBeenCalledTimes(0);
-      expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(1);
-    });
     service.activateLiveDataUpdatesCities();
     expect(spyOnLiveDataUpdate$).toHaveBeenCalledTimes(1);
+    expect(spyOnGetDataOnce).toHaveBeenCalledTimes(0);
+    expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(1);
   }));
 
-  it('should activateLiveDataUpdatesCities getDataOnce when liveDataUpdate$ is false', waitForAsync(() => {
-    const q$ = cold('-f|', { t: true, f: false });
+  it('should activateLiveDataUpdatesCities subscribeToGetData when liveDataUpdate$ is true', waitForAsync(() => {
     service.getDataSubscription.unsubscribe();
     service.liveDataUpdateSubscription.unsubscribe();
     const spyOnSubscribeToGetData = spyOn(service, 'subscribeToGetData');
     const spyOnGetDataOnce = spyOn(service, 'getDataOnce');
-    const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(q$);
+    const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(of(true));
 
-    q$.pipe(delay(10)).subscribe(() => {
-      expect(spyOnGetDataOnce).toHaveBeenCalledTimes(1);
-      expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(0);
-    });
     service.activateLiveDataUpdatesCities();
     expect(spyOnLiveDataUpdate$).toHaveBeenCalledTimes(1);
+    expect(spyOnGetDataOnce).toHaveBeenCalledTimes(0);
+    expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should activateLiveDataUpdatesCities getDataOnce when liveDataUpdate$ is false', fakeAsync(() => {
+    service.getDataSubscription.unsubscribe();
+    service.liveDataUpdateSubscription.unsubscribe();
+    const spyOnSubscribeToGetData = spyOn(service, 'subscribeToGetData');
+    const spyOnGetDataOnce = spyOn(service, 'getDataOnce');
+    const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(of(false));
+    service.activateLiveDataUpdatesCities();
+    tick();
+    expect(spyOnLiveDataUpdate$).toHaveBeenCalledTimes(1);
+    expect(spyOnGetDataOnce).toHaveBeenCalledTimes(1);
+    expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(0);
   }));
 
   it('should getDataOnce when AppCitiesState.selectCities is null', waitForAsync(() => {

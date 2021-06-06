@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { Observable, Subscription } from 'rxjs';
 
@@ -39,11 +39,14 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
   listByDate: IListByDateModel;
   subscriptions: Subscription;
   frames = 10;
+  onMouseWheelIntervalDelay_ms = 20;
+  animateScrollRedrawDelay_ms = 1100;
+  animateScrollIntervalDelay_ms = 100;
   scrolling = false;
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
 
-  constructor(private _errors: ErrorsService, public dialog: MatDialog, private _utils: OwmDataUtilsService) {}
+  constructor(private _errors: ErrorsService, public dialog: MatDialog, private _utils: OwmDataUtilsService) { }
 
   ngOnInit() {
     this.subscribeOwmData();
@@ -64,8 +67,8 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
     const gridContainer = this.gridContainer?.nativeElement;
     if (!gridContainer || gridContainer.scrollWidth === gridContainer.clientWidth) { return; }
 
-    const slotWidth = Math.round(gridContainer.scrollWidth / maxSlotsPerDay);
-    const viewportSlots = Math.round(gridContainer.clientWidth / slotWidth);
+    const scrollSlotWidth = Math.round(gridContainer.scrollWidth / maxSlotsPerDay);
+    const viewportSlots = Math.round(gridContainer.clientWidth / scrollSlotWidth);
 
     const listByDateKeysSorted = Object.keys(this.listByDate).sort();
     const todayKey = listByDateKeysSorted[0];
@@ -75,19 +78,19 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
     if (viewportSlots + todaySlotsCount > maxSlotsPerDay) { return; }
 
     const scrollPositions = maxSlotsPerDay - todaySlotsCount;
-    this.animateScroll(gridContainer, scrollPositions, slotWidth);
+    this.animateScroll(gridContainer, scrollPositions, scrollSlotWidth);
   }
 
-  animateScroll(gridContainer, scrollPositions, slotWidth) {
+  animateScroll(gridContainer, scrollPositions, scrollSlotWidth) {
     setTimeout(() => {
       const interval = setInterval(() => {
-        gridContainer.scrollLeft += slotWidth;
+        gridContainer.scrollLeft += scrollSlotWidth;
         scrollPositions--;
         if (scrollPositions < 1) {
           clearInterval(interval);
         }
-      }, 100);
-    }, 1100);
+      }, this.animateScrollIntervalDelay_ms);
+    }, this.animateScrollRedrawDelay_ms);
   }
 
   subscribeOwmData() {
@@ -114,7 +117,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
           clearInterval(interval);
           this.scrolling = false;
         }
-      }, 20);
+      }, this.onMouseWheelIntervalDelay_ms);
     }
   }
 

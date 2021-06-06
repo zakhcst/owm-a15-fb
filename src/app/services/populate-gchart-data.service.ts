@@ -10,7 +10,7 @@ export class PopulateGchartDataService {
   textColor = '#FFF';
   weatherParams = ConstantsService.weatherParams;
   graphsKeys = ConstantsService.graphsKeys;
-  constructor() {}
+  constructor() { }
 
   setGChartData(weatherDataListByDate: IListByDateModel, weatherDataDateKeys: string[], showGraphs): any {
     this.chart = {};
@@ -31,7 +31,7 @@ export class PopulateGchartDataService {
         hoursKeys,
         showGraphsKeys
       );
-      this.chart[dayK].icons = this.setGChartDayIcons(dayK, day, hoursKeys);
+      this.chart[dayK].icons = this.setGChartDayIcons(day, hoursKeys);
       this.chart[dayK].options = this.setGChartDayOptions(showGraphsKeys);
     });
     return this.chart;
@@ -107,7 +107,7 @@ export class PopulateGchartDataService {
       if (nextDay['0']) {
         nextDay1stSlot = nextDay['0'];
       } else {
-        const nextDay1stSlotKey = Object.keys(nextDay).sort((a,b) => +(+a > +b))[0];
+        const nextDay1stSlotKey = Object.keys(nextDay).sort((a, b) => +(+a > +b))[0];
         nextDay1stSlot = nextDay[nextDay1stSlotKey];
       }
       last = ['23:59'];
@@ -221,7 +221,7 @@ export class PopulateGchartDataService {
     `;
   }
 
-  setGChartDayIcons(dayK: string, day: IListDayByHourModel, hoursKeys: number[]) {
+  setGChartDayIcons(day: IListDayByHourModel, hoursKeys: number[]) {
     const icons = [];
     const iconSize = ConstantsService.iconsWeatherSize2;
 

@@ -78,13 +78,13 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   setLog$(log$: Observable<any>, filterIp: boolean) {
-    return log$.pipe(filter((historyLog) => !!historyLog)).pipe(
-      switchMap((historyLog: IHistoryLog) => {
-        const sortedTrimmedEntries = Object.entries(historyLog)
+    return log$.pipe(filter((log) => !!log)).pipe(
+      switchMap((log) => {
+        const sortedTrimmedEntries = Object.entries(log)
           .filter((ent: any[]) => !filterIp || !ConstantsService.reservedIps.includes(ent[0]))
           .map((ent: any[]) => {
             ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
-            ent[2] = ent[1].length > 11 ? ent[1].splice(0, 11) : ent[1];
+            ent[2] = ent[1].slice(0, 11);
             return ent;
           })
           .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1));

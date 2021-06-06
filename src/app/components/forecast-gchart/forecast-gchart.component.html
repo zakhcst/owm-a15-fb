@@ -54,7 +54,7 @@
                   <ng-container *ngFor="let slot of chart[dayK].icons; index as iconInd">
                     <span class="flex flex-justify-content-center">
                       <span 
-                        [ngClass]="{'icon-weather-container' : !!slot.tooltipTxt}"
+                        [ngClass]="{'icon-weather-container': !!slot.tooltipTxt}"
                         [matTooltip]="slot.tooltipTxt"
                         matTooltipPosition="right"
                         matTooltipClass="gchart-tooltip-icon"

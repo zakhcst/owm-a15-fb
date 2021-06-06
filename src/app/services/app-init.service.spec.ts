@@ -67,7 +67,7 @@ describe('AppInitService', () => {
     expect(spyOnSelectSnapshot).toHaveBeenCalledTimes(ConstantsService.initCssShowPropertiesList.length);
     expect(spyOnSetProperty).toHaveBeenCalledTimes(iconsAndPropertiesSum);
   });
-  
+
   it('should initCss no propeties or set to false', () => {
     const spyOnSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValue(false);
     const spyOnSetProperty = spyOn(_document.documentElement.style, 'setProperty');
@@ -81,7 +81,7 @@ describe('AppInitService', () => {
     const spyOnCheckRouterEvents = spyOn(service, 'checkRouterEvent');
     router.navigate(['/']);
     service.subscriptions.unsubscribe();
-    expect(spyOnCheckRouterEvents).toHaveBeenCalled();
+    expect(spyOnCheckRouterEvents).toHaveBeenCalledTimes(1);
   }));
 
   it('should checkRouterEvent', () => {

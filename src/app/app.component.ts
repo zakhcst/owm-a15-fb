@@ -16,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @Select(AppStatusState.showLoading) showLoading$: Observable<boolean>;
 
-  constructor(private appInitService: AppInitService, private _windowRef: WindowRefService) {
+  constructor(private appInitService: AppInitService, private windowRef: WindowRefService) {
     this.loading = this.showLoading$.pipe(
       startWith(false),
       distinctUntilChanged(), 
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._windowRef.nativeWindow.onbeforeunload = () => this.ngOnDestroy();
+    this.windowRef.nativeWindow.onbeforeunload = () => this.ngOnDestroy();
   }
 
   ngOnDestroy() {

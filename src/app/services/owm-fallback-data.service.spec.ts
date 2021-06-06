@@ -8,7 +8,7 @@ import { getNewDataObject, MockErrorsService } from './testing.services.mocks';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from './constants.service';
 import { AppModule } from '../app.module';
-import { of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 
 describe('OwmFallbackDataService', () => {
   let service: OwmFallbackDataService;

@@ -11,8 +11,8 @@ import {
 import { ICities } from '../../models/cities.model';
 import { Router, ChildActivationEnd, NavigationEnd, Event } from '@angular/router';
 import { MediaObserver } from '@angular/flex-layout';
-import { catchError, debounce, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Subscription, Observable, timer, of, throwError } from 'rxjs';
+import { debounce, filter, map, tap } from 'rxjs/operators';
+import { Subscription, Observable, timer, of } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
 import { AppErrorPayloadModel } from '../../states/app.models';
@@ -25,6 +25,7 @@ import { SetStatusSelectedCityId } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
+import { WindowRefService } from 'src/app/services/window.service';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -45,9 +46,8 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   toolbarActions: [] = [];
   settingsOptions: {} = {};
-  toolbarShow = true;
   loaded = false;
-  selectedCityId: string = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId) || ConstantsService.defaultCityId;
+  selectedCityId: string = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
   iconSettings = ConstantsService.iconSettings;
   subscriptions: Subscription;
   showActionButtonsXS = false;
@@ -59,6 +59,16 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   connected = true;
   updatesAvailable = false;
   currentPageKey: (string | null) = null;
+  toolbarShow = true;
+
+  routerEvents$ = this._router.events.pipe(
+    filter((event: Event) => event instanceof NavigationEnd),
+    map((event: ChildActivationEnd) => event['urlAfterRedirects'].split('/').pop()),
+    filter(eventPathEndSegment => eventPathEndSegment && (eventPathEndSegment in ConstantsService.toolbar)),
+    tap(eventPathEndSegment => this.currentPageKey = eventPathEndSegment),
+    filter(eventPathEndSegment => this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]),
+    tap(eventPathEndSegment => this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions),
+  );
 
   @Select(AppCitiesState.selectCities) cities$: Observable<ICities>;
   @Select(AppStatusState.connected) connected$: Observable<boolean>;
@@ -71,15 +81,20 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _router: Router,
-    private _utils: OwmDataUtilsService, // Instantiate service to start listeners
+    private _utils: OwmDataUtilsService,
     private _store: Store,
     private _errors: ErrorsService,
     private _sanitizer: DomSanitizer,
     public mediaObserver: MediaObserver,
     public dialog: MatDialog,
+    private windowRef: WindowRefService
   ) {
     this.subscribeRouterEvents();
     this.subscribeAvailableUpdates();
+  }
+
+  subscribeRouterEvents() {
+    this.subscriptions = this.routerEvents$.subscribe();
   }
 
   subscribeAvailableUpdates() {
@@ -87,33 +102,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
       this.updatesAvailable = updatesAvailable;
     });
     this.subscriptions = subscriptionAvailableUpdates;
-  }
-
-  subscribeRouterEvents() {
-
-    this.subscriptions = this._router.events
-      .pipe(
-        filter((event: Event) => event instanceof NavigationEnd),
-        map((event: ChildActivationEnd) => event['urlAfterRedirects'].split('/').pop() || event['url'].split('/').pop()),
-        filter(eventPathEndSegment => eventPathEndSegment && (eventPathEndSegment in ConstantsService.toolbar)),
-        tap(eventPathEndSegment => this.currentPageKey = eventPathEndSegment),
-        // filter(eventPathEndSegment => (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment])),
-      )
-      .subscribe(
-        (eventPathEndSegment) => {
-          // if (eventPathEndSegment in ConstantsService.toolbar) {
-          if (this.toolbarActions !== ConstantsService.toolbar[eventPathEndSegment]) {
-            this.toolbarActions = ConstantsService.toolbar[eventPathEndSegment].actions;
-            // this.settingsOptions = ConstantsService.toolbar[eventPathEndSegment].settingsOptions;
-            this.toolbarShow = true;
-          } else {
-            this.toolbarShow = false;
-          }
-        },
-        (err) => {
-          this.addError('header-toolbar: router.events', err.message);
-        }
-      );
   }
 
   ngOnInit() {
@@ -148,10 +136,6 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
         (imgPath: string) => {
           this.container.nativeElement.style['background-image'] = `url(${imgPath})`;
           this.loaded = true;
-        },
-        (err) => {
-          this.addError('header-toolbar: ngOnInit: onChange: subscribe', err.message);
-          this.loaded = true;
         }
       );
 
@@ -163,7 +147,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnDestroy() {
-    if (this.subscriptions) {
+    if (this.subscriptions && !this.subscriptions.closed) {
       this.subscriptions.unsubscribe();
     }
   }
@@ -203,7 +187,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
       hasBackdrop: true,
     };
 
-    const windowHeight = window.innerHeight;
+    const windowHeight = this.windowRef.nativeWindow.innerHeight;
     const dialogHeight = (windowHeight < collapsibleHeight) ? (windowHeight - margin + 'px') : 'auto';
     config['height'] = dialogHeight;
 

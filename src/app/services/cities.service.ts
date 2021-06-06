@@ -39,7 +39,7 @@ export class CitiesService {
 
    activateLiveDataUpdatesCities() {
     this.liveDataUpdateSubscription = this.liveDataUpdate$.subscribe((liveDataUpdate) => {
-      if (this.getDataSubscription) {
+      if (this.getDataSubscription && !this.getDataSubscription.closed) {
         this.getDataSubscription.unsubscribe();
       }
       if (liveDataUpdate) {

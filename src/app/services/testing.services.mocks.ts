@@ -1,4 +1,4 @@
-import { BehaviorSubject, EMPTY, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
@@ -9,6 +9,7 @@ import citiesJSON from '../../../misc/cities-obj.json';
 import { IPopupModel } from '../models/snackbar.model';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { IHistoryLog } from '../models/history-log.model';
+import { NavigationEnd, NavigationStart } from '@angular/router';
 
 export const data = <IOwmDataModel>(<any>dataJSON);
 
@@ -61,7 +62,6 @@ export class MockDbOwmService {
     this.dbData = getNewDataObject();
     return of(this.dbData);
   }
-
 }
 
 export class MockCitiesService {
@@ -109,14 +109,14 @@ export class MockOwmFallbackDataService {
 export class MockErrorsService {
   messages: AppErrorPayloadModel[] = [];
   errorLog = {
-    '1-1-1-1' : {
-      '1610000000011' : 'err message11',
-      '1610000000012' : 'err message12'
+    '1-1-1-1': {
+      '1610000000011': 'err message11',
+      '1610000000012': 'err message12',
     },
-    '2-2-2-2' : {
-      '1610000000021' : 'err message21',
-      '1610000000022' : 'err message22'
-    }
+    '2-2-2-2': {
+      '1610000000021': 'err message21',
+      '1610000000022': 'err message22',
+    },
   };
   constructor() {
     this.messages = [];
@@ -137,7 +137,7 @@ export class MockHttpBackend {
   errorConnectionMessage: string;
   errorHttpMessage: string;
   responseMessage: string;
-  
+
   setMessages(errorConnectionMessage, errorHttpMessage, responseMessage) {
     this.errorConnectionMessage = errorConnectionMessage;
     this.errorHttpMessage = errorHttpMessage;
@@ -148,13 +148,12 @@ export class MockHttpBackend {
     if (request.url === 'error') {
       return throwError(new Error(this.errorConnectionMessage));
     } else if (request.url === 'http-error') {
-      return throwError(new HttpErrorResponse({error: new Error(this.errorHttpMessage) }));
+      return throwError(new HttpErrorResponse({ error: new Error(this.errorHttpMessage) }));
     } else {
-      return of(new HttpResponse({ status: 200, body: { message: this.responseMessage }} ));
+      return of(new HttpResponse({ status: 200, body: { message: this.responseMessage } }));
     }
   }
 }
-
 
 export class MockHistoryService {
   messages: AppHistoryPayloadModel[] = [];
@@ -190,14 +189,17 @@ export class MockAngularFireService {
     this.fbdata = fbdata;
     return fbdata ? Promise.resolve('Resolved') : Promise.reject('Rejected');
   }
-  
+
   update(fbdata: any) {
     this.fbdata = { ...this.fbdata, ...fbdata };
     return fbdata ? Promise.resolve('Resolved') : Promise.reject('Rejected');
   }
 
   valueChanges() {
-    return (this.fbdata && (this.error ? throwError('MockAngularFireService Error: ' + this.error) : of(this.fbdata))) || of(null);
+    return (
+      (this.fbdata && (this.error ? throwError('MockAngularFireService Error: ' + this.error) : of(this.fbdata))) ||
+      of(null)
+    );
   }
 }
 
@@ -209,7 +211,7 @@ export class MockSnackbarService {
   }
 }
 
-export class MockPresenceService  {
+export class MockPresenceService {
   connected = new BehaviorSubject(false);
   connectedUpdate(newValue) {
     this.connected.next(newValue);
@@ -236,18 +238,18 @@ export class MockSwUpdate {
           hash: '123456',
           timeStamp: 1234567890123,
           version: '0.11.1',
-        }
+        },
       },
     },
     available: {
       hash: 'string',
-      appData: { 
+      appData: {
         buildInfo: {
           hash: '234567',
           timeStamp: 1234567890987,
           version: '0.11.2',
-        }
-       },
+        },
+      },
     },
   };
 
@@ -262,22 +264,35 @@ export class MockSwUpdate {
   }
 }
 
-export class MockDocument { 
+export class MockDocument {
   visibilityState = 'hidden';
   documentElement = {
     style: {
-      setProperty: (property: string, value: any) => {}
-    }
-  }
+      setProperty: (property: string, value: any) => {},
+    },
+  };
+}
+
+export const historyLogMockData: IHistoryLog = {
+  'dashed-ip01': { timeStamp01: 'cityId01' },
+  'dashed-ip02': { timeStamp02: 'cityId02' },
+  'dashed-ip03': { timeStamp03: 'cityId03' },
+  'dashed-ip07': { timeStamp07: 'cityId07' },
+  'dashed-ip08': { timeStamp08: 'cityId08' },
+  'dashed-ip09': { timeStamp09: 'cityId09' },
+  'dashed-ip04': { timeStamp04: 'cityId04' },
+  'dashed-ip05': { timeStamp05: 'cityId05' },
+  'dashed-ip06': { timeStamp06: 'cityId06' },
+  'dashed-ip10': { timeStamp10: 'cityId10' },
+  'dashed-ip11': { timeStamp11: 'cityId11' },
+  'dashed-ip12': { timeStamp12: 'cityId12' },
+  'dashed-ip13': { timeStamp13: 'cityId13' },
+  'dashed-ip14': { timeStamp14: 'cityId14' },
+  'dashed-ip15': { timeStamp15: 'cityId15' },
 };
 
-export const historyLogMockData: IHistoryLog  = { 
-  'dashed-ip1': {
-    'timeStamp1': 'cityId1'
-  }
-};
-
-export const historyLogMockModelData: HistoryLogModel  = { 
+export const historyLogMockModelData: HistoryLogModel = {
   cityId: 'cityId',
-  time: 1234567890132
+  time: 1234567890123,
 };
+

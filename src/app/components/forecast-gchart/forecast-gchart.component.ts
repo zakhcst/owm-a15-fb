@@ -18,6 +18,7 @@ import { ChartReadyEvent } from 'angular-google-charts';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
+import { WindowRefService } from 'src/app/services/window.service';
 
 @Component({
   selector: 'app-forecast-gchart',
@@ -33,9 +34,6 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   chart: {} = {};
   activeDays: string[] = [];
   weatherDataDateKeys: string[];
-  resizeObservable$: Observable<Event>;
-  orientationchangeObservable$: Observable<Event>;
-  layoutChangesOrientation$: Observable<BreakpointState>;
   subscriptions: Subscription;
   daysForecast = this._store.selectSnapshot(AppStatusState.daysForecast);
   containerPadding = 20;
@@ -43,6 +41,12 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   dateColumnWidth = 40;
   overlaySubjecs = [];
   showGChartIcons = false;
+  orientationchangeObservable$: Observable<Event>;
+  resizeWindow$ = fromEvent(this.windowRef.nativeWindow, 'resize');
+  layoutChangesOrientation$ = this._breakpointObserver.observe([
+    '(orientation: portrait)',
+    '(orientation: landscape)',
+  ]);
 
   @Select(AppStatusState.daysForecast) daysForecast$: Observable<number>;
   @Select(AppStatusState.showGChartIcons) showGChartIcons$: Observable<boolean>;
@@ -56,10 +60,11 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _utils: OwmDataUtilsService,
     public dialog: MatDialog,
+    private windowRef: WindowRefService
   ) { }
 
   ngOnInit() {
-    this.subscribeResizeObservable();
+    this.subscribeResizeWindow();
     this.subscribeLayoutChangesOrientation();
     this.subscribeDaysForecast();
     this.subscribeOwmData();
@@ -73,23 +78,18 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     }
   }
 
-  subscribeResizeObservable() {
-    this.resizeObservable$ = fromEvent(window, 'resize');
-    this.subscriptions = this.resizeObservable$.subscribe(() => {
+  subscribeResizeWindow() {
+    this.subscriptions = this.resizeWindow$.subscribe(() => {
       if (this.activeDays.length > 0) {
-        this.resizeGraphs(this.activeDays);
+        this.resizeCharts(this.activeDays);
       }
     });
   }
 
   subscribeLayoutChangesOrientation() {
-    const layoutChangesOrientation$ = this._breakpointObserver.observe([
-      '(orientation: portrait)',
-      '(orientation: landscape)',
-    ]);
-    const layoutChangesOrientationSubscription = layoutChangesOrientation$.subscribe((result) => {
+    const layoutChangesOrientationSubscription = this.layoutChangesOrientation$.subscribe(() => {
       if (this.activeDays.length > 0) {
-        this.resizeGraphs(this.activeDays);
+        this.resizeCharts(this.activeDays);
       }
     });
     this.subscriptions.add(layoutChangesOrientationSubscription);
@@ -99,20 +99,20 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     const daysForecastSubscription = this.daysForecast$.subscribe((daysForecast) => {
       this.daysForecast = daysForecast;
       if (this.activeDays.length > 0) {
-        this.resizeGraphs(this.activeDays);
+        this.resizeCharts(this.activeDays);
       }
     });
     this.subscriptions.add(daysForecastSubscription);
   }
 
   setDebounceIconsDraws() {
-    // helper BehaviorSubjects array for each chart to debounce and delay icons redraws
+    // helper BehaviorSubjects array for each chart to debounce delay icons redraws
     [...Array(6)].forEach(() => {
       const behaviorSubject = new BehaviorSubject(null);
       const overlaySubscription = behaviorSubject
         .pipe(
           filter((data) => !!data),
-          debounceTime(1000)
+          debounceTime(ConstantsService.gchartIconsShowDelay_ms)
         )
         .subscribe((data) => {
           this.redrawOverlay(data);
@@ -134,45 +134,42 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
       this._utils.getOwmDataDebounced$({ showLoading: true }),
       this.showGChartWind$,
       this.showGChartHumidity$
-    ]).subscribe(
-      ([data, wind, humidity]) => {
-        const showGraphs = { temperature: true, wind, humidity, pressure: true };
-        this.weatherData = data;
-        const dataDays = Object.keys(this.weatherData.listByDate).sort();
-        this.weatherDataDateKeys = [...dataDays];
-        if (this.activeDays.length === 1) {
-          if (!dataDays.includes(this.activeDays[0])) {
-            this.activeDays[0] = dataDays[0];
-          }
-        } else {
-          this.activeDays = dataDays;
-        }
-        this.chart = this._populateGchartData.setGChartData(this.weatherData.listByDate, this.weatherDataDateKeys, showGraphs);
-        this.resizeGraphs(this.activeDays);
-      },
-      (err) => {
-        this.addError('ngOnInit: onChange: subscribe', err.message);
-      }
-    );
+    ]).subscribe(this.updateKeysAndData.bind(this));
     this.subscriptions.add(weatherDataSubscription);
+  }
+
+  updateKeysAndData([data, wind, humidity]) {
+    const showGraphs = { temperature: true, wind, humidity, pressure: true };
+    this.weatherData = data;
+    const dataDays = Object.keys(this.weatherData.listByDate).sort((date1, date2) => (+date1 - +date2));
+    this.weatherDataDateKeys = [...dataDays];
+    if (this.activeDays.length === 1) {
+      if (!dataDays.includes(this.activeDays[0])) {
+        this.activeDays[0] = dataDays[0];
+      }
+    } else {
+      this.activeDays = dataDays;
+    }
+    this.chart = this._populateGchartData.setGChartData(this.weatherData.listByDate, this.weatherDataDateKeys, showGraphs);
+    this.resizeCharts(this.activeDays);
   }
 
   clickedDay(selectedDay: string) {
     const activeDaysLength = this.activeDays.length;
     this.activeDays = [];
     const activeDays = activeDaysLength === 1 ? [...this.weatherDataDateKeys] : [selectedDay];
-    this.resizeGraphs(activeDays);
+    this.resizeCharts(activeDays);
     this.activeDays = activeDays;
   }
 
-  resizeGraphs(activeDays: string[]) {
-    const dateColumn = this.dateColumn.nativeElement;
-    const documentBodyWidth = document.body.clientWidth;
+  resizeCharts(activeDays: string[]) {
+    const dateColumn = this.dateColumn?.nativeElement;
+    const documentBodyWidth = this.windowRef.nativeWindow.document.body.clientWidth;
     if (dateColumn) {
       const activeDaysLength = activeDays.length;
       const activeDaysHeightCoef = activeDaysLength === 1 ? 1 : 0.94;
       const days = activeDaysLength === 1 ? 1 : this.daysForecast;
-      const dateColumnClientHeight = dateColumn.clientHeight || window.innerHeight - 100;
+      const dateColumnClientHeight = dateColumn.clientHeight || this.windowRef.nativeWindow.innerHeight - 100;
       const graphHeight = Math.floor((dateColumnClientHeight * activeDaysHeightCoef) / days);
       const graphWidth = Math.floor(
         documentBodyWidth - this.containerPadding - this.cardPadding - this.dateColumnWidth
@@ -199,25 +196,24 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
     const scaleFactor = 0.87;
     const cli = gc.chart.getChartLayoutInterface();
     const overlayTop = gc.height / 2 - 10;
-    setTimeout(() => {
-      overlay.setAttribute('style', `top: ${overlayTop}px;`);
-      let chartArea;
-      try {
-        chartArea = cli.getChartAreaBoundingBox();
-      } catch {
-        console.log('Chart Refresh Error', extendedIndex, gc);
-        chartArea = { left: gc.width * 0.65, width: gc.width * 0.75 };
-      }
-      const offsetLeft = chartArea.left + (chartArea.width * (1 - scaleFactor)) / 2;
-      const overlayContentWidth = chartArea.width * scaleFactor;
-      overlayContent.setAttribute(
-        'style',
-        `left: ${offsetLeft}px;
-        width: ${overlayContentWidth}px;
-        display: flex;
-        `
-      );
-    }, 500);
+    overlay.setAttribute('style', `top: ${overlayTop}px;`);
+    let chartArea;
+    try {
+      chartArea = cli.getChartAreaBoundingBox();
+    } catch (error) {
+      console.log(error);
+      console.log('Chart Refresh Error at index', extendedIndex, gc);
+      chartArea = { left: gc.width * 0.65, width: gc.width * 0.75 };
+    }
+    const offsetLeft = chartArea.left + (chartArea.width * (1 - scaleFactor)) / 2;
+    const overlayContentWidth = chartArea.width * scaleFactor;
+    overlayContent.setAttribute(
+      'style',
+      `left: ${offsetLeft}px;
+      width: ${overlayContentWidth}px;
+      display: flex;
+      `
+    );
   }
 
   showDataCellExpanded(timeSlotData: IOwmDataModelTimeSlotUnit, iconIndex: number) {

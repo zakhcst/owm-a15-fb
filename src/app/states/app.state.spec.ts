@@ -9,6 +9,7 @@ import {
   AppStatsState,
   AppHistoryLogState,
   AppFallbackDataState,
+  AppPopupMessages,
 } from './app.state';
 import { GetBrowserIpService } from '../services/get-browser-ip.service';
 import { SnackbarService } from '../services/snackbar.service';
@@ -40,6 +41,7 @@ describe('State store', () => {
   let appStatsState: AppStatsState;
   let appHistoryLogState: AppHistoryLogState;
   let appFallbackDataState: AppFallbackDataState;
+  let appPopupMessages: AppPopupMessages;
 
   const mockHistoryData = { owmData: dataJSON };
   const mockErrorData: AppErrorPayloadModel = {
@@ -79,6 +81,7 @@ describe('State store', () => {
       appStatsState = TestBed.inject(AppStatsState);
       appHistoryLogState = TestBed.inject(AppHistoryLogState);
       appFallbackDataState = TestBed.inject(AppFallbackDataState);
+      appPopupMessages = TestBed.inject(AppPopupMessages);
     })
   );
 
@@ -109,5 +112,11 @@ describe('State store', () => {
   });
   it('should create AppFallbackDataState', () => {
     expect(appFallbackDataState).toBeTruthy();
+  });
+  it('should create AppPopupMessages', () => {
+    expect(appPopupMessages).toBeTruthy();
+  });
+  it('should create AppPopupMessages', () => {
+    expect(appPopupMessages.setPopupMessage).toBeTruthy();
   });
 });
