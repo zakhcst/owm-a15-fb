@@ -3,8 +3,6 @@ import { Store } from '@ngxs/store';
 import { InitModules } from '../modules/init.module';
 import { RequiredModules } from '../modules/required.module';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { cold } from 'jasmine-marbles';
-import { delay } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { ICity } from '../models/cities.model';
 import { CitiesService } from './cities.service';
@@ -40,7 +38,6 @@ describe('CitiesService', () => {
   });
 
   it('should dispatch', () => {
-    // const testData = { 'cityId': 'ICity' }; 
     const spyDispatch = spyOn(store, 'dispatch');
     service.dispatch(testData);
     expect(spyDispatch).toHaveBeenCalled();
@@ -96,14 +93,14 @@ describe('CitiesService', () => {
 
   it('should getDataOnce when AppCitiesState.selectCities is null', waitForAsync(() => {
     const spyOnStoreSelect = spyOn(store, 'selectSnapshot').and.returnValue(null);
-    const spyOnGetData = spyOn(service, 'getData').and.returnValue(of({'cityId1': testData}));
+    const spyOnGetData = spyOn(service, 'getData').and.returnValue(of({ 'cityId1': testData }));
     const spyDispatch = spyOn(store, 'dispatch');
     service.getDataOnce();
     expect(spyOnStoreSelect).toHaveBeenCalledTimes(1);
     expect(spyOnGetData).toHaveBeenCalledTimes(1);
     expect(spyDispatch).toHaveBeenCalledTimes(1);
   }));
-  
+
   it('should not getDataOnce when AppCitiesState.selectCities is not null', waitForAsync(() => {
     const spyOnStoreSelect = spyOn(store, 'selectSnapshot').and.returnValue(true);
     const spyOnGetData = spyOn(service, 'getData');
@@ -111,5 +108,28 @@ describe('CitiesService', () => {
     expect(spyOnStoreSelect).toHaveBeenCalledTimes(1);
     expect(spyOnGetData).toHaveBeenCalledTimes(0);
   }));
+
+  it('should setSelectedCityId', () => {
+    const city = {
+      cityId: {
+        name: 'cityName',
+        iso2: 'cityIso2'
+      }
+    };
+    const spyOnStoreSelect = spyOn(store, 'selectSnapshot').and.returnValue(city);
+    const spyOnStoreDsipatch = spyOn(store, 'dispatch');
+    service.setSelectedCityId('cityId');
+    expect(spyOnStoreSelect).toHaveBeenCalledTimes(1);
+    expect(spyOnStoreDsipatch).toHaveBeenCalledTimes(2);
+  });
+
+  it('should setSelectedCityId return on missing cities', () => {
+    const city = null;
+    const spyOnStoreSelect = spyOn(store, 'selectSnapshot').and.returnValue(city);
+    const spyOnStoreDispatch = spyOn(store, 'dispatch');
+    service.setSelectedCityId('cityId');
+    expect(spyOnStoreSelect).toHaveBeenCalledTimes(1);
+    expect(spyOnStoreDispatch).toHaveBeenCalledTimes(0);
+  });
 
 });

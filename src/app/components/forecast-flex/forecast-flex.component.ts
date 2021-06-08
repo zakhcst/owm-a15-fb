@@ -9,7 +9,7 @@ import { ErrorsService } from '../../services/errors.service';
 import { Select } from '@ngxs/store';
 import { IOwmDataModel, IListByDateModel } from '../../models/owm-data.model';
 import { AppStatusState } from 'src/app/states/app.state';
-import { AppErrorPayloadModel } from '../../states/app.models';
+import { AppErrorModel } from '../../states/app.models';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
@@ -132,7 +132,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addError(custom: string, errorMessage: string) {
-    const errorLog: AppErrorPayloadModel = {
+    const errorLog: AppErrorModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
       logMessage: `ForecastFlexComponent: ${custom}: ${errorMessage}`,
     };

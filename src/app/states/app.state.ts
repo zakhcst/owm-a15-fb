@@ -31,11 +31,9 @@ import {
   AppStatusModel,
   AppErrorsStateModel,
   HistoryLogModel,
-  ErrorRecordModel,
   IOwmDataCacheModel,
 } from './app.models';
 import { HistoryLogUpdateService } from '../services/history-log-update.service';
-import { ErrorsService } from '../services/errors.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from '../services/constants.service';
 import { NormalizeDataService } from '../services/normalize-data.service';
@@ -75,7 +73,7 @@ export class AppStatusState {
   constructor(
     private normalizedData: NormalizeDataService,
     private _store: Store,
-  ) {}
+  ) { }
 
   @Selector()
   static selectStatusSelectedCityId(state: AppStatusModel) {
@@ -173,18 +171,7 @@ export class AppStatusState {
 
   @Action(SetStatusSelectedCityId)
   setStatusSelectedCityId(context: StateContext<AppStatusModel>, action: SetStatusSelectedCityId) {
-    const selectedCityId = action.payload || context.getState().selectedCityId;
-    const cities = this._store.selectSnapshot(AppCitiesState.selectCities);
-    const cityName = cities[selectedCityId].name;
-    const countryISO2 = cities[selectedCityId].iso2;
-    if (cities && cityName && countryISO2) {
-      this._store.dispatch(new SetPopupMessage({
-        message: `Selected: ${cityName}, ${countryISO2}`,
-        class: 'popup__info',
-        delay: 500
-      }));
-    }
-    context.patchState({ selectedCityId });
+    context.patchState({ selectedCityId: action.payload });
   }
 
   @Action(SetStatusShowTimeSlotBgPicture)
@@ -298,47 +285,22 @@ export class AppFallbackDataState {
 })
 @Injectable()
 export class AppOwmDataCacheState {
-  constructor(
-    private _store: Store,
-    private _historyLogUpdate: HistoryLogUpdateService,
-  ) {}
 
   @Selector([AppStatusState, AppFallbackDataState])
-  static selectOwmDataCacheSelectedCity(state: IOwmDataModel, status: AppStatusModel, fallbackData: IOwmDataModel) {
-    return (state && state[status.selectedCityId]) || fallbackData || null;
+  static selectOwmDataCachedOrDefaultSelectedCity(state: IOwmDataModel, status: AppStatusModel, fallbackData: IOwmDataModel) {
+    return state?.[status.selectedCityId] || fallbackData || null;
+  }
+
+  @Selector([AppStatusState])
+  static selectOwmDataCachedSelectedCity(state: IOwmDataModel, status: AppStatusModel) {
+    return state?.[status.selectedCityId];
   }
 
   @Action(SetOwmDataCacheState)
   setOwmDataCacheState(context: StateContext<IOwmDataCacheModel>, action: SetOwmDataCacheState) {
     const owmData = action.payload;
-    if (!owmData || !owmData.updated) {
-      return;
-    }
-    const updatesPromiseArray = [];
-    const selectedCityId = this._store.selectSnapshot(AppStatusState.selectStatusSelectedCityId);
-    const state = context.getState() ?? {};
-    const cachedCityOwmData = state[selectedCityId];
-
-    if (!cachedCityOwmData || cachedCityOwmData.updated < owmData.updated) {
-      const update = { ...state, [selectedCityId]: owmData };
-      context.setState(update);
-
-      const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
-      const newEntry: HistoryLogModel = {
-        cityId: selectedCityId,
-        time: new Date().valueOf(),
-      };
-      updatesPromiseArray.push(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
-
-      const cityName = owmData.city.name;
-      const countryISO2 = owmData.city.country;
-      this._store.dispatch(new SetPopupMessage({
-        message: `Refreshed: ${cityName}, ${countryISO2}`,
-        class: 'popup__info',
-        delay: 500
-      }));
-      return Promise.all(updatesPromiseArray);
-    }
+    const selectedCityId = owmData.city.id.toString();
+    context.patchState({[selectedCityId]: owmData});
   }
 }
 
@@ -358,27 +320,12 @@ const defaultErrorsRecord = {
 })
 @Injectable()
 export class AppErrorsState {
-  constructor(private _errors: ErrorsService, private _store: Store) {}
-
   @Action(SetErrorsState)
   setErrorsState(context: StateContext<AppErrorsStateModel>, action: SetErrorsState) {
-    const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
-    const ip = this._store.selectSnapshot(AppStatusState.selectStatusIp);
-    const newEntry: ErrorRecordModel = {
-      logMessage: action.payload.logMessage,
-      time: new Date().valueOf(),
-      ip,
-    };
     const update = {
-      sessionErrors: [...context.getState().sessionErrors, newEntry],
+      sessionErrors: [...context.getState().sessionErrors, action.payload],
     };
-    context.patchState(update);
-    this._store.dispatch(new SetPopupMessage({
-      message: `Error: ${action.payload.userMessage}`,
-      class: 'popup__error',
-    }));
-
-    return this._errors.setDataToFB(normalizedIp, newEntry);
+    context.setState(update);
   }
 }
 

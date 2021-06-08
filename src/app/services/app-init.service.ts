@@ -84,16 +84,8 @@ export class AppInitService {
   checkRouterEvent(routerEvent: Event) {
     if (routerEvent instanceof NavigationStart) {
       this._store.dispatch(new SetStatusShowLoading(true));
-      return;
-    }
-
-    if (
-      routerEvent instanceof NavigationEnd ||
-      routerEvent instanceof NavigationCancel ||
-      routerEvent instanceof NavigationError
-    ) {
+    } else {
       this._store.dispatch(new SetStatusShowLoading(false));
-      return;
     }
   }
 

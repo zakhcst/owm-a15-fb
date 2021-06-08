@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AppModule } from 'src/app/app.module';
+import { StatsService } from '../../services/stats.service';
 
 import { ResolverStatsService } from './resolver-stats.service';
 
@@ -8,7 +8,12 @@ describe('ResolverStatsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      imports: [
+      ],
+      providers: [
+        ResolverStatsService,
+        { provide: StatsService, useValue: {} }
+      ]
     });
     service = TestBed.inject(ResolverStatsService);
   });
@@ -17,9 +22,9 @@ describe('ResolverStatsService', () => {
     expect(service).toBeTruthy();
   });
   it('should resolve', waitForAsync(() => {
-      service.resolve().subscribe((response) => {
-        expect(response).toBe(true);
-      });
-    })
+    service.resolve().subscribe((response) => {
+      expect(response).toBe(true);
+    });
+  })
   );
 });

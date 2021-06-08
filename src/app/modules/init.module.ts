@@ -20,7 +20,7 @@ import {
 } from '../states/app.state';
 import { ConstantsService } from '../services/constants.service';
 
-function setRequiredKeysAfterDeserialize(obj, state: string) {
+export function setRequiredKeysAfterDeserialize(obj, state: string) {
   if (state === 'status') {
     const keysToBeSet = [
       'showDetailTimeSlotBgPicture',

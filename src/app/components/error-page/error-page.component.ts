@@ -7,35 +7,35 @@ import { ConstantsService } from 'src/app/services/constants.service';
 @Component({
   selector: 'app-error-page',
   templateUrl: './error-page.component.html',
-  styleUrls: ['./error-page.component.css']
+  styleUrls: ['./error-page.component.css'],
 })
 export class ErrorPageComponent implements OnInit {
   redirectPage: string;
   errorMessage: string;
   viewCount: number;
+  activatedRouteParams = this._activatedRoute.params.pipe(
+    take(1),
+    switchMap((activatedRouteParams) => {
+      this.errorMessage = activatedRouteParams.errorMessage || 'ERROR';
+      this.redirectPage = activatedRouteParams.redirectPage || '';
+      return timer(0, 1000);
+    }),
+    take(ConstantsService.redirectDelay + 1),
+    map((timerCount: number) => {
+      this.viewCount = ConstantsService.redirectDelay - timerCount;
+    }),
+    last()
+  );
 
-  constructor(
-    public _router: Router,
-    public _activatedRoute: ActivatedRoute
-  ) {}
+  constructor(public _router: Router, public _activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this._activatedRoute.params
-      .pipe(
-        take(1),
-        switchMap(activatedRouteParams => {
-          this.errorMessage = activatedRouteParams.errorMessage || 'ERROR';
-          this.redirectPage = activatedRouteParams.redirectPage || '';
-          return timer(0, 1000);
-        }),
-        take(ConstantsService.redirectDelay + 1),
-        map((timerCount: number) => {
-          this.viewCount = ConstantsService.redirectDelay - timerCount;
-        }),
-        last(),
-      )
-      .subscribe(() => {
-          this._router.navigate([this.redirectPage || '' ]);
-      });
+    this.subscribeToActivatedRouteParams();
+  }
+  
+  subscribeToActivatedRouteParams() {
+    this.activatedRouteParams.subscribe(() => {
+      this._router.navigate([this.redirectPage || '']);
+    });
   }
 }

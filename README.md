@@ -67,6 +67,6 @@ Development build is depolyed at: https://owm-a11-fb.web.app
 
 ### Coverage
 
-![coverage-all](/misc/owm-a11-fb-coverage-all.jpg)
+![coverage-all](/misc/Screenshot_20210608_015405.jpg)
 
-![coverage-services](/misc/owm-a11-coverage-services-Screenshot_20210526_142950.jpg)
+![coverage-services](/misc/Screenshot_20210608_015217.jpg)

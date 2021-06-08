@@ -1,4 +1,4 @@
-import { AppHistoryPayloadModel, AppErrorPayloadModel } from './app.models';
+import { ErrorRecordModel } from './app.models';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
 import { IStats } from '../models/stats.model';
@@ -85,7 +85,7 @@ export class SetStatusShowGChartWind {
 
 export class SetErrorsState {
   static readonly type = '[errors] set';
-  constructor(public payload: AppErrorPayloadModel) {}
+  constructor(public payload: ErrorRecordModel) {}
 }
 
 export class SetCitiesState {

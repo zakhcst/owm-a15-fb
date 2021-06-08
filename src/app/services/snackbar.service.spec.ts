@@ -115,4 +115,12 @@ describe('SnackbarService', () => {
     expect(spyOnShow).toHaveBeenCalledTimes(1);
   });
 
+  it('should ref when error no delay and no error', () => {
+    delete testData.delay;
+    testData.class = 'popup__info';
+    const spyOnShow = spyOn(matSnackBar, 'openFromComponent');
+    service.ref(testData);
+    expect(spyOnShow).toHaveBeenCalledTimes(1);
+  });
+
 });

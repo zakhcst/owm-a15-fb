@@ -21,7 +21,7 @@ import {
 } from '../services/testing.services.mocks';
 
 import { Store } from '@ngxs/store';
-import { AppErrorPayloadModel } from './app.models';
+import { AppErrorModel } from './app.models';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 
 import dataJSON from '../../assets/owm-fallback-data.json';
@@ -44,9 +44,9 @@ describe('State store', () => {
   let appPopupMessages: AppPopupMessages;
 
   const mockHistoryData = { owmData: dataJSON };
-  const mockErrorData: AppErrorPayloadModel = {
-    userMessage: 'mockErrorData: AppErrorPayloadModel: value: userMessage',
-    logMessage: 'mockErrorData: AppErrorPayloadModel: value: logMessage',
+  const mockErrorData: AppErrorModel = {
+    userMessage: 'mockErrorData: AppErrorModel: value: userMessage',
+    logMessage: 'mockErrorData: AppErrorModel: value: logMessage',
   };
 
   beforeEach(

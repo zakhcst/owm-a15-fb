@@ -9,9 +9,6 @@ import { HeaderToolbarModule } from './header-toolbar.module';
 import { InitModules } from '../../modules/init.module';
 import { ResolverRegisterIconsService } from '../../modules/routing-resolvers/resolver-register-icons.service';
 
-// import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
-// import { OwmDataManagerService } from '../../services/owm-data-manager.service';
-
 import { ConstantsService } from '../../services/constants.service';
 import { getNewDataObject } from '../../services/testing.services.mocks';
 import { WindowRefService } from '../../services/window.service';
@@ -27,11 +24,9 @@ describe('HeaderToolbarComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [InitModules, AppRoutingModule, MatDialogModule, HeaderToolbarModule],
-        // declarations: [DialogSettingsComponent, HeaderToolbarComponent],
         declarations: [HeaderToolbarComponent],
         providers: [
           ResolverRegisterIconsService,
-          // OwmDataManagerService,
         ],
       }).compileComponents();
 
@@ -178,13 +173,30 @@ describe('HeaderToolbarComponent', () => {
     const dialog = component.showSettings(settingsButton);
     expect(dialog).toBe(opened);
     expect(spyOnDialogOpen).toHaveBeenCalledTimes(1);
-  }
-  );
+  });
+
+  it('should showSettings when isXs is true and windowHeight >= collapsibleHeight', () => {
+    component.loaded = true;
+    const existingRoute = Object.keys(ConstantsService.toolbar)[0];
+    component.currentPageKey = existingRoute;
+    const opened: any = 'opened';
+
+    const spyOnDialogOpen = spyOn(component['dialog'], 'open').and.returnValue(opened);
+    const spyOnIsXs = spyOn(component, 'isXs').and.returnValue(true);
+
+    const { collapsibleHeight } = ConstantsService.toolbar[existingRoute].settingsDialog;
+    windowRef.nativeWindow.innerHeight = collapsibleHeight;
+    const settingsButton = { _elementRef: { nativeElement: { offsetLeft: 100, offsetWidth: 300 } } };
+
+    const dialog = component.showSettings(settingsButton);
+    expect(dialog).toBe(opened);
+    expect(spyOnDialogOpen).toHaveBeenCalledTimes(1);
+  });
 
   it('should selectedCityChange', () => {
-    const spyOnStoreDispatch = spyOn(component['_store'], 'dispatch');
+    const spyOnCitiesServicesetSelectedCityId = spyOn(component['citiesService'], 'setSelectedCityId');
     component.selectedCityChange();
-    expect(spyOnStoreDispatch).toHaveBeenCalledTimes(1);
+    expect(spyOnCitiesServicesetSelectedCityId).toHaveBeenCalledTimes(1);
   });
 
   it('should addError', () => {

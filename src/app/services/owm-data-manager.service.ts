@@ -76,12 +76,12 @@ export class OwmDataManagerService {
 
   subscribeOnStatusChange() {
     this.combineLatestStatus().subscribe((data: IOwmDataModel) => {
-        this._store.dispatch(new SetOwmDataCacheState(data));
-      });
+      this._utils.setOwmDataCache(data);
+    });
   }
 
   getDataMemory(status: IStatusChanges): Observable<IOwmDataModel | null> {
-    const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCacheSelectedCity);
+    const lastOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCachedOrDefaultSelectedCity);
     this._store.dispatch(new SetPopupMessage({ ...this.popupOptions, message: 'Query memory cache' }));
     if (lastOwmData && this._utils.isNotExpired(lastOwmData)) {
       return of(null);

@@ -13,8 +13,8 @@ describe('GchartGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ NgxsModule.forRoot([])],
-      providers: [ Store ]
+      imports: [NgxsModule.forRoot([])],
+      providers: [Store]
     });
     canActivateGchart = TestBed.inject(CanActivateGchart);
     canLoadGchart = TestBed.inject(CanLoadGchart);
@@ -31,6 +31,18 @@ describe('GchartGuard', () => {
 
     canActivateGchart.canActivate().subscribe((response) => {
       expect(response).toBe(true);
+    });
+    getTestScheduler().flush();
+  }));
+
+  it('should canActivateGchart return true when connected$ changed to true within the set period and disableOnDisconnected is false', waitForAsync(() => {
+    const q$ = cold('-f-t|', { t: true, f: false });
+    spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeout_ms - 50)));
+    ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] = false;
+
+    canActivateGchart.canActivate().subscribe((response) => {
+      expect(response).toBe(true);
+      ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] = true;
     });
     getTestScheduler().flush();
   }));
@@ -65,6 +77,18 @@ describe('GchartGuard', () => {
 
     canLoadGchart.canLoad().subscribe((response) => {
       expect(response).toBe(true);
+    });
+    getTestScheduler().flush();
+  }));
+
+  it('should canLoadGchart return true when connected$ changed to true within the set period and disableOnDisconnected is false', waitForAsync(() => {
+    const q$ = cold('-f-t|', { t: true, f: false });
+    spyOn(store, 'select').and.returnValue(q$.pipe(delay(ConstantsService.connectedResponseTimeout_ms - 50)));
+    ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] = false;
+
+    canLoadGchart.canLoad().subscribe((response) => {
+      expect(response).toBe(true);
+      ConstantsService.toolbarElements.forecastGChart['disableOnDisconnected'] = true;
     });
     getTestScheduler().flush();
   }));

@@ -15,17 +15,17 @@ import { debounce, filter, map, tap } from 'rxjs/operators';
 import { Subscription, Observable, timer, of } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
-import { AppErrorPayloadModel } from '../../states/app.models';
+import { AppErrorModel } from '../../states/app.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
 import { AppCitiesState, AppStatusState } from '../../states/app.state';
-import { SetStatusSelectedCityId } from '../../states/app.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 import { WindowRefService } from 'src/app/services/window.service';
+import { CitiesService } from 'src/app/services/cities.service';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -81,6 +81,7 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _router: Router,
+    private citiesService: CitiesService,
     private _utils: OwmDataUtilsService,
     private _store: Store,
     private _errors: ErrorsService,
@@ -195,11 +196,11 @@ export class HeaderToolbarComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   selectedCityChange() {
-    this._store.dispatch(new SetStatusSelectedCityId(this.selectedCityId));
+    this.citiesService.setSelectedCityId(this.selectedCityId);
   }
 
   addError(custom: string, errorMessage: string) {
-    const errorLog: AppErrorPayloadModel = {
+    const errorLog: AppErrorModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
       logMessage: `ForecastComponent: ${custom}: ${errorMessage}`,
     };

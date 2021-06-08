@@ -6,13 +6,13 @@ import { Store } from '@ngxs/store';
 
 import { ErrorsService } from './errors.service';
 import { MockAngularFireService } from './testing.services.mocks';
-import { ErrorRecordModel, AppErrorPayloadModel } from '../states/app.models';
+import { ErrorRecordModel, AppErrorModel } from '../states/app.models';
 
 describe('ErrorsService', () => {
 
   const testIP = 'ip';
   const testData: ErrorRecordModel = { logMessage: 'Log Message', time: 0 };
-  const appErrorPayload: AppErrorPayloadModel = {
+  const appErrorPayload: AppErrorModel = {
     userMessage: 'userMessage',
     logMessage: 'logMessage'
   };
@@ -62,7 +62,9 @@ describe('ErrorsService', () => {
   it('should dispatch error', () => {
     const store = TestBed.inject(Store);
     const spyDispatch = spyOn(store, 'dispatch');
+    const spySetDataToFb = spyOn(service, 'setDataToFB');
     service.add(appErrorPayload);
-    expect(spyDispatch).toHaveBeenCalledTimes(1);
+    expect(spyDispatch).toHaveBeenCalledTimes(2);
+    expect(spySetDataToFb).toHaveBeenCalledTimes(1);
   });
 });

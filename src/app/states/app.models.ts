@@ -47,11 +47,10 @@ export interface AppErrorsStateModel {
   sessionErrors: ErrorRecordModel[];
 }
 
-export interface AppErrorPayloadModel {
+export interface AppErrorModel {
   userMessage: string;
   logMessage: string;
 }
-
 export interface ErrorMessageLogModel {
   [time: number]: string;
 }

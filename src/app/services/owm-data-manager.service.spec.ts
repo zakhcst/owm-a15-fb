@@ -7,23 +7,21 @@ import { TestScheduler } from 'rxjs/testing';
 import { OwmDataManagerService } from './owm-data-manager.service';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
-import { CitiesService } from './cities.service';
 import { ErrorsService } from './errors.service';
 import { OwmDataUtilsService } from './owm-data-utils.service';
 import {
   MockDbOwmService,
   MockOwmService,
-  MockCitiesService,
   MockErrorsService,
   getNewDataObject,
   MockStatsUpdateService,
 } from './testing.services.mocks';
+import { HistoryLogUpdateService } from './history-log-update.service';
 
 describe('OwmDataManagerService', () => {
   let service: OwmDataManagerService;
   let mockDbOwmService: MockDbOwmService;
   let mockOwmService: MockOwmService;
-  let mockCitiesService: MockCitiesService;
   let mockStatsUpdateService: MockStatsUpdateService;
   let mockErrorsService: MockErrorsService;
   let store: Store;
@@ -34,7 +32,6 @@ describe('OwmDataManagerService', () => {
     waitForAsync(() => {
       mockOwmService = new MockOwmService();
       mockDbOwmService = new MockDbOwmService();
-      mockCitiesService = new MockCitiesService();
       mockStatsUpdateService = new MockStatsUpdateService();
       mockErrorsService = new MockErrorsService();
       testScheduler = new TestScheduler((actual, expected) => {
@@ -45,6 +42,7 @@ describe('OwmDataManagerService', () => {
         imports: [NgxsModule.forRoot([])],
         declarations: [],
         providers: [
+          Store,
           {
             provide: OwmService,
             useValue: mockOwmService,
@@ -54,10 +52,6 @@ describe('OwmDataManagerService', () => {
             useValue: mockDbOwmService,
           },
           {
-            provide: CitiesService,
-            useValue: mockCitiesService,
-          },
-          {
             provide: StatsUpdateService,
             useValue: mockStatsUpdateService,
           },
@@ -65,7 +59,10 @@ describe('OwmDataManagerService', () => {
             provide: ErrorsService,
             useValue: mockErrorsService,
           },
-          Store,
+          { 
+            provide: HistoryLogUpdateService, 
+            useValue: { setDataToFB : function (ip, newEntry) {} } 
+          },
           OwmDataUtilsService
         ],
       });
@@ -512,10 +509,10 @@ describe('OwmDataManagerService', () => {
   it('should subscribeOnStatusChange', fakeAsync(() => {
     const owmData = getNewDataObject();
     const spyOnCombineLatestStatus = spyOn(service, 'combineLatestStatus').and.returnValue(of(owmData));
-    const spyOnStoreDispatch = spyOn(store, 'dispatch');
+    const spyOnSetOwmDataCache = spyOn(service['_utils'], 'setOwmDataCache');
     service.subscribeOnStatusChange();
     expect(spyOnCombineLatestStatus).toHaveBeenCalledTimes(1);
-    expect(spyOnStoreDispatch).toHaveBeenCalledTimes(1);
+    expect(spyOnSetOwmDataCache).toHaveBeenCalledTimes(1);
   }));
 
 });

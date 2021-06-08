@@ -3,16 +3,21 @@ import { Select, Store } from '@ngxs/store';
 import { merge, Observable, of, throwError, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, mapTo, switchMap, take, tap } from 'rxjs/operators';
 import { IOwmDataModel, IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
-import { SetStatusShowLoading } from '../states/app.actions';
-import { AppOwmDataCacheState } from '../states/app.state';
+import { SetOwmDataCacheState, SetPopupMessage, SetStatusShowLoading } from '../states/app.actions';
+import { HistoryLogModel } from '../states/app.models';
+import { AppOwmDataCacheState, AppStatusState } from '../states/app.state';
 import { ConstantsService } from './constants.service';
+import { HistoryLogUpdateService } from './history-log-update.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OwmDataUtilsService {
-  @Select(AppOwmDataCacheState.selectOwmDataCacheSelectedCity) selectedCityOwmDataCache$: Observable<IOwmDataModel>;
-  constructor(private _store: Store) { }
+  @Select(AppOwmDataCacheState.selectOwmDataCachedOrDefaultSelectedCity) selectedCityOwmDataCache$: Observable<IOwmDataModel>;
+  constructor(
+    private _store: Store, 
+    private _historyLogUpdate: HistoryLogUpdateService
+  ) { }
 
   getOwmDataDebounced$({ showLoading }) {
     return this.selectedCityOwmDataCache$.pipe(
@@ -33,6 +38,34 @@ export class OwmDataUtilsService {
       ),
       tap(() => { showLoading && this.dispatchShowLoading(false); })
     );
+  }
+
+  setOwmDataCache(owmData) {
+    if (!owmData || !owmData.updated) {
+      return;
+    }
+    const selectedCityId = owmData.city.id;
+    const cachedCityOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCachedSelectedCity);
+    if (cachedCityOwmData && cachedCityOwmData.updated >= owmData.updated) { 
+      return; 
+    }
+      
+    const cityName = owmData.city.name;
+    const countryISO2 = owmData.city.country;
+    this._store.dispatch(new SetPopupMessage({
+      message: `Refreshed: ${cityName}, ${countryISO2}`,
+      class: 'popup__info',
+      delay: 500
+    }));
+    
+    const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
+    const newEntry: HistoryLogModel = {
+      cityId: selectedCityId,
+      time: new Date().valueOf(),
+    };
+    Promise.resolve(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
+
+    this._store.dispatch(new SetOwmDataCacheState(owmData));
   }
 
   dispatchShowLoading(onOff: boolean) {

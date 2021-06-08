@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AppModule } from 'src/app/app.module';
-
+import { MatIconRegistry } from '@angular/material/icon';
 import { ResolverRegisterIconsService } from './resolver-register-icons.service';
 
 describe('ResolverRegisterIconsService', () => {
@@ -8,7 +7,10 @@ describe('ResolverRegisterIconsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      providers: [
+        ResolverRegisterIconsService,
+        MatIconRegistry
+      ]
     });
     service = TestBed.inject(ResolverRegisterIconsService);
   });
@@ -16,10 +18,11 @@ describe('ResolverRegisterIconsService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
   it('should resolve', waitForAsync(() => {
-      service.resolve().subscribe((response) => {
-        expect(response).toBe(true);
-      });
-    })
+    service.resolve().subscribe((response) => {
+      expect(response).toBe(true);
+    });
+  })
   );
 });

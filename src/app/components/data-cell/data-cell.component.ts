@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { ITimeTemplate } from 'src/app/models/hours.model';
-import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
+import { IListDayByHourModel,  } from 'src/app/models/owm-data.model';
 import { ConstantsService } from 'src/app/services/constants.service';
 import { AppStatusState } from 'src/app/states/app.state';
 import { Select } from '@ngxs/store';
@@ -14,7 +14,7 @@ import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataCellComponent implements OnInit, OnDestroy {
-  @Input() dataDaily: IOwmDataModelTimeSlotUnit;
+  @Input() dataDaily: IListDayByHourModel;
   @Input() timeSlot: ITimeTemplate;
 
   subscription: Subscription;
@@ -28,14 +28,14 @@ export class DataCellComponent implements OnInit, OnDestroy {
   constructor(private hostElementRef: ElementRef, private _utils: OwmDataUtilsService) {}
 
   ngOnInit() {
-    if (this.dataDaily[this.timeSlot.hour]) {
+    if (this.timeSlot && this.dataDaily?.[this.timeSlot.hour]) {
       this.setWeatherConditionIcon();
       this.subscribeShowBackgroundPictire();
     }
   }
   
   setWeatherConditionIcon() {
-    if (this.dataDaily[this.timeSlot.hour]) {
+    if (this.dataDaily?.[this.timeSlot.hour]) {
       const iconCode = this.dataDaily[this.timeSlot.hour].weather[0].icon;
       const iconIndex = ConstantsService.iconsWeatherMap[iconCode];
       const iconSize = ConstantsService.iconsWeatherSize2;
@@ -52,7 +52,7 @@ export class DataCellComponent implements OnInit, OnDestroy {
   }
   
   setBackground(showDetailTimeSlotBgPicture: boolean) {
-    if (this.dataDaily[this.timeSlot.hour]) {
+    if (this.dataDaily?.[this.timeSlot.hour]) {
       const bgImgPath = showDetailTimeSlotBgPicture ? this._utils.getWeatherBgImg(this.dataDaily[this.timeSlot.hour]) : '';
       this.hostElementRef.nativeElement.style['background-image'] = showDetailTimeSlotBgPicture ? `url(${bgImgPath})` : '';
       this.hostElementRef.nativeElement.style['background-color'] = showDetailTimeSlotBgPicture ? '' : this.timeSlot.bgColor;

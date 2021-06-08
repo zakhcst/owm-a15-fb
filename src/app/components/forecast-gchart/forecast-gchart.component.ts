@@ -4,7 +4,7 @@ import { Observable, Subscription, fromEvent, BehaviorSubject, combineLatest } f
 import { debounceTime, filter } from 'rxjs/operators';
 
 import { Select, Store } from '@ngxs/store';
-import { AppErrorPayloadModel } from '../../states/app.models';
+import { AppErrorModel } from '../../states/app.models';
 import { ITimeTemplate } from '../../models/hours.model';
 import { IOwmDataModelTimeSlotUnit } from '../../models/owm-data.model';
 
@@ -228,7 +228,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   }
 
   addError(custom: string, errorMessage: string) {
-    const errorLog: AppErrorPayloadModel = {
+    const errorLog: AppErrorModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
       logMessage: `ForecastGChartComponent: ${custom}: ${errorMessage}`,
     };

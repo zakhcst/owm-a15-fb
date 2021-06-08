@@ -15,7 +15,7 @@ import { filter, map, tap } from 'rxjs/operators';
 import { Subscription, Observable } from 'rxjs';
 import { ConstantsService } from '../../services/constants.service';
 import { ErrorsService } from '../../services/errors.service';
-import { AppErrorPayloadModel } from '../../states/app.models';
+import { AppErrorModel } from '../../states/app.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
@@ -192,7 +192,7 @@ export class MockHeaderToolbarComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   addError(custom: string, errorMessage: string) {
-    const errorLog: AppErrorPayloadModel = {
+    const errorLog: AppErrorModel = {
       userMessage: 'Connection or service problem. Please reload or try later.',
       logMessage: `ForecastComponent: ${custom}: ${errorMessage}`,
     };

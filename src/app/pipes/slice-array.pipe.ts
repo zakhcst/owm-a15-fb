@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SliceArrayPipe implements PipeTransform {
 
-  transform(value: [], arg: number): any[] {
+  transform(value: any[], arg: number): any[] {
     return arg === 0 ? value.slice(arg) : value.slice(0, arg);
   }
 

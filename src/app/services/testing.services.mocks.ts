@@ -1,15 +1,15 @@
-import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ICities } from '../models/cities.model';
-import { AppErrorPayloadModel, AppHistoryPayloadModel, HistoryLogModel } from '../states/app.models';
+import { AppErrorModel, AppHistoryPayloadModel, HistoryLogModel } from '../states/app.models';
 
 import dataJSON from '../../assets/owm-fallback-data.json';
 import citiesJSON from '../../../misc/cities-obj.json';
 import { IPopupModel } from '../models/snackbar.model';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { IHistoryLog } from '../models/history-log.model';
-import { NavigationEnd, NavigationStart } from '@angular/router';
+import { ActivatedRoute, Params, RouterEvent } from '@angular/router';
 
 export const data = <IOwmDataModel>(<any>dataJSON);
 
@@ -107,7 +107,7 @@ export class MockOwmFallbackDataService {
 }
 
 export class MockErrorsService {
-  messages: AppErrorPayloadModel[] = [];
+  messages: AppErrorModel[] = [];
   errorLog = {
     '1-1-1-1': {
       '1610000000011': 'err message11',
@@ -125,10 +125,10 @@ export class MockErrorsService {
     return of(this.errorLog);
   }
 
-  setDataToFB(newData: AppErrorPayloadModel) {
+  setDataToFB(newData: AppErrorModel) {
     return newData ? Promise.resolve() : Promise.reject();
   }
-  add(message: AppErrorPayloadModel) {
+  add(message: AppErrorModel) {
     this.messages.push(message);
   }
 }
@@ -178,7 +178,7 @@ export class MockAngularFireService {
     update: this.update.bind(this),
   };
 
-  constructor() {}
+  constructor() { }
 
   object(refkey: string) {
     this.refkey = refkey;
@@ -268,13 +268,19 @@ export class MockDocument {
   visibilityState = 'hidden';
   documentElement = {
     style: {
-      setProperty: (property: string, value: any) => {},
+      setProperty: (property: string, value: any) => { },
     },
   };
 }
 
 export const historyLogMockData: IHistoryLog = {
-  'dashed-ip01': { timeStamp01: 'cityId01' },
+  'dashed-ip01': {
+    timeStamp011: 'cityId011',
+    timeStamp014: 'cityId014',
+    timeStamp015: 'cityId015',
+    timeStamp013: 'cityId013',
+    timeStamp012: 'cityId012',
+  },
   'dashed-ip02': { timeStamp02: 'cityId02' },
   'dashed-ip03': { timeStamp03: 'cityId03' },
   'dashed-ip07': { timeStamp07: 'cityId07' },
@@ -294,5 +300,21 @@ export const historyLogMockData: IHistoryLog = {
 export const historyLogMockModelData: HistoryLogModel = {
   cityId: 'cityId',
   time: 1234567890123,
+};
+
+
+export const routerEventSubject = new ReplaySubject<RouterEvent>(1);
+
+export const routerMock = {
+  navigate: jasmine.createSpy('navigate'),
+  events: routerEventSubject.asObservable(),
+  url: 'test/url'
+};
+
+export const activatedRouteParamsSubject = new Subject<Params>();
+
+export const activatedRouteMock = {
+  params: activatedRouteParamsSubject.asObservable(),
+  url: '',
 };
 

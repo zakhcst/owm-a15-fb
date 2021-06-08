@@ -98,9 +98,8 @@ describe('ForecastFlexComponent services', () => {
     const spyOnUtils = spyOn(_utils, 'getOwmDataDebounced$').and.returnValue(of(owmData));
     const spyOnAnimateScroll = spyOn(component, 'animateScroll');
 
-    fixture.detectChanges();
-    tick(ConstantsService.loadingDataDebounceTime_ms);
-    const listByDateKeysSorted = Object.keys(component.listByDate).sort();
+    component.listByDate = owmData.listByDate;
+    const listByDateKeysSorted = Object.keys(component.listByDate).sort((d1, d2) => +d1 - +d2);
     const todayKey = listByDateKeysSorted[0];
     const todaySlots = component.listByDate[todayKey];
     const todaySlotsCount = Object.keys(todaySlots).length;
@@ -120,9 +119,8 @@ describe('ForecastFlexComponent services', () => {
     const spyOnUtils = spyOn(_utils, 'getOwmDataDebounced$').and.returnValue(of(owmData));
     const spyOnAnimateScroll = spyOn(component, 'animateScroll');
 
-    fixture.detectChanges();
-    tick(ConstantsService.loadingDataDebounceTime_ms);
-    const listByDateKeysSorted = Object.keys(component.listByDate).sort();
+    component.listByDate = owmData.listByDate;
+    const listByDateKeysSorted = Object.keys(component.listByDate).sort((d1, d2) => +d1 - +d2);
     const todayKey = listByDateKeysSorted[0];
     const todaySlots = component.listByDate[todayKey];
     const todaySlotsCount = Object.keys(todaySlots).length;
@@ -180,13 +178,13 @@ describe('ForecastFlexComponent services', () => {
     component.gridContainer = { nativeElement: { scrollLeft: 100 } };
     const scrollLeftInput = component.gridContainer.nativeElement.scrollLeft;
     const step = (event.deltaY * 2) / component.frames;
-    
+
     component.onMouseWheel(event);
     tick(component.onMouseWheelIntervalDelay_ms * (component.frames + 1));
     const scrollLeftOutput = component.gridContainer.nativeElement.scrollLeft;
     expect(scrollLeftOutput).toBe(scrollLeftInput + (component.frames + 1) * step);
   }));
-  
+
   it('should addError', () => {
     const spyOnErrorsAdd = spyOn(component['_errors'], 'add');
     component.addError('custom error string', 'error message');

@@ -3,11 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsModule, Store } from '@ngxs/store';
 import { of } from 'rxjs';
-import { SharedModule } from 'src/app/modules/shared.module';
-import { ErrorsService } from 'src/app/services/errors.service';
-import { SnackbarService } from 'src/app/services/snackbar.service';
-import { cities, MockErrorsService, historyLogMockData } from 'src/app/services/testing.services.mocks';
-import { AppCitiesState, AppHistoryLogState, AppStatsState, AppStatusState } from 'src/app/states/app.state';
+import { SharedModule } from '../../modules/shared.module';
+import { ErrorsService } from '../../services/errors.service';
+import { SnackbarService } from '../../services/snackbar.service';
+import { MockErrorsService, historyLogMockData } from '../../services/testing.services.mocks';
+import { AppCitiesState, AppHistoryLogState, AppStatsState, AppStatusState } from '../../states/app.state';
 
 import { StatsComponent } from './stats.component';
 
@@ -28,7 +28,7 @@ describe('StatsComponent', () => {
           NgxsModule.forRoot([AppStatusState, AppCitiesState, AppHistoryLogState, AppStatsState]),
         ],
         declarations: [StatsComponent],
-        providers: [SnackbarService, Store, 
+        providers: [SnackbarService, Store,
           { provide: ErrorsService, useValue: mockErrorsService }],
       }).compileComponents();
       store = TestBed.inject(Store);
@@ -47,14 +47,14 @@ describe('StatsComponent', () => {
 
   it('should not keyEvent when key != e', () => {
     const spyOnToggleShowErrors = spyOn(component, 'toggleShowErrors');
-    const event: any = { key: '0'};
+    const event: any = { key: '0' };
     component.keyEvent(event);
     expect(spyOnToggleShowErrors).toHaveBeenCalledTimes(0);
   });
 
   it('should keyEvent', () => {
     const spyOnToggleShowErrors = spyOn(component, 'toggleShowErrors');
-    const event: any = { key: 'e'};
+    const event: any = { key: 'e' };
     component.keyEvent(event);
     expect(spyOnToggleShowErrors).toHaveBeenCalledTimes(1);
   });
@@ -66,7 +66,7 @@ describe('StatsComponent', () => {
     expect(spyOnStats$).toHaveBeenCalledTimes(1);
     expect(component.stats).toBe(value);
   }));
-  
+
   it('should subscribeCities', waitForAsync(() => {
     fixture.detectChanges();
     const value: any = { citiId1: 1, citiId2: 2 };
@@ -87,6 +87,26 @@ describe('StatsComponent', () => {
     fixture.detectChanges();
     component.subscribeHistoryLog();
     expect(component.historyLog).toBeTruthy();
+  }));
+
+  it('should setLog$', waitForAsync(() => {
+    component.setLog$(of(historyLogMockData), false).subscribe(sortedTrimmedEntries => {
+      const first = sortedTrimmedEntries[0];
+      const last = sortedTrimmedEntries[sortedTrimmedEntries.length - 1];
+      expect(first[0]).toBeGreaterThan(last[0]);
+      expect(last[1][1]).toBeGreaterThan(last[1][last.length - 1]);
+
+    });
+  }));
+
+  it('should setLog$ when filter is true', waitForAsync(() => {
+    component.setLog$(of(historyLogMockData), true).subscribe(sortedTrimmedEntries => {
+      const first = sortedTrimmedEntries[0];
+      const last = sortedTrimmedEntries[sortedTrimmedEntries.length - 1];
+      expect(first[0]).toBeGreaterThan(last[0]);
+      expect(last[1][1]).toBeGreaterThan(last[1][last.length - 1]);
+
+    });
   }));
 
   it('should toggleShowErrors subscribe', waitForAsync(() => {

@@ -59,7 +59,7 @@ describe('StatsService', () => {
     const spyOnSubscribeToGetData = spyOn(service, 'subscribeToGetData');
     const spyOnGetDataOnce = spyOn(service, 'getDataOnce');
     const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(q$);
-    
+
     q$.pipe(delay(10)).subscribe(() => {
       expect(spyOnGetDataOnce).toHaveBeenCalledTimes(0);
       expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(1);
@@ -70,7 +70,6 @@ describe('StatsService', () => {
 
   it('should activateLiveDataUpdatesStats getDataOnce when liveDataUpdate$ is false', waitForAsync(() => {
     const q$ = cold('-f|', { t: true, f: false });
-    console.log(service.getDataSubscription);
     service.liveDataUpdateSubscription.unsubscribe();
     const spyOnSubscribeToGetData = spyOn(service, 'subscribeToGetData');
     const spyOnGetDataOnce = spyOn(service, 'getDataOnce');
@@ -90,7 +89,7 @@ describe('StatsService', () => {
     const spyDispatch = spyOn(store, 'dispatch');
     const spyOnGetDataOnce = spyOn(service, 'getDataOnce');
     const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(q$);
-    
+
     q$.pipe(delay(10)).subscribe(() => {
       expect(spyOnGetDataOnce).toHaveBeenCalledTimes(0);
       expect(spyDispatch).toHaveBeenCalledTimes(2);

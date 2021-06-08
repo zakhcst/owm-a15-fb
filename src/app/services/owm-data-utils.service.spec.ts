@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { ConstantsService } from './constants.service';
+import { HistoryLogUpdateService } from './history-log-update.service';
 
 import { OwmDataUtilsService } from './owm-data-utils.service';
 import { getNewDataObject } from './testing.services.mocks';
@@ -18,7 +19,10 @@ describe('OwmDataUtilsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ NgxsModule.forRoot([]) ],
-      providers: [ Store ]
+      providers: [ 
+        Store, 
+        { provide: HistoryLogUpdateService, useValue: { setDataToFB : function (ip, newEntry) {} } }
+      ]
     });
     service = TestBed.inject(OwmDataUtilsService);
     store = TestBed.inject(Store);
@@ -225,7 +229,46 @@ describe('OwmDataUtilsService', () => {
     delete dataFirstDayFirstHourSlot.sys.pod;
     getWeatherBgImgUrl = service.getWeatherBgImg(dataFirstDayFirstHourSlot);
     expect(getWeatherBgImgUrl).toContain(defaultUrl);
-
   });
+  
+  it('should setOwmDataCache return when no owm', () => {
+    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot');
+    service.setOwmDataCache(null);
+    expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(0);
+  });
+
+  it('should setOwmDataCache return when owm.updated is undefined', () => {
+    const data = getNewDataObject();
+    delete data.updated;
+    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot');
+    service.setOwmDataCache(data);
+    expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(0);
+  });
+
+  it('should setOwmDataCache return when cached.updated >= owm.updated', () => {
+    const data = getNewDataObject();
+    const now = Date.now();
+    data.updated = now;
+    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValue({ ...data, updated: now + 100 });
+    const spyOnStoreDispatch = spyOn(store, 'dispatch');
+    service.setOwmDataCache(data);
+    expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(1);
+    expect(spyOnStoreDispatch).toHaveBeenCalledTimes(0);
+  });
+
+  it('should setOwmDataCache ', () => {
+    const data = getNewDataObject();
+    const now = Date.now();
+    data.updated = now;
+    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValues({ ...data, updated: now - 100 }, 'normalized-Ip');
+    const spyOnStoreDispatch = spyOn(store, 'dispatch');
+    const spyOn_historyLogUpdateSetDataToFB = spyOn(service['_historyLogUpdate'], 'setDataToFB').and.resolveTo();
+
+    service.setOwmDataCache(data);
+    expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(2);
+    expect(spyOn_historyLogUpdateSetDataToFB).toHaveBeenCalledTimes(1);
+    expect(spyOnStoreDispatch).toHaveBeenCalledTimes(2);
+  });
+
   
 });

@@ -1,7 +1,7 @@
 import { Injectable, ErrorHandler, Injector, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { ErrorsService } from './errors.service';
-import { AppErrorPayloadModel } from '../states/app.models';
+import { AppErrorModel } from '../states/app.models';
 
 
 @Injectable({
@@ -15,7 +15,7 @@ export class AppErrorHandlerService implements ErrorHandler {
     const _errors = this.injector.get(ErrorsService);
     console.log('handleError');
     console.log(error);
-    const errorLog: AppErrorPayloadModel = {
+    const errorLog: AppErrorModel = {
       userMessage: 'Client error. Please reload or try later.',
       logMessage: `Client error:\n ${error.message}:\n ${error}`
     };

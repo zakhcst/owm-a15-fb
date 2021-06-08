@@ -4,7 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ICities } from '../models/cities.model';
-import { SetCitiesState } from '../states/app.actions';
+import { SetCitiesState, SetPopupMessage, SetStatusSelectedCityId } from '../states/app.actions';
 import { AppCitiesState, AppStatusState } from '../states/app.state';
 @Injectable({
   providedIn: 'root',
@@ -37,7 +37,7 @@ export class CitiesService {
     }
   }
 
-   activateLiveDataUpdatesCities() {
+  activateLiveDataUpdatesCities() {
     this.liveDataUpdateSubscription = this.liveDataUpdate$.subscribe((liveDataUpdate) => {
       if (this.getDataSubscription && !this.getDataSubscription.closed) {
         this.getDataSubscription.unsubscribe();
@@ -48,6 +48,20 @@ export class CitiesService {
         this.getDataOnce();
       }
     });
+  }
+
+  setSelectedCityId(selectedCityId) {
+    const cities = this._store.selectSnapshot(AppCitiesState.selectCities);
+    const cityName = cities?.[selectedCityId]?.name;
+    const countryISO2 = cities?.[selectedCityId]?.iso2;
+    if (cities && cityName && countryISO2) {
+      this._store.dispatch(new SetPopupMessage({
+        message: `Selected: ${cityName}, ${countryISO2}`,
+        class: 'popup__info',
+        delay: 500
+      }));
+      this._store.dispatch(new SetStatusSelectedCityId(selectedCityId));
+    }
   }
 
   dispatch(cities) {

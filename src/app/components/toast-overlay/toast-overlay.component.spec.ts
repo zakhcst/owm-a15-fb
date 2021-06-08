@@ -61,11 +61,11 @@ describe('ToastOverlayComponent', () => {
   });
 
   it('should triggerShift', fakeAsync(() => {
-
     component.isOpen = true;
     component.items.push(mockMessage);
     component.items.push(mockMessage);
     expect(component.items.length).toBe(2);
+    
     component.triggerShift(mockMessage);
     tick(mockMessage.delay + ConstantsService.popupDelay_ms);
     expect(component.items.length).toBe(1);
@@ -76,6 +76,25 @@ describe('ToastOverlayComponent', () => {
     expect(component.items.length).toBe(0);
     expect(component.isOpen).toBe(false);
 
+  }));
+
+  it('should triggerShift when data.delay undefined', fakeAsync(() => {
+    delete mockMessage.delay;
+    component.isOpen = true;
+    component.items.push(mockMessage);
+    component.items.push(mockMessage);
+    expect(component.items.length).toBe(2);
+
+    component.triggerShift(mockMessage);
+    tick(mockMessage.delay + ConstantsService.popupDelay_ms);
+    expect(component.items.length).toBe(1);
+    expect(component.isOpen).toBe(true);
+    
+    component.triggerShift(mockMessage);
+    tick(mockMessage.delay + ConstantsService.popupDelay_ms);
+    expect(component.items.length).toBe(0);
+    expect(component.isOpen).toBe(false);
+    mockMessage.delay = 500;
   }));
 
   it('should ngOnInit', () => {
