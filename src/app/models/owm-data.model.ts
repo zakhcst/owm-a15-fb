@@ -49,7 +49,11 @@ export interface IOwmDataModelTimeSlotUnit {
     temp_min?: number;
     feels_like?: number;
   };
+  pop?: number; 
   rain?: {
+    '3h': number;
+  };
+  snow?: {
     '3h': number;
   };
   sys?: {
@@ -57,8 +61,9 @@ export interface IOwmDataModelTimeSlotUnit {
   };
   weather: IOwmDataWeatherModel[];
   wind: {
-    deg: number;
-    speed: number;
+    deg?: number;
+    speed?: number;
+    gust?: number;
   };
   visibility: number;
 }

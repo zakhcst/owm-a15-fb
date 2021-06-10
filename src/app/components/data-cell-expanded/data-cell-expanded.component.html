@@ -19,35 +19,47 @@
   </div>
 
   <div fxFlex="50%" class="data-table-grid" mat-dialog-content>
-    <span class="red">Temperature</span>
-    <span class="red right">{{ this.timeSlotData.main.temp | number: "1.0-0" }}</span>
-    <span class="red">&#176;C</span>
-    <span class="red">Feels like</span>
-    <span class="red right">{{ this.timeSlotData.main.feels_like | number: "1.0-0" }}</span>
-    <span class="red">&#176;C</span>
-    <span class="green">Pressure</span>
-    <span class="green right">{{ this.timeSlotData.main.pressure | number: "1.0-0" }}</span>
-    <span class="green">hPa</span>
-    <span class="green">Sea level</span>
-    <span class="green right">{{ this.timeSlotData.main.sea_level | number: "1.0-0" }}</span>
-    <span class="green">hPa</span>
-    <span class="green">Ground level</span>
-    <span class="green right">{{ this.timeSlotData.main.grnd_level | number: "1.0-0" }}</span>
-    <span class="green">hPa</span>
-    <span class="blue">Wind Speed</span>
-    <span class="blue right">{{ this.timeSlotData.wind.speed | number: "1.0-0" }}</span>
-    <span class="blue ">m/s</span>
-    <span class="blue">Direction</span>
-    <span class="blue right" style="display: flex;">
+    <span >Temperature</span>
+    <span class="right">{{ this.timeSlotData.main.temp | number: "1.0-0" }}</span>
+    <span>&#176;C</span>
+    <span>Feels like</span>
+    <span class="right">{{ this.timeSlotData.main.feels_like | number: "1.0-0" }}</span>
+    <span>&#176;C</span>
+    <span>Pressure</span>
+    <span class="right">{{ this.timeSlotData.main.pressure | number: "1.0-0" }}</span>
+    <span>hPa</span>
+    <span>Sea level</span>
+    <span class="right">{{ this.timeSlotData.main.sea_level | number: "1.0-0" }}</span>
+    <span>hPa</span>
+    <span>Ground level</span>
+    <span class="right">{{ this.timeSlotData.main.grnd_level | number: "1.0-0" }}</span>
+    <span>hPa</span>
+    <span>Wind Speed</span>
+    <span class="right">{{ this.timeSlotData.wind.speed | number: "1.0-0" }}</span>
+    <span>m/s</span>
+    <span>Gust</span>
+    <span class="right">{{ this.timeSlotData.wind.gust | number: "1.0-0" }}</span>
+    <span>m/s</span>
+    <span>Direction</span>
+    <span class="right" style="display: flex;">
         <span [style.transform]="'rotate(' + this.timeSlotData.wind.deg + 'deg)'" class="icon-wind-direction"></span>
         &nbsp;{{ this.timeSlotData.wind.deg }}
     </span>
-    <span class="blue">Degrees</span>
-    <span class="yellow">Humidity</span>
-    <span class="yellow right">{{ this.timeSlotData.main.humidity | number: "1.0-0" }}</span>
-    <span class="yellow">%</span>
-    <span class="">Visibility</span>
+    <span>Degrees</span>
+    <span>Humidity</span>
+    <span class="right">{{ this.timeSlotData.main.humidity | number: "1.0-0" }}</span>
+    <span>%</span>
+    <span>Precipitation</span>
+    <span class="right">{{ (this.timeSlotData.pop * 100) | number: "1.0-0" }}</span>
+    <span>%</span>
+    <span *ngIf="this.timeSlotData.rain">Rain 3 hours</span>
+    <span class="right" *ngIf="this.timeSlotData.rain">{{ this.timeSlotData.rain['3h'] || 0 | number: "1.0-0" }}</span>
+    <span *ngIf="this.timeSlotData.rain">mm</span>
+    <span *ngIf="this.timeSlotData.snow">Snow 3 hours</span>
+    <span class="right" *ngIf="this.timeSlotData.snow">{{ this.timeSlotData.snow['3h'] || 0 | number: "1.0-0" }}</span>
+    <span *ngIf="this.timeSlotData.snow">mm</span>
+    <span>Visibility</span>
     <span class="right">{{ this.timeSlotData.visibility | number: "1.0-0" }}</span>
-    <span class="">m</span>
+    <span>m</span>
   </div>
 </div>
