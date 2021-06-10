@@ -20,8 +20,8 @@ describe('DbOwmService', () => {
       TestBed.configureTestingModule({
         imports: [NgxsModule.forRoot([])],
         providers: [
-          DbOwmService, 
-          Store, 
+          DbOwmService,
+          Store,
           { provide: AngularFireDatabase, useValue: mockAngularFireService }],
       });
       service = TestBed.inject(DbOwmService);
@@ -68,7 +68,7 @@ describe('DbOwmService', () => {
     service.liveDataUpdateSubscription.unsubscribe();
     const spyOnSubscribeToGetData = spyOn(service, 'subscribeToGetData');
     const spyOnLiveDataUpdate$ = spyOnProperty(service, 'liveDataUpdate$').and.returnValue(of(false));
-    
+
     service.activateLiveDataUpdateDB();
     tick(10);
     expect(spyOnSubscribeToGetData).toHaveBeenCalledTimes(0);
@@ -78,10 +78,12 @@ describe('DbOwmService', () => {
   it('should subscribeToGetData', fakeAsync(() => {
     const spyOnSelectedCityId$ = spyOnProperty(service, 'selectedCityId$').and.callFake(() => of('cityId'));
     const spyOnGetData = spyOn(service, 'getData').and.callFake(() => of(testData));
-    const spyOnUpdateCache = spyOn(service, 'updateCache');
-    
+    const spyOnUpdateCache = spyOn(service, 'updateCache').and.resolveTo();
+
     service.subscribeToGetData();
     tick(ConstantsService.loadingDataDebounceTime_ms);
+    tick(ConstantsService.loadingDataDebounceTime_ms);
+
     expect(spyOnSelectedCityId$).toHaveBeenCalledTimes(1);
     expect(spyOnGetData).toHaveBeenCalledTimes(1);
     expect(spyOnUpdateCache).toHaveBeenCalledTimes(1);

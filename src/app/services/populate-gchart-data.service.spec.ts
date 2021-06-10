@@ -18,7 +18,7 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should setGChartData', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((date1, date2) => (+date1 - +date2));
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataDaysKeysLength = owmDataDaysKeys.length;
     const showGraphs = { temperature: true, wind: true, humidity: true, pressure: true };
     const spyOnSetGChartColumnNames = spyOn(service, 'setGChartColumnNames');
@@ -70,13 +70,13 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should addAdditionalRow2359 not last', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort();
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataLastDay = owmData.listByDate[owmDataDaysKeys[0]];
     const hoursKeys = [Object.keys(owmDataLastDay).map(k => +k)[0]];
     const showGraphs = { temperature: true, wind: true, humidity: true, pressure: true };
     const showGraphsKeys = Object.keys(showGraphs);
     const weatherDataListByDate = owmData.listByDate;
-    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort();
+    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort((d1, d2) => +d1 - +d2);
     const dayK = weatherDataDateKeys[0];
     const day = weatherDataListByDate[dayK]
     const data = service.setGChartDayData(dayK, day, weatherDataListByDate, weatherDataDateKeys, hoursKeys, showGraphsKeys);
@@ -89,13 +89,13 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should addAdditionalRow2359 not last and next 0 is not existing', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort();
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataLastDay = owmData.listByDate[owmDataDaysKeys[0]];
     const hoursKeys = [Object.keys(owmDataLastDay).map(k => +k)[0]];
     const showGraphs = { temperature: true, wind: true, humidity: true, pressure: true };
     const showGraphsKeys = Object.keys(showGraphs);
     const weatherDataListByDate = owmData.listByDate;
-    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort();
+    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort((d1, d2) => +d1 - +d2);
     const dayK = weatherDataDateKeys[0];
     const day = weatherDataListByDate[dayK]
     delete owmData.listByDate[owmDataDaysKeys[1]][0];
@@ -109,13 +109,13 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should addAdditionalRow2359 last', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort();
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataLastDay = owmData.listByDate[owmDataDaysKeys[owmDataDaysKeys.length - 1]];
     const hoursKeys = [Object.keys(owmDataLastDay).map(k => +k)[0]];
     const showGraphs = { temperature: true, wind: true, humidity: true, pressure: true };
     const showGraphsKeys = Object.keys(showGraphs);
     const weatherDataListByDate = owmData.listByDate;
-    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort();
+    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort((d1, d2) => +d1 - +d2);
     const dayK = weatherDataDateKeys[weatherDataDateKeys.length - 1];
     const day = weatherDataListByDate[dayK];
 
@@ -140,11 +140,11 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should setGChartDayIcons today', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort();
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataLastDay = owmData.listByDate[owmDataDaysKeys[0]];
     const hoursKeys = [Object.keys(owmDataLastDay).map(k => +k)[0]];
     const weatherDataListByDate = owmData.listByDate;
-    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort();
+    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort((d1, d2) => +d1 - +d2);
     const dayK = weatherDataDateKeys[0];
     const day = weatherDataListByDate[dayK];
 
@@ -153,11 +153,11 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should setGChartDayIcons last day', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort();
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataLastDay = owmData.listByDate[owmDataDaysKeys[owmDataDaysKeys.length - 1]];
     const hoursKeys = [Object.keys(owmDataLastDay).map(k => +k)[0]];
     const weatherDataListByDate = owmData.listByDate;
-    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort();
+    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort((d1, d2) => +d1 - +d2);
     const dayK = weatherDataDateKeys[0];
     const day = weatherDataListByDate[dayK];
 
@@ -166,11 +166,11 @@ describe('PopulateGchartDataService', () => {
   });
 
   it('should setGChartDayIcons when icon index is mising', () => {
-    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort();
+    const owmDataDaysKeys = Object.keys(owmData.listByDate).sort((d1, d2) => +d1 - +d2);
     const owmDataLastDay = owmData.listByDate[owmDataDaysKeys[1]];
     const hoursKeys = [Object.keys(owmDataLastDay).map(k => +k)[0]];
     const weatherDataListByDate = owmData.listByDate;
-    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort();
+    const weatherDataDateKeys = Object.keys(weatherDataListByDate).sort((d1, d2) => +d1 - +d2);
     const dayK = weatherDataDateKeys[1];
     const day = weatherDataListByDate[dayK];
     delete day['3'].weather[0].icon;

@@ -141,7 +141,7 @@ export class ForecastGChartComponent implements OnInit, OnDestroy {
   updateKeysAndData([data, wind, humidity]) {
     const showGraphs = { temperature: true, wind, humidity, pressure: true };
     this.weatherData = data;
-    const dataDays = Object.keys(this.weatherData.listByDate).sort((date1, date2) => (+date1 - +date2));
+    const dataDays = Object.keys(this.weatherData.listByDate).sort((d1, d2) => (+d1 - +d2));
     this.weatherDataDateKeys = [...dataDays];
     if (this.activeDays.length === 1) {
       if (!dataDays.includes(this.activeDays[0])) {

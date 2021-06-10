@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, combineLatest } from 'rxjs';
+import { of, Observable, combineLatest, Subscription } from 'rxjs';
 import { switchMap, catchError, tap, filter } from 'rxjs/operators';
 import { OwmService } from './owm.service';
 import { DbOwmService } from './db-owm.service';
 import { ErrorsService } from './errors.service';
 import { OwmDataUtilsService } from './owm-data-utils.service';
 import { Store, Select } from '@ngxs/store';
-import { SetOwmDataCacheState, SetPopupMessage, SetStatusShowLoading } from '../states/app.actions';
+import { SetPopupMessage, SetStatusShowLoading } from '../states/app.actions';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { IPopupModel } from '../models/snackbar.model';
 import { AppStatusState, AppOwmDataCacheState } from '../states/app.state';
@@ -22,6 +22,7 @@ export interface IStatusChanges {
 })
 export class OwmDataManagerService {
 
+  combineLatestStatusSubscription: Subscription;
   popupOptions: IPopupModel = {
     message: '',
     class: 'popup__warn',
@@ -53,9 +54,9 @@ export class OwmDataManagerService {
     return combineLatest([this.selectedCityId$, this.connected$, this.away$])
       .pipe(
         filter((status) => {
-          const passCondition = 
-            status[1] === true && 
-            status[2] === false && 
+          const passCondition =
+            status[1] === true &&
+            status[2] === false &&
             (status[0] !== previous[0] || status[1] !== previous[1] || status[2] !== previous[2]);
           if (!passCondition) {
             previous = status;
@@ -64,20 +65,19 @@ export class OwmDataManagerService {
         }
         ),
         tap(() => this._store.dispatch(new SetStatusShowLoading(true))),
-        switchMap(status => { 
+        switchMap(status => {
           const previousCurrentCityIds = { selectedCityId: status[0], previousSelectedCityId: (previous[0] || status[0]) };
           previous = status;
           return this.getDataMemory(previousCurrentCityIds);
         }),
         tap(() => this._store.dispatch(new SetStatusShowLoading(false))),
-        filter((data) => !!data)
+        filter((data) => !!data),
+        switchMap(data => this._utils.setOwmDataCache(data, false))
       );
   }
 
   subscribeOnStatusChange() {
-    this.combineLatestStatus().subscribe((data: IOwmDataModel) => {
-      this._utils.setOwmDataCache(data);
-    });
+    this.combineLatestStatusSubscription = this.combineLatestStatus().subscribe();
   }
 
   getDataMemory(status: IStatusChanges): Observable<IOwmDataModel | null> {
@@ -91,7 +91,7 @@ export class OwmDataManagerService {
 
   getDataDB({ selectedCityId, previousSelectedCityId }: IStatusChanges): Observable<IOwmDataModel | null> {
     const liveDataUpdate = this._store.selectSnapshot(AppStatusState.liveDataUpdate);
-    
+
     if (liveDataUpdate && selectedCityId === previousSelectedCityId) {
       return this.getDataOWM(selectedCityId);
     }
@@ -103,7 +103,7 @@ export class OwmDataManagerService {
       switchMap((fbdata: IOwmDataModel) => {
         if (fbdata !== null && this._utils.isNotExpired(fbdata)) {
           // concurent case with DbOwmService, on liveDataUpdate DbOwmService to handle data update
-          if (liveDataUpdate) { 
+          if (liveDataUpdate) {
             return of(null);
           }
           return of(fbdata);

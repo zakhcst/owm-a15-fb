@@ -19,7 +19,7 @@ export class PopulateGchartDataService {
     Object.entries(weatherDataListByDate).forEach(([dayK, day]) => {
       const hoursKeys: number[] = Object.keys(day)
         .map(Number)
-        .sort((a, b) => Number(a > b));
+        .sort((h1, h2) => Number(h1 > h2));
 
       this.chart[dayK] = { type: 'LineChart' };
       this.chart[dayK].columnNames = this.setGChartColumnNames(showGraphsKeys);

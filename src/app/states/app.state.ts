@@ -30,10 +30,8 @@ import {
 import {
   AppStatusModel,
   AppErrorsStateModel,
-  HistoryLogModel,
   IOwmDataCacheModel,
 } from './app.models';
-import { HistoryLogUpdateService } from '../services/history-log-update.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { ConstantsService } from '../services/constants.service';
 import { NormalizeDataService } from '../services/normalize-data.service';
@@ -269,7 +267,7 @@ export class AppStatusState {
 @Injectable()
 export class AppFallbackDataState {
   @Selector()
-  static selectFallbackData(state: IHistoryLog) {
+  static selectFallbackData(state: IOwmDataModel) {
     return state;
   }
 

@@ -1,11 +1,11 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { cold } from 'jasmine-marbles';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { ConstantsService } from './constants.service';
-import { HistoryLogUpdateService } from './history-log-update.service';
+import { HistoryLogService } from './history-log.service';
 
 import { OwmDataUtilsService } from './owm-data-utils.service';
 import { getNewDataObject } from './testing.services.mocks';
@@ -18,10 +18,10 @@ describe('OwmDataUtilsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ NgxsModule.forRoot([]) ],
-      providers: [ 
-        Store, 
-        { provide: HistoryLogUpdateService, useValue: { setDataToFB : function (ip, newEntry) {} } }
+      imports: [NgxsModule.forRoot([])],
+      providers: [
+        Store,
+        { provide: HistoryLogService, useValue: { setDataToFB: function (ip, newEntry) { } } }
       ]
     });
     service = TestBed.inject(OwmDataUtilsService);
@@ -72,22 +72,22 @@ describe('OwmDataUtilsService', () => {
   it('should getDataServiceOrTimeout data when return before timeout period', (done) => {
     const data = getNewDataObject('owm');
     const serviceToCall = of(data);
-    service.getDataServiceOrTimeout(serviceToCall).subscribe(responseData  => {
+    service.getDataServiceOrTimeout(serviceToCall).subscribe(responseData => {
       expect(responseData).toBe(data);
       done();
     });
   });
-  
+
   it('should getDataServiceOrTimeout throw error when data is not returned in timeout period', fakeAsync(() => {
     const data = getNewDataObject('owm');
     const serviceToCall = of(data).pipe(delay(ConstantsService.dataResponseTimeout_ms * 2 + 1));
-    
-    service.getDataServiceOrTimeout(serviceToCall).subscribe(responseData  => {
+
+    service.getDataServiceOrTimeout(serviceToCall).subscribe(responseData => {
       fail('should time out with error');
     },
-    error => {
-      expect(error).toBe('Service Timeout Error');
-    });
+      error => {
+        expect(error).toBe('Service Timeout Error');
+      });
     tick(ConstantsService.dataResponseTimeout_ms * 2);
   }));
 
@@ -102,7 +102,7 @@ describe('OwmDataUtilsService', () => {
       expect(responseData).toBe(data);
     });
   }));
-  
+
   it('should getOwmDataDebounced$ when showLoading is false', fakeAsync(() => {
     const data = getNewDataObject('owm');
     const spyOnStoreDispatch = spyOn(store, 'dispatch');
@@ -114,7 +114,7 @@ describe('OwmDataUtilsService', () => {
       expect(responseData).toBe(data);
     });
   }));
-  
+
   it('should getOwmDataDebounced$ when no data', fakeAsync(() => {
     const data = getNewDataObject('owm');
     const spyOnStoreDispatch = spyOn(store, 'dispatch');
@@ -129,10 +129,10 @@ describe('OwmDataUtilsService', () => {
   it('should getOwmDataDebounced$ when data expired', fakeAsync(() => {
     const data = getNewDataObject('owm');
     const spyOnStoreDispatch = spyOn(store, 'dispatch');
-    const a = { ...data, updated: 1};
-    const b = { ...data, updated: 2};
-    const c = { ...data, updated: 3};
-    const $q = cold('--a--b--c--|', {a, b, c});
+    const a = { ...data, updated: 1 };
+    const b = { ...data, updated: 2 };
+    const c = { ...data, updated: 3 };
+    const $q = cold('--a--b--c--|', { a, b, c });
     const spyOnSelectedCityOwmDataCache$ = spyOnProperty(service, 'selectedCityOwmDataCache$').and.returnValue($q);
 
     const showLoading = true;
@@ -141,7 +141,7 @@ describe('OwmDataUtilsService', () => {
       expect(responseData).toBe(c);
     });
   }));
-  
+
   it('should getOwmDataDebounced$ when data is different and is expired', () => {
 
     testScheduler.run(({ expectObservable, cold }) => {
@@ -150,14 +150,14 @@ describe('OwmDataUtilsService', () => {
       const debounce_ms = ConstantsService.loadingDataDebounceTime_ms;
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnIsNotExpired = spyOn(service, 'isNotExpired').and.returnValue(false);
-      const a = { ...data, updated: 1};
-      const b = { ...data, updated: 2};
-      const c = { ...data, updated: 3};
-      const delay = 100;
-      const $q = cold(`${delay}ms a ${delay}ms b ${delay}ms c`, { a, b, c });
+      const a = { ...data, updated: 1 };
+      const b = { ...data, updated: 2 };
+      const c = { ...data, updated: 3 };
+      const delayed = 100;
+      const $q = cold(`${delayed}ms a ${delayed}ms b ${delayed}ms c`, { a, b, c });
       const spyOnSelectedCityOwmDataCache$ = spyOnProperty(service, 'selectedCityOwmDataCache$').and.returnValue($q);
-      const expected = `${debounce_ms + delay*3 + 2}ms c `;
-      expectObservable(service.getOwmDataDebounced$({ showLoading })).toBe(expected, {c});
+      const expected = `${debounce_ms + delayed * 3 + 2}ms c `;
+      expectObservable(service.getOwmDataDebounced$({ showLoading })).toBe(expected, { c });
     });
 
   });
@@ -169,17 +169,17 @@ describe('OwmDataUtilsService', () => {
       const debounce_ms = ConstantsService.loadingDataDebounceTime_ms;
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnIsNotExpired = spyOn(service, 'isNotExpired').and.returnValue(false);
-      const a = { ...data, updated: 1};
-      const b = { ...data, updated: 3};
-      const c = { ...data, updated: 3};
-      const delay = 100;
-      const $q = cold(`${delay}ms a ${delay}ms b ${delay}ms c`, { a, b, c });
+      const a = { ...data, updated: 1 };
+      const b = { ...data, updated: 3 };
+      const c = { ...data, updated: 3 };
+      const delayed = 100;
+      const $q = cold(`${delayed}ms a ${delayed}ms b ${delayed}ms c`, { a, b, c });
       const spyOnSelectedCityOwmDataCache$ = spyOnProperty(service, 'selectedCityOwmDataCache$').and.returnValue($q);
-      const expected = `${debounce_ms + delay*2 + 1}ms c `;
-      expectObservable(service.getOwmDataDebounced$({ showLoading })).toBe(expected, {c});
+      const expected = `${debounce_ms + delayed * 2 + 1}ms c `;
+      expectObservable(service.getOwmDataDebounced$({ showLoading })).toBe(expected, { c });
     });
   });
-  
+
   it('should getOwmDataDebounced$ when data is duplicated and is different and is not expired', () => {
     testScheduler.run(({ expectObservable, cold }) => {
       const showLoading = true;
@@ -187,14 +187,14 @@ describe('OwmDataUtilsService', () => {
       const debounce_ms = ConstantsService.loadingDataDebounceTime_ms;
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnIsNotExpired = spyOn(service, 'isNotExpired').and.returnValue(true);
-      const a = { ...data, updated: 1};
-      const b = { ...data, updated: 1};
-      const c = { ...data, updated: Date.now()};
-      const delay = 100;
-      const $q = cold(`${delay}ms a ${delay}ms b ${delay}ms c`, { a, b, c });
+      const a = { ...data, updated: 1 };
+      const b = { ...data, updated: 1 };
+      const c = { ...data, updated: Date.now() };
+      const delayed = 100;
+      const $q = cold(`${delayed}ms a ${delayed}ms b ${delayed}ms c`, { a, b, c });
       const spyOnSelectedCityOwmDataCache$ = spyOnProperty(service, 'selectedCityOwmDataCache$').and.returnValue($q);
-      const expected = `${delay}ms a ${delay*2 + 1}ms c `;
-      expectObservable(service.getOwmDataDebounced$({ showLoading })).toBe(expected, {a, c});
+      const expected = `${delayed}ms a ${delayed * 2 + 1}ms c `;
+      expectObservable(service.getOwmDataDebounced$({ showLoading })).toBe(expected, { a, c });
     });
   });
 
@@ -213,7 +213,7 @@ describe('OwmDataUtilsService', () => {
     const dataFirstDayFirstHourSlotBg_syspod = dataFirstDayFirstHourSlotBg + '_' + syspod;
     expect(weatherBgImgUrl).toContain(dataFirstDayFirstHourSlotBg_syspod);
   });
-  
+
   it('should getWeatherBgImg when no syspod', () => {
     const data = getNewDataObject();
     const dataFirstDayKey = Object.keys(data.listByDate)[0];
@@ -230,10 +230,10 @@ describe('OwmDataUtilsService', () => {
     getWeatherBgImgUrl = service.getWeatherBgImg(dataFirstDayFirstHourSlot);
     expect(getWeatherBgImgUrl).toContain(defaultUrl);
   });
-  
+
   it('should setOwmDataCache return when no owm', () => {
     const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot');
-    service.setOwmDataCache(null);
+    service.setOwmDataCache(null, true);
     expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(0);
   });
 
@@ -241,7 +241,7 @@ describe('OwmDataUtilsService', () => {
     const data = getNewDataObject();
     delete data.updated;
     const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot');
-    service.setOwmDataCache(data);
+    service.setOwmDataCache(data, true);
     expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(0);
   });
 
@@ -251,24 +251,46 @@ describe('OwmDataUtilsService', () => {
     data.updated = now;
     const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValue({ ...data, updated: now + 100 });
     const spyOnStoreDispatch = spyOn(store, 'dispatch');
-    service.setOwmDataCache(data);
+    service.setOwmDataCache(data, true);
     expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(1);
     expect(spyOnStoreDispatch).toHaveBeenCalledTimes(0);
   });
 
-  it('should setOwmDataCache ', () => {
+  it('should setOwmDataCache when dbLiveUpdateRefresh is false ', waitForAsync(() => {
     const data = getNewDataObject();
     const now = Date.now();
     data.updated = now;
-    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValues({ ...data, updated: now - 100 }, 'normalized-Ip');
-    const spyOnStoreDispatch = spyOn(store, 'dispatch');
-    const spyOn_historyLogUpdateSetDataToFB = spyOn(service['_historyLogUpdate'], 'setDataToFB').and.resolveTo();
+    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValue({ ...data, updated: now - 100 });
+    const spyOnStoreSelect = spyOnProperty(service, 'selectStatusNormalizedIp$').and.returnValue(of('1-1-1-1'));
+    const spyOnStoreDispatch = spyOn(store, 'dispatch').and.returnValue(of(true));
+    const spyOn_historyLogSetDataToFB = spyOn(service['_historyLog'], 'setDataToFB').and.resolveTo();
 
-    service.setOwmDataCache(data);
-    expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(2);
-    expect(spyOn_historyLogUpdateSetDataToFB).toHaveBeenCalledTimes(1);
-    expect(spyOnStoreDispatch).toHaveBeenCalledTimes(2);
-  });
+    service.setOwmDataCache(data, false).subscribe(() => {
+      expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(1);
+      expect(spyOn_historyLogSetDataToFB).toHaveBeenCalledTimes(1);
+      expect(spyOnStoreSelect).toHaveBeenCalledTimes(1);
+      expect(spyOnStoreDispatch).toHaveBeenCalledTimes(2);
+    });
+  }));
 
-  
+  it('should setOwmDataCache when dbLiveUpdateRefresh is true', waitForAsync(() => {
+    const data = getNewDataObject();
+    const now = Date.now();
+    data.updated = now;
+    const spyOnStoreSelectSnapshot = spyOn(store, 'selectSnapshot').and.returnValue({ ...data, updated: now - 100 });
+    const spyOnStoreSelectStatusNormalizedIp$ = spyOnProperty(service, 'selectStatusNormalizedIp$').and.returnValue(of('1-1-1-1'));
+    const spyOnStoreDispatch = spyOn(store, 'dispatch').and.returnValue(of(true));
+    const spyOn_historyLogSetDataToFB = spyOn(service['_historyLog'], 'setDataToFB').and.resolveTo();
+
+    service.setOwmDataCache(data, true).subscribe(
+      (success) => fail(),
+      (error) => fail(),
+      () => {
+        expect(spyOnStoreSelectSnapshot).toHaveBeenCalledTimes(1);
+        expect(spyOnStoreDispatch).toHaveBeenCalledTimes(2);
+        expect(spyOn_historyLogSetDataToFB).toHaveBeenCalledTimes(0);
+        expect(spyOnStoreSelectStatusNormalizedIp$).toHaveBeenCalledTimes(0);
+      }
+    );
+  }));
 });

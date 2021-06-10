@@ -90,22 +90,26 @@ describe('StatsComponent', () => {
   }));
 
   it('should setLog$', waitForAsync(() => {
-    component.setLog$(of(historyLogMockData), false).subscribe(sortedTrimmedEntries => {
-      const first = sortedTrimmedEntries[0];
-      const last = sortedTrimmedEntries[sortedTrimmedEntries.length - 1];
+    const filterableIpEntry = { '0-0-0-0': { 12345678900: 'cityId0' }};
+    component.setLog$(of({...historyLogMockData, ...filterableIpEntry}), false).subscribe(sortedTrimmedEntries => {
+      const entry0 = sortedTrimmedEntries[0][2];
+      const first = entry0[0];
+      const last = entry0[entry0.length - 1];
       expect(first[0]).toBeGreaterThan(last[0]);
-      expect(last[1][1]).toBeGreaterThan(last[1][last.length - 1]);
-
+      const ipKeys = sortedTrimmedEntries.map(ipEntry => ipEntry[0]);
+      expect(ipKeys).toContain(Object.keys(filterableIpEntry)[0]);
     });
   }));
 
   it('should setLog$ when filter is true', waitForAsync(() => {
-    component.setLog$(of(historyLogMockData), true).subscribe(sortedTrimmedEntries => {
-      const first = sortedTrimmedEntries[0];
-      const last = sortedTrimmedEntries[sortedTrimmedEntries.length - 1];
+    const filterableIpEntry = { '0-0-0-0': { 12345678900: 'cityId0' }};
+    component.setLog$(of({...historyLogMockData, ...filterableIpEntry}), true).subscribe(sortedTrimmedEntries => {
+      const entry0 = sortedTrimmedEntries[0][2];
+      const first = entry0[0];
+      const last = entry0[entry0.length - 1];
       expect(first[0]).toBeGreaterThan(last[0]);
-      expect(last[1][1]).toBeGreaterThan(last[1][last.length - 1]);
-
+      const ipKeys = sortedTrimmedEntries.map(ipEntry => ipEntry[0]);
+      expect(ipKeys).not.toContain(Object.keys(filterableIpEntry)[0]);
     });
   }));
 

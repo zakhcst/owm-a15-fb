@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { merge, Observable, of, throwError, timer } from 'rxjs';
+import { EMPTY, merge, Observable, of, throwError, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, mapTo, switchMap, take, tap } from 'rxjs/operators';
 import { IOwmDataModel, IOwmDataModelTimeSlotUnit } from '../models/owm-data.model';
 import { SetOwmDataCacheState, SetPopupMessage, SetStatusShowLoading } from '../states/app.actions';
 import { HistoryLogModel } from '../states/app.models';
 import { AppOwmDataCacheState, AppStatusState } from '../states/app.state';
 import { ConstantsService } from './constants.service';
-import { HistoryLogUpdateService } from './history-log-update.service';
+import { HistoryLogService } from './history-log.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OwmDataUtilsService {
   @Select(AppOwmDataCacheState.selectOwmDataCachedOrDefaultSelectedCity) selectedCityOwmDataCache$: Observable<IOwmDataModel>;
+  @Select(AppStatusState.selectStatusNormalizedIp) selectStatusNormalizedIp$: Observable<string>;
   constructor(
-    private _store: Store, 
-    private _historyLogUpdate: HistoryLogUpdateService
+    private _store: Store,
+    private _historyLog: HistoryLogService
   ) { }
 
   getOwmDataDebounced$({ showLoading }) {
@@ -30,43 +31,54 @@ export class OwmDataUtilsService {
         }
         return eq;
       }),
-      debounce((data: IOwmDataModel) => 
-        (
-          data.updated && this.isNotExpired(data) ? 
+      debounce((data: IOwmDataModel) =>
+      (
+        data.updated && this.isNotExpired(data) ?
           of(null) : timer(ConstantsService.loadingDataDebounceTime_ms)
-        )
+      )
       ),
       tap(() => { showLoading && this.dispatchShowLoading(false); })
     );
   }
 
-  setOwmDataCache(owmData) {
+  setOwmDataCache(owmData, dbLiveUpdateRefresh: boolean) {
     if (!owmData || !owmData.updated) {
-      return;
+      return EMPTY;
     }
-    const selectedCityId = owmData.city.id;
+
+    const selectedCityId = owmData.city.id.toString();
     const cachedCityOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCachedSelectedCity);
-    if (cachedCityOwmData && cachedCityOwmData.updated >= owmData.updated) { 
-      return; 
+    if (cachedCityOwmData && cachedCityOwmData.updated >= owmData.updated) {
+      return EMPTY;
     }
-      
+
     const cityName = owmData.city.name;
     const countryISO2 = owmData.city.country;
-    this._store.dispatch(new SetPopupMessage({
+    const popupMessage = {
       message: `Refreshed: ${cityName}, ${countryISO2}`,
       class: 'popup__info',
       delay: 500
-    }));
-    
-    const normalizedIp = this._store.selectSnapshot(AppStatusState.selectStatusNormalizedIp);
-    const newEntry: HistoryLogModel = {
-      cityId: selectedCityId,
-      time: new Date().valueOf(),
     };
-    Promise.resolve(this._historyLogUpdate.setDataToFB(normalizedIp, newEntry));
+    return this._store.dispatch(new SetOwmDataCacheState(owmData)).pipe(
+      switchMap(() => this._store.dispatch(new SetPopupMessage(popupMessage))),
+      switchMap(() => dbLiveUpdateRefresh ? EMPTY : this.selectStatusNormalizedIp$),
+      filter(normalizedIp => !ConstantsService.reservedIps.includes(normalizedIp)),
 
-    this._store.dispatch(new SetOwmDataCacheState(owmData));
+      switchMap(normalizedIp => {
+        const newEntry: HistoryLogModel = {
+          cityId: selectedCityId,
+          time: new Date().valueOf(),
+        };
+        return this._historyLog.setDataToFB(normalizedIp, newEntry);
+      }),
+    );
   }
+
+
+
+
+
+
 
   dispatchShowLoading(onOff: boolean) {
     this._store.dispatch(new SetStatusShowLoading(onOff));
@@ -77,7 +89,7 @@ export class OwmDataUtilsService {
     const now = Date.now();
     const firstDateTime = data.list && data.list.length > 0 && data.list[0].dt ? data.list[0].dt * 1000 : 0;
     const dataUpdated = typeof data.updated === 'number' ? data.updated : null;
-    const diff = now - (data.updated || firstDateTime );
+    const diff = now - (dataUpdated || firstDateTime);
     return diff < 3 * 3600 * 1000; // < 3 hours
   }
 
@@ -109,7 +121,7 @@ export class OwmDataUtilsService {
 
   getWeatherDefaultBgImg() {
     return ConstantsService.weatherBgImgPath + ConstantsService.weatherDefaultBgImgFileName;
-  } 
+  }
 
   getWeatherBgImg(dataListHour: IOwmDataModelTimeSlotUnit) {
     const main = dataListHour.weather[0].main;

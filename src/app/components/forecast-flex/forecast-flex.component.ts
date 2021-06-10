@@ -70,7 +70,7 @@ export class ForecastFlexComponent implements OnInit, OnDestroy, AfterViewInit {
     const scrollSlotWidth = Math.round(gridContainer.scrollWidth / maxSlotsPerDay);
     const viewportSlots = Math.round(gridContainer.clientWidth / scrollSlotWidth);
 
-    const listByDateKeysSorted = Object.keys(this.listByDate).sort();
+    const listByDateKeysSorted = Object.keys(this.listByDate).sort((d1, d2) => +d1 - +d2);
     const todayKey = listByDateKeysSorted[0];
     const todaySlots = this.listByDate[todayKey];
     const todaySlotsCount = Object.keys(todaySlots).length;

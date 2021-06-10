@@ -7,7 +7,6 @@ import { IOwmDataModel } from '../../models/owm-data.model';
 import { switchMap } from 'rxjs/operators';
 import { AppFallbackDataState } from '../../states/app.state';
 import { SetFallbackDataState } from '../../states/app.actions';
-import { IHistoryLog } from '../../models/history-log.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +14,7 @@ import { IHistoryLog } from '../../models/history-log.model';
 export class ResolverFallbackService implements Resolve<any> {
   constructor(public _store: Store, private _owmFallback: OwmFallbackDataService) { }
 
-  resolve(): Observable<string> | Observable<never> | Observable<IHistoryLog> {
+  resolve(): Observable<string> | Observable<never> | Observable<IOwmDataModel> {
     const falbackData = this._store.selectSnapshot(AppFallbackDataState.selectFallbackData);
     if (falbackData) {
       return of(falbackData);

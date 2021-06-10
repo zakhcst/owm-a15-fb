@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
+import { Event, NavigationStart, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { ConstantsService } from './constants.service';
 import { OwmDataManagerService } from './owm-data-manager.service';
 import { SnackbarService } from './snackbar.service';
 import { PresenceService } from './presence.service';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -68,10 +69,14 @@ export class AppInitService {
 
   setSubscribeOnConnected() {
     this.subscriptions.add(
-      this._presence.updateOnConnected().subscribe((connected) => {
-        console.log('AppComponent connected', connected);
-        this._store.dispatch(new SetStatusConnected(!!connected));
-      })
+      this._presence.updateOnConnected()
+        .pipe(distinctUntilChanged((prev, curr) => {
+          return (prev === curr);
+        }))
+        .subscribe((connected) => {
+          console.log('AppComponent connected', connected);
+          this._store.dispatch(new SetStatusConnected(!!connected));
+        })
     );
   }
 

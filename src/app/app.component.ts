@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private appInitService: AppInitService, private windowRef: WindowRefService) {
     this.loading = this.showLoading$.pipe(
       startWith(false),
-      distinctUntilChanged(), 
+      distinctUntilChanged(),
       debounceTime(50)
     );
   }

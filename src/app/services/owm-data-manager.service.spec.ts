@@ -16,7 +16,7 @@ import {
   getNewDataObject,
   MockStatsUpdateService,
 } from './testing.services.mocks';
-import { HistoryLogUpdateService } from './history-log-update.service';
+import { HistoryLogService } from './history-log.service';
 
 describe('OwmDataManagerService', () => {
   let service: OwmDataManagerService;
@@ -59,9 +59,9 @@ describe('OwmDataManagerService', () => {
             provide: ErrorsService,
             useValue: mockErrorsService,
           },
-          { 
-            provide: HistoryLogUpdateService, 
-            useValue: { setDataToFB : function (ip, newEntry) {} } 
+          {
+            provide: HistoryLogService,
+            useValue: { setDataToFB: function (ip, newEntry) { } }
           },
           OwmDataUtilsService
         ],
@@ -174,7 +174,7 @@ describe('OwmDataManagerService', () => {
       );
     })
   );
-  
+
   it(
     'should getDataMemory return data from db when data in store is expired(isolated)',
     waitForAsync(() => {
@@ -385,7 +385,7 @@ describe('OwmDataManagerService', () => {
     service.addError('error message');
     expect(spyOnMockErrorsService).toHaveBeenCalledTimes(1);
   });
-  
+
   it('should getDataOWM on error', fakeAsync(() => {
     const owmData = getNewDataObject();
     const errMessage = 'error message';
@@ -409,7 +409,7 @@ describe('OwmDataManagerService', () => {
     const spyGetDataServiceOrTimeout = spyOn(utils, 'getDataServiceOrTimeout').and.returnValue(of(owmData));
     const spyOnMockDbOwmService = spyOn(mockDbOwmService, 'setData');
     const spyOnMockErrorsService = spyOn(mockErrorsService, 'add');
-    
+
     service.getDataOWM('cityId').subscribe(data => {
       expect(spyOnStoreDispatch).toHaveBeenCalledTimes(1);
       expect(spyGetDataServiceOrTimeout).toHaveBeenCalledTimes(1);
@@ -418,20 +418,20 @@ describe('OwmDataManagerService', () => {
       expect(data).toBe(owmData);
     });
   }));
-  
+
   it('should combineLatestStatus wait when connected false', () => {
     const owmData = getNewDataObject();
     testScheduler.run(({ expectObservable, cold }) => {
       const delay = 100;
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnGetDataMemory = spyOn(service, 'getDataMemory').and.returnValue(of(owmData));
-      
-      const cityId$ = cold(`a ${delay}ms b`, { a: 'cityId1', b: 'cityid1'});
+
+      const cityId$ = cold(`a ${delay}ms b`, { a: 'cityId1', b: 'cityid1' });
       const spyOnSelectedCityId$ = spyOnProperty(service, 'selectedCityId$').and.returnValue(cityId$);
 
       const connected$ = cold(`a ${delay}ms b`, { a: false, b: false });
       const spyOnConnected$ = spyOnProperty(service, 'connected$').and.returnValue(connected$);
-      
+
       const away$ = cold(`a ${delay}ms b`, { a: false, b: false });
       const spyOnAway$ = spyOnProperty(service, 'away$').and.returnValue(away$);
 
@@ -446,13 +446,13 @@ describe('OwmDataManagerService', () => {
       const delay = 100;
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnGetDataMemory = spyOn(service, 'getDataMemory').and.returnValue(of(owmData));
-      
-      const cityId$ = cold(`a ${delay}ms b`, { a: 'cityId1', b: 'cityid1'});
+
+      const cityId$ = cold(`a ${delay}ms b`, { a: 'cityId1', b: 'cityid1' });
       const spyOnSelectedCityId$ = spyOnProperty(service, 'selectedCityId$').and.returnValue(cityId$);
 
       const connected$ = cold(`a ${delay}ms b`, { a: true, b: true });
       const spyOnConnected$ = spyOnProperty(service, 'connected$').and.returnValue(connected$);
-      
+
       const away$ = cold(`a ${delay}ms b`, { a: true, b: true });
       const spyOnAway$ = spyOnProperty(service, 'away$').and.returnValue(away$);
 
@@ -466,20 +466,18 @@ describe('OwmDataManagerService', () => {
     testScheduler.run(({ expectObservable, cold, flush }) => {
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnGetDataMemory = spyOn(service, 'getDataMemory').and.returnValue(of(owmData));
-      
-      const cityId$ = cold('c', { c: 'cityId1'});
+      const spyOnSetOwmDataCache = spyOn(service['_utils'], 'setOwmDataCache').and.returnValue(of());
+      const cityId$ = cold('c', { c: 'cityId1' });
       const spyOnSelectedCityId$ = spyOnProperty(service, 'selectedCityId$').and.returnValue(cityId$);
-
       const connected$ = cold('t', { t: true });
       const spyOnConnected$ = spyOnProperty(service, 'connected$').and.returnValue(connected$);
-      
       const away$ = cold('f', { f: false });
       const spyOnAway$ = spyOnProperty(service, 'away$').and.returnValue(away$);
 
-      const expected = 'd';
-      expectObservable(service.combineLatestStatus()).toBe(expected, { d: owmData });
+      expectObservable(service.combineLatestStatus());
       flush();
       expect(spyOnStoreDispatch).toHaveBeenCalledTimes(2);
+      expect(spyOnSetOwmDataCache).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -489,30 +487,26 @@ describe('OwmDataManagerService', () => {
       const delay = 100;
       const spyOnStoreDispatch = spyOn(store, 'dispatch');
       const spyOnGetDataMemory = spyOn(service, 'getDataMemory').and.returnValue(of(owmData));
-      
-      const cityId$ = cold('c', { c: 'cityId1'});
+      const spyOnSetOwmDataCache = spyOn(service['_utils'], 'setOwmDataCache').and.returnValue(of());
+      const cityId$ = cold('c', { c: 'cityId1' });
       const spyOnSelectedCityId$ = spyOnProperty(service, 'selectedCityId$').and.returnValue(cityId$);
-
       const connected$ = cold(`t ${delay}ms f ${delay}ms t`, { t: true, f: false });
       const spyOnConnected$ = spyOnProperty(service, 'connected$').and.returnValue(connected$);
-      
-      const away$ = cold(`f ${delay*3 + 1}ms t ${delay + 1}ms f`, { t: true, f: false });
+      const away$ = cold(`f ${delay * 3 + 1}ms t ${delay + 1}ms f`, { t: true, f: false });
       const spyOnAway$ = spyOnProperty(service, 'away$').and.returnValue(away$);
 
-      const expected = `d ${delay*2 + 1}ms d ${delay*2 + 1}ms d`;
-      expectObservable(service.combineLatestStatus()).toBe(expected, { d: owmData });
+      const expected = `d ${delay * 2 + 1}ms d ${delay * 2 + 1}ms d`;
+      expectObservable(service.combineLatestStatus());
       flush();
       expect(spyOnStoreDispatch).toHaveBeenCalledTimes(6);
     });
   });
 
-  it('should subscribeOnStatusChange', fakeAsync(() => {
-    const owmData = getNewDataObject();
-    const spyOnCombineLatestStatus = spyOn(service, 'combineLatestStatus').and.returnValue(of(owmData));
-    const spyOnSetOwmDataCache = spyOn(service['_utils'], 'setOwmDataCache');
+  it('should subscribeOnStatusChange', waitForAsync(() => {
+    const spyOnCombineLatestStatus = spyOn(service, 'combineLatestStatus').and.returnValue(of());
     service.subscribeOnStatusChange();
     expect(spyOnCombineLatestStatus).toHaveBeenCalledTimes(1);
-    expect(spyOnSetOwmDataCache).toHaveBeenCalledTimes(1);
+
   }));
 
 });

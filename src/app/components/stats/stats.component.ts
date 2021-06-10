@@ -48,7 +48,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     }
   }
 
-  constructor(private errorsService: ErrorsService) {}
+  constructor(private errorsService: ErrorsService) { }
 
   ngOnInit() {
     this.subscribeStats();
@@ -81,14 +81,13 @@ export class StatsComponent implements OnInit, OnDestroy {
     return log$.pipe(filter((log) => !!log)).pipe(
       switchMap((log) => {
         const sortedTrimmedEntries = Object.entries(log)
-          .filter((ent: any[]) => !filterIp || !ConstantsService.reservedIps.includes(ent[0]))
-          .map((ent: any[]) => {
-            ent[1] = Object.entries(ent[1]).sort((a, b) => (a[0] < b[0] ? 1 : -1));
-            ent[2] = ent[1].slice(0, 11);
-            return ent;
+          .filter((entry: any[]) => !filterIp || !ConstantsService.reservedIps.includes(entry[0]))
+          .map((entry: any[]) => {
+            entry[1] = Object.entries(entry[1]).sort((e1, e2) => (+e2[0] - +e1[0]));
+            entry[2] = entry[1].slice(0, 11);
+            return entry;
           })
-          .sort((a, b) => (a[2][0] < b[2][0] ? 1 : -1));
-
+          .sort((e1, e2) => (+e2[2][0][0] - +e1[2][0][0]));
         return of(sortedTrimmedEntries);
       })
     );
@@ -112,10 +111,10 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   toggleShowErrors() {
     this.showErrors = !this.showErrors;
-      if (this.showErrors && this.firstShowErrors) {
-        this.firstShowErrors = false;
-        this.subscribeErrorsLog();
-      }
+    if (this.showErrors && this.firstShowErrors) {
+      this.firstShowErrors = false;
+      this.subscribeErrorsLog();
+    }
   }
 
 }

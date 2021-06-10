@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { AppHistoryLogState, AppStatusState } from '../states/app.state';
 import { SetHistoryLogState } from '../states/app.actions';
+import { HistoryLogModel } from '../states/app.models';
 @Injectable({
   providedIn: 'root',
 })
@@ -21,6 +22,12 @@ export class HistoryLogService {
 
   getData(): Observable<IHistoryLog> {
     return this._db.object<IHistoryLog>(ConstantsService.historyLog).valueChanges();
+  }
+
+  setDataToFB(normIp: string, data: HistoryLogModel) {
+    const refKey = ConstantsService.historyLog + '/' + normIp + '/' + data.time;
+    const ref = this._db.object(refKey);
+    return ref.set(data.cityId);
   }
 
   subscribeToGetData() {

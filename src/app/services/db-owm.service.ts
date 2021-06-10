@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ConstantsService } from './constants.service';
 import { IOwmDataModel } from '../models/owm-data.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { AppStatusState } from '../states/app.state';
-import { delay, filter, switchMap } from 'rxjs/operators';
+import { debounce, delay, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { OwmDataUtilsService } from './owm-data-utils.service';
 
 @Injectable({
@@ -36,10 +36,11 @@ export class DbOwmService {
         delay(ConstantsService.loadingDataDebounceTime_ms),
         switchMap((cityId) => this.getData(cityId)),
         filter((data) => !!data),
+        distinctUntilChanged((prev, curr) => prev.city.id === curr.city.id && prev.updated === curr.updated),
+        debounce(() => timer(ConstantsService.loadingDataDebounceTime_ms)),
+        switchMap(data => this.updateCache(data))
       )
-      .subscribe((owmData) => {
-        this.updateCache(owmData);
-      });
+      .subscribe();
   }
 
   activateLiveDataUpdateDB() {
@@ -54,6 +55,6 @@ export class DbOwmService {
   }
 
   updateCache(owmData) {
-    this._utils.setOwmDataCache(owmData);
+    return this._utils.setOwmDataCache(owmData, true);
   }
 }
