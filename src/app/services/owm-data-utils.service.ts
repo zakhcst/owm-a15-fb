@@ -46,8 +46,8 @@ export class OwmDataUtilsService {
       return EMPTY;
     }
 
-    const selectedCityId = owmData.city.id.toString();
-    const cachedCityOwmData = this._store.selectSnapshot(AppOwmDataCacheState.selectOwmDataCachedSelectedCity);
+    const updatedCityId = owmData.city.id.toString();
+    const cachedCityOwmData = this._store.selectSnapshot((state: AppOwmDataCacheState) => state['owmDataCache']?.[updatedCityId]);
     if (cachedCityOwmData && cachedCityOwmData.updated >= owmData.updated) {
       return EMPTY;
     }
@@ -66,7 +66,7 @@ export class OwmDataUtilsService {
 
       switchMap(normalizedIp => {
         const newEntry: HistoryLogModel = {
-          cityId: selectedCityId,
+          cityId: updatedCityId,
           time: new Date().valueOf(),
         };
         return this._historyLog.setDataToFB(normalizedIp, newEntry);
