@@ -18,4 +18,4 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 # RUN sudo -u node npm install -g <your-package-list -here>
 RUN sudo -u node npm install -g firebase-tools
 
-WORKDIR /workspaces/owm-a11-fb
+WORKDIR /workspaces/owm-a12-fb

@@ -1,15 +1,15 @@
 {
   "name": "owm-a12-fb",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "scripts": {
     "ng": "ng",
     "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4212",
     "build": "./utils/generate-build-info.js && ng build",
-    "build-prod": "./utils/generate-build-info.js && ng build --prod && git checkout HEAD -- ngsw-config.json",
+    "build-prod": "./utils/generate-build-info.js && ng build --configuration production && git checkout HEAD -- ngsw-config.json",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-analyze": "ng build --prod --stats-json && ./node_modules/.bin/source-map-explorer firebase/public/stats-es2015.json",
+    "build-analyze": "ng build --configuration production --stats-json && ./node_modules/.bin/source-map-explorer firebase/public/stats-es2015.json",
     "analyze-only": "./node_modules/.bin/source-map-explorer firebase/public/*",
     "postinstall": "ngcc"
   },
