@@ -24,7 +24,7 @@
     "FIREBASE_EMULATOR": "${localEnv:FIREBASE_EMULATOR}"
   },
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [4511, 4000, 5001, 9000, 4400, 4500],
+  "forwardPorts": [4512, 4000, 5001, 9000, 4400, 4500],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "yarn install",

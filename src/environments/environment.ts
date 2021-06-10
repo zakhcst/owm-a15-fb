@@ -27,16 +27,16 @@ const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
 
 
 const firebaseEmulator = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a11-fb',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a12-fb',
   ssl: false,
 };
 const firebaseEmulatorContainer = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a11-fb',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a12-fb',
   ssl: false,
 };
 
-const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a11-fb/us-central1';
-const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a11-fb/us-central1';
+const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a12-fb/us-central1';
+const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a12-fb/us-central1';
 
 export const environment = {
   production: false,
@@ -53,4 +53,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

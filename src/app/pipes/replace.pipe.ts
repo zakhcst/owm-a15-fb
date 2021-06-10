@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { strict } from 'assert';
 
 @Pipe({
   name: 'replace'

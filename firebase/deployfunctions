@@ -1,3 +1,3 @@
-sed -i 's/owm-a11-fb/owm-a7-fb/' .firebaserc
+sed -i 's/owm-a12-fb/owm-a7-fb/' .firebaserc
 firebase use owm-a7-fb
 firebase deploy --only functions

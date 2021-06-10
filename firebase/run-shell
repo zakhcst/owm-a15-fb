@@ -1,2 +1,2 @@
-export eval echo $(cat ../../owm-a11-fb-credentials/fb_token) && \
+export eval echo $(cat ../../owm-a12-fb-credentials/fb_token) && \
 firebase functions:shell --token $FB_TOKEN --project 'owm-a7-fb'

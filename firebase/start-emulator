@@ -1,2 +1,2 @@
 export eval FIREBASE_EMULATOR=true
-firebase emulators:start --only functions,pubsub,database --import=./owm-a11-fb --token $FB_TOKEN
+firebase emulators:start --only functions,pubsub,database --import=./owm-a12-fb --token $FB_TOKEN

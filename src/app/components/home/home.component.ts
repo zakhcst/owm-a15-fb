@@ -11,6 +11,13 @@ export class HomeComponent implements OnInit {
   loaded = false;
   data = [
     {
+      version: 12,
+      db: 'Firebase RTDB',
+      hosted: 'Firebase',
+      routedLink: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path,
+      sourceLink: 'https://github.com/zakhcst/owm-a12-fb'
+    },
+    {
       version: 11,
       db: 'Firebase RTDB',
       hosted: 'Firebase',
