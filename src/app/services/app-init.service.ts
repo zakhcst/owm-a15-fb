@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Event, NavigationStart, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
@@ -16,10 +15,9 @@ import { distinctUntilChanged } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AppInitService {
-  subscriptions: Subscription;
-
+  subscriptions = new Subscription();
+  
   constructor(
-    private _router: Router,
     private _presence: PresenceService,
     private _updates: SwUpdate,
     private _store: Store,
@@ -28,7 +26,6 @@ export class AppInitService {
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this.initCss();
-    this.setSubscribeOnRouterEvents();
     this.setSubscribeOnConnected();
     this.startListenerOnAway();
     this.setSubscribeOnUpdates();
@@ -78,20 +75,6 @@ export class AppInitService {
           this._store.dispatch(new SetStatusConnected(!!connected));
         })
     );
-  }
-
-  setSubscribeOnRouterEvents() {
-    this.subscriptions = this._router.events.subscribe((routerEvent: Event) => {
-      this.checkRouterEvent(routerEvent);
-    });
-  }
-
-  checkRouterEvent(routerEvent: Event) {
-    if (routerEvent instanceof NavigationStart) {
-      this._store.dispatch(new SetStatusShowLoading(true));
-    } else {
-      this._store.dispatch(new SetStatusShowLoading(false));
-    }
   }
 
   shutdown() {

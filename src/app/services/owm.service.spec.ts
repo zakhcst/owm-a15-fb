@@ -59,9 +59,8 @@ describe('OwmService', () => {
     const spyMockErrorsServiceAdd = spyOn(mockErrorsService, 'add').and.callThrough();
 
     service.getData(cityId).subscribe(
-      (response) => {
+      () => {
         fail('service should have thrown error');
-        console.log(response);
       },
       (error) => {
         expect(spyMockErrorsServiceAdd).toHaveBeenCalledTimes(1);

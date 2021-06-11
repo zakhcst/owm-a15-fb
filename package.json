@@ -1,6 +1,6 @@
 {
   "name": "owm-a12-fb",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "scripts": {
     "ng": "ng",
     "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4212",

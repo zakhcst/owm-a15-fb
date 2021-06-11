@@ -78,6 +78,7 @@ describe('HttpInterceptorService', () => {
       (response: any) => {
         console.log(response);
         expect(response).toBeFalsy();
+        fail('should error');
       },
       (error) => {
         expect(error).toContain(errorHttpMessage);

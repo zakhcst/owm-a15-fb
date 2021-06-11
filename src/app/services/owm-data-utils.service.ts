@@ -74,12 +74,6 @@ export class OwmDataUtilsService {
     );
   }
 
-
-
-
-
-
-
   dispatchShowLoading(onOff: boolean) {
     this._store.dispatch(new SetStatusShowLoading(onOff));
   }
@@ -97,7 +91,7 @@ export class OwmDataUtilsService {
     data.listByDate = data.list.reduce((accumulator: any, item: any) => {
       const dateObj = new Date(item.dt * 1000);
       const hour = dateObj.getUTCHours();
-      const date0000 = dateObj.setHours(0);
+      const date0000 = dateObj.setHours(0, 0, 0, 0);
 
       if (accumulator[date0000]) {
         accumulator[date0000][hour] = item;
