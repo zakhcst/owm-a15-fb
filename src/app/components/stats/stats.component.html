@@ -1,5 +1,5 @@
 <mat-card class="stats-card">
-  <div fxLayout="column" fxFill>
+  <div fxFlex fxLayout="column" fxFill>
     <div fxFlex="0 0 auto" fxLayout="row">
       <p (click)="toggleShowErrors()">Current client IPv4: {{ ip$ | async }}</p>
       <span fxFlex></span>
@@ -23,11 +23,16 @@
 
     <div fxFlex fxLayout="column" *ngIf="checkedCities === false && historyLog && !showErrors">
       <div fxFlex="0 0 auto" fxLayout="row">
-        <span fxFlex>IP</span>
-        <span fxFlex>Date</span>
+        <span fxFlex class="min-width-130">IP</span>
+        <span fxFlex class="min-width-100">Date</span>
         <span fxFlex>Time</span>
         <span fxFlex>City</span>
-        <span fxFlex>#</span>
+        <span fxFlex>
+          <span fxFlex></span>
+          <span fxFlex class="min-width-25 right">#</span>
+          <span fxFlex></span>
+        </span>
+        <span class="width-5"></span>
       </div>
 
       <hr />
@@ -51,20 +56,27 @@
             }"
             (click)="showDetails[logEntryIp[0]] = !showDetails[logEntryIp[0]]"
           >
-            <span fxFlex class="truncate">
+            <span fxFlex class="truncate min-width-130">
               {{ showDetails[logEntryIp[0]] ? "&#x23F7;" : "&#x23F5;" }}
               {{ logEntryIp[0] | replace: "-":"." }}
             </span>
-            <span fxFlex>{{ logEntryIp[2][0][0] | date: "dd/MM/yyyy" }}</span>
+            <span fxFlex class="min-width-100">{{
+              logEntryIp[2][0][0] | date: "dd/MM/yyyy"
+            }}</span>
             <span fxFlex>{{ logEntryIp[2][0][0] | date: "HH:mm" }}</span>
             <span fxFlex>{{ cities[logEntryIp[2][0][1]]?.name }}</span>
-            <span fxFlex>{{ logEntryIp[1].length }}</span>
+
+            <span fxFlex>
+              <span fxFlex></span>
+              <span fxFlex class="min-width-25 right">{{
+                logEntryIp[1].length
+              }}</span>
+              <span fxFlex></span>
+            </span>
           </div>
 
           <ng-container *ngIf="showDetails[logEntryIp[0]]">
-            <ng-container
-              *ngFor="let logEntryTime of logEntryIp[2];let oddsub = odd"
-            >
+            <ng-container *ngFor="let logEntryTime of logEntryIp[2]; let oddsub = odd">
               <div
                 fxLayout="row"
                 fxLayoutAlign="start center"
@@ -89,8 +101,8 @@
 
     <div fxFlex fxLayout="column" *ngIf="checkedCities && stats && !showErrors">
       <div fxLayout="row">
-        <span fxFlex class="padding-left-5">Requests</span>
-        <span fxFlex></span>
+        <span fxFlex class="padding-left-5 min-width-100">Requests</span>
+        <span fxFlex class="min-width-100"></span>
         <span fxFlex></span>
         <span class="width-50 right">OWM</span>
         <span fxFlex></span>
@@ -99,12 +111,12 @@
       </div>
       <hr />
       <div fxLayout="row">
-        <span fxFlex class="padding-left-5">All</span>
+        <span fxFlex class="padding-left-5 min-width-100">All</span>
+        <span fxFlex class="min-width-100"></span>
         <span fxFlex></span>
+        <span class="width-50 right">{{ stats?.u || '' }}</span>
         <span fxFlex></span>
-        <span class="width-50 right">{{ stats?.u || ''}}</span>
-        <span fxFlex></span>
-        <span class="width-50 right">{{ stats?.r || ''}}</span>
+        <span class="width-50 right">{{ stats?.r || '' }}</span>
         <span fxFlex></span>
       </div>
 
@@ -124,8 +136,8 @@
           [class.odd]="odd"
           class="hovered"
         >
-          <span fxFlex class="truncate padding-left-5">{{ city.value.name }}</span>
-          <span fxFlex class="truncate">{{ city.value.country }}</span>
+          <span fxFlex class="min-width-100 truncate padding-left-5" >{{ city.value.name }}</span>
+          <span fxFlex class="min-width-100 truncate">{{ city.value.country }}</span>
           <span fxFlex></span>
           <span class="width-50 right">{{(stats[city.key]?.u || 0) + (city.value?.u || 0)}}</span>
           <span fxFlex></span>
@@ -143,12 +155,7 @@
 
       <hr />
 
-      <div
-        fxFlex
-        fxLayout="column"
-        class="scroll-this"
-        @showStats
-      >
+      <div fxFlex fxLayout="column" class="scroll-this" @showStats>
         <ng-container *ngFor="let logEntryIp of errorsLog; let odd = odd">
           <div
             fxLayout="row"
@@ -194,6 +201,5 @@
         </ng-container>
       </div>
     </div>
-
   </div>
 </mat-card>

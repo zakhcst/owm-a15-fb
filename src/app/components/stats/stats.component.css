@@ -1,7 +1,6 @@
 .stats-card {
   height: 100%;
   padding: 10px;
-  /* overflow-y: overlay; */
   z-index: 0;
   background-color: transparent;
   color: white;
@@ -20,6 +19,24 @@
   background-color: #888888;
 }
 
+.min-width-25 {
+  min-width: 25px;
+}
+.min-width-80 {
+  min-width: 80px;
+}
+.min-width-100 {
+  min-width: 100px;
+}
+.min-width-130 {
+  min-width: 130px;
+}
+.min-width-360 {
+  min-width: 360px;
+}
+.width-5 {
+  width: 5px;
+}
 .width-50 {
   width: 50px;
 }
