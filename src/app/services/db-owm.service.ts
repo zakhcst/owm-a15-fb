@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { ConstantsService } from './constants.service';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { Observable, Subscription, timer } from 'rxjs';
@@ -22,7 +22,7 @@ export class DbOwmService {
   }
 
   getData(cityId: string): Observable<IOwmDataModel> {
-    return this._db.object<IOwmDataModel>(ConstantsService.owmData + '/' + cityId).valueChanges();
+    return <any>this._db.object<IOwmDataModel>(ConstantsService.owmData + '/' + cityId).valueChanges();
   }
 
   setData(cityId: string, data: IOwmDataModel) {

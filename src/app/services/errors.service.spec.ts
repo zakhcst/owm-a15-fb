@@ -1,7 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { InitModules } from '../modules/init.module';
 import { RequiredModules } from '../modules/required.module';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Store } from '@ngxs/store';
 
 import { ErrorsService } from './errors.service';

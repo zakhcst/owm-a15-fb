@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RequiredModules } from '../modules/required.module';

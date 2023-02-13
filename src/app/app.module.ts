@@ -15,30 +15,28 @@ import { SharedModule } from './modules/shared.module';
 import { InitModules } from './modules/init.module';
 
 @NgModule({
-  declarations: [AppComponent, AppSnackBarInnerComponent],
-
-  imports: [
-    InitModules,
-    RequiredModules,
-    SharedModule,
-    AdditionalModules,
-    AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-  ],
-  exports: [
-    RequiredModules,
-    SharedModule,
-    AdditionalModules,
-  ],
-  providers: [
-    { provide: ErrorHandler, useClass: AppErrorHandlerService },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpInterceptorService,
-      multi: true
-    },
-  ],
-  entryComponents: [AppSnackBarInnerComponent],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent, AppSnackBarInnerComponent],
+    imports: [
+        InitModules,
+        RequiredModules,
+        SharedModule,
+        AdditionalModules,
+        AppRoutingModule,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ],
+    exports: [
+        RequiredModules,
+        SharedModule,
+        AdditionalModules,
+    ],
+    providers: [
+        { provide: ErrorHandler, useClass: AppErrorHandlerService },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpInterceptorService,
+            multi: true
+        },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

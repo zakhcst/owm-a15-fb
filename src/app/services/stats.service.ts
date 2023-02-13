@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Observable, Subscription } from 'rxjs';
 import { IStats } from '../models/stats.model';
 import { Select, Store } from '@ngxs/store';
@@ -20,11 +20,11 @@ export class StatsService {
   }
 
   getData(): Observable<IStats> {
-    return this._db.object(ConstantsService.stats).valueChanges();
+    return <any>this._db.object(ConstantsService.stats).valueChanges();
   }
 
   subscribeToGetData() {
-    this.getDataSubscription = this.getData().subscribe((stats) => {
+    this.getDataSubscription = this.getData().subscribe((stats: IStats) => {
       this.dispatch(stats);
     });
   }

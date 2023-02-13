@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { from } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { ConstantsService } from './constants.service';
@@ -16,11 +16,10 @@ export class StatsUpdateService {
       return;
     }
     const path = ConstantsService.stats + '/' + cityId;
-    const ref = this._db.object(path);
+    const ref: any = this._db.object(path);
     let newValue: number;
     let cityR: number | null;
-    return ref
-      .valueChanges()
+    ref.valueChanges()
       .pipe(
         take(1),
         switchMap((city: any) => {
@@ -30,7 +29,7 @@ export class StatsUpdateService {
         })
       )
       .subscribe(() => {},
-        (error) => {
+        (error: any) => {
           this.addError(path + ' ' + cityR + ' ' + newValue + ' ' + error);
         }
       );

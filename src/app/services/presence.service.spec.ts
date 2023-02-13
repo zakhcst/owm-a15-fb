@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { MockAngularFireService } from './testing.services.mocks';
 import { PresenceService } from './presence.service';
 import { of } from 'rxjs';

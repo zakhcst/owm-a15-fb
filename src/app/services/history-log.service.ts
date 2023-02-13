@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { ConstantsService } from './constants.service';
 import { IHistoryLog } from '../models/history-log.model';
 import { Observable, Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ export class HistoryLogService {
   }
 
   getData(): Observable<IHistoryLog> {
-    return this._db.object<IHistoryLog>(ConstantsService.historyLog).valueChanges();
+    return <any>this._db.object<IHistoryLog>(ConstantsService.historyLog).valueChanges();
   }
 
   setDataToFB(normIp: string, data: HistoryLogModel) {

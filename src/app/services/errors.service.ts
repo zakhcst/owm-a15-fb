@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { ConstantsService } from './constants.service';
 import { Store } from '@ngxs/store';
 import { SetErrorsState, SetPopupMessage } from '../states/app.actions';
@@ -14,7 +14,7 @@ export class ErrorsService {
   constructor(private _db: AngularFireDatabase, private _store: Store) {}
 
   getData(): Observable<ErrorLogModel> {
-    return this._db.object<ErrorLogModel>(ConstantsService.errorsLog).valueChanges();
+    return <any>this._db.object<ErrorLogModel>(ConstantsService.errorsLog).valueChanges();
   }
 
   setDataToFB(normIp: string, data: ErrorRecordModel) {

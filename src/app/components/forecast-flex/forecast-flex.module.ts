@@ -14,9 +14,8 @@ const componentRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ForecastFlexComponent, DataCellComponent, DataCellExpandedComponent],
-  imports: [RouterModule.forChild(componentRoutes), SharedModule],
-  exports: [RouterModule],
-  entryComponents: [DataCellExpandedComponent]
+    declarations: [ForecastFlexComponent, DataCellComponent, DataCellExpandedComponent],
+    imports: [RouterModule.forChild(componentRoutes), SharedModule],
+    exports: [RouterModule]
 })
 export class ForecastFlexModule {}

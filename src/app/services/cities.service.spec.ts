@@ -2,7 +2,7 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Store } from '@ngxs/store';
 import { InitModules } from '../modules/init.module';
 import { RequiredModules } from '../modules/required.module';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { of, Subscription } from 'rxjs';
 import { ICity } from '../models/cities.model';
 import { CitiesService } from './cities.service';

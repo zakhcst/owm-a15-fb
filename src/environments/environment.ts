@@ -11,7 +11,7 @@
 // along with in 'firebase/firebase.json' the 'emulators' section.
 
 
-const emulator = true;
+const emulator = false;
 const container = false;
 
 const firebaseConfigDevEnv = {

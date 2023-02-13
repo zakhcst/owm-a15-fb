@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { DbOwmService } from './db-owm.service';
 import { MockAngularFireService } from './testing.services.mocks';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { IOwmDataModel } from '../models/owm-data.model';
 import { getNewDataObject } from './testing.services.mocks';
 import { NgxsModule, Store } from '@ngxs/store';

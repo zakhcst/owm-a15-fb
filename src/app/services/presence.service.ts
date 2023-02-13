@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,9 @@ export class PresenceService {
 
   constructor(private _db: AngularFireDatabase, @Inject(DOCUMENT) private _document: Document) { }
 
-  updateOnConnected() {
+  updateOnConnected(): Observable<Boolean> {
     const connectedRef = this._db.object('.info/connected');
-    return connectedRef.valueChanges();
+    return <any>connectedRef.valueChanges();
   }
 
   updateOnAway(fn) {

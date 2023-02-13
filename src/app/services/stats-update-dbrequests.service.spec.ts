@@ -1,4 +1,4 @@
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { MockAngularFireService, MockErrorsService } from './testing.services.mocks';
 import { StatsUpdateService } from './stats-update-dbrequests.service';

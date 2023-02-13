@@ -1,7 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { StatsService } from './stats.service';
 import { MockAngularFireService } from './testing.services.mocks';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { NgxsModule, Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { cold } from 'jasmine-marbles';

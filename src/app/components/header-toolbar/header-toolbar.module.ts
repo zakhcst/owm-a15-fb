@@ -8,10 +8,8 @@ import { RequiredModules } from 'src/app/modules/required.module';
 import { ToastOverlayComponent } from '../toast-overlay/toast-overlay.component';
 
 @NgModule({
-  declarations: [HeaderToolbarComponent, DialogSettingsComponent, ToastOverlayComponent],
-
-  imports: [RequiredModules, RouterModule, SharedModule],
-  exports: [RequiredModules, RouterModule, SharedModule],
-  entryComponents: [DialogSettingsComponent],
+    declarations: [HeaderToolbarComponent, DialogSettingsComponent, ToastOverlayComponent],
+    imports: [RequiredModules, RouterModule, SharedModule],
+    exports: [RequiredModules, RouterModule, SharedModule]
 })
 export class HeaderToolbarModule { }
