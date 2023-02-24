@@ -1,9 +1,9 @@
 {
   "targets": {
-    "owm-a12-fb": {
+    "owm-a13-fb": {
       "hosting": {
-        "owm-a12-fb": [
-          "owm-a12-fb"
+        "owm-a13-fb": [
+          "owm-a13-fb"
         ]
       }
     }

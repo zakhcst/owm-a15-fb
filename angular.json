@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "owm-a12-fb": {
+    "owm-a13-fb": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -70,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "owm-a12-fb:build"
+            "browserTarget": "owm-a13-fb:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "owm-a12-fb:build:production"
+              "browserTarget": "owm-a13-fb:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "owm-a12-fb:build"
+            "browserTarget": "owm-a13-fb:build"
           }
         },
         "test": {
@@ -113,7 +113,7 @@
         }
       }
     },
-    "owm-a12-fb-e2e": {
+    "owm-a13-fb-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -121,16 +121,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "owm-a12-fb:serve"
+            "devServerTarget": "owm-a13-fb:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "owm-a12-fb:serve:production"
+              "devServerTarget": "owm-a13-fb:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "owm-a12-fb"
+  "defaultProject": "owm-a13-fb"
 }

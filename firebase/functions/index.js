@@ -4,7 +4,7 @@ const isEmulator = require('./local-emulator/emulator').isEmulator;
 
 let options;
 if (isEmulator() === true) {
-  options = { databaseURL: 'http://localhost:9000/?ns=owm-a12-fb', ssl: false };
+  options = { databaseURL: 'http://localhost:9000/?ns=owm-a13-fb', ssl: false };
 } else {
   options = { databaseURL: 'https://owm-a7-fb.firebaseio.com' };
 }

@@ -3,7 +3,7 @@
   "version": "0.13.1",
   "scripts": {
     "ng": "ng",
-    "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4212",
+    "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4213",
     "build": "./utils/generate-build-info.js && ng build",
     "build-prod": "./utils/generate-build-info.js && ng build --configuration production && git checkout HEAD -- ngsw-config.json",
     "test": "ng test",

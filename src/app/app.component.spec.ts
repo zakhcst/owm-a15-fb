@@ -32,7 +32,7 @@ describe('AppComponent', () => {
   
   it('should create the app', () => {
     expect(component).toBeTruthy();
-    expect(component.title).toEqual('owm-a12-fb');
+    expect(component.title).toEqual('owm-a13-fb');
   });
 
   it('should destroy onbeforeunload', () => {

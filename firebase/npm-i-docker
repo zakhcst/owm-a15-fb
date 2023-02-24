@@ -1,7 +1,7 @@
 docker run \
   -it \
   --rm \
-  --mount type=bind,source=/home/sdr/projects/owm-a12-fb/firebase/functions,destination=/app/functions \
+  --mount type=bind,source=/home/sdr/projects/owm-a13-fb/firebase/functions,destination=/app/functions \
   firebase-app \
   /bin/bash -c "cd functions && npm i && npm ls --depth 0"
 
