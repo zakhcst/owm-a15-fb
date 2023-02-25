@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "owm-a13-fb",
+      "target": "owm-a14-fb",
       "public": "firebase/public",
       "ignore": [
         "**/.*"

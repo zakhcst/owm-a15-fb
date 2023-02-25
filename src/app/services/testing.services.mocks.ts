@@ -247,7 +247,7 @@ export class MockSwUpdate {
         buildInfo: {
           hash: '234567',
           timeStamp: 1234567890987,
-          version: '0.13.2',
+          version: '0.14.2',
         },
       },
     },

@@ -27,16 +27,16 @@ const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
 
 
 const firebaseEmulator = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a13-fb',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a14-fb',
   ssl: false,
 };
 const firebaseEmulatorContainer = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a13-fb',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a14-fb',
   ssl: false,
 };
 
-const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a13-fb/us-central1';
-const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a13-fb/us-central1';
+const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a14-fb/us-central1';
+const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a14-fb/us-central1';
 
 export const environment = {
   production: false,

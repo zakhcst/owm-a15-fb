@@ -11,7 +11,7 @@ import { WindowRefService } from './services/window.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'owm-a13-fb';
+  title = 'owm-a14-fb';
   loading: Observable<boolean>;
 
   @Select(AppStatusState.showLoading) showLoading$: Observable<boolean>;

@@ -1,11 +1,11 @@
 {
-  "name": "owm-a13-fb",
-  "short_name": "owm-a13-fb",
+  "name": "owm-a14-fb",
+  "short_name": "owm-a14-fb",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
-  "start_url": "https://owm-a13-fb.web.app",
+  "start_url": "https://owm-a14-fb.web.app",
   "prefer_related_applications": false,
   "icons": [
     {

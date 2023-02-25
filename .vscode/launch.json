@@ -7,17 +7,17 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome localhost:4212",
+      "name": "Launch Chrome localhost:4214",
       "runtimeExecutable": "/usr/bin/google-chrome-stable",
-      "url": "http://localhost:4212",
+      "url": "http://localhost:4214",
       "webRoot": "${workspaceFolder}"
     },
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome 192.168.1.15:4212",
+      "name": "Launch Chrome 192.168.1.15:4214",
       "runtimeExecutable": "/usr/bin/google-chrome-stable",
-      "url": "http://192.168.1.15:4212",
+      "url": "http://192.168.1.15:4214",
       "webRoot": "${workspaceFolder}"
     },
     {
@@ -40,7 +40,7 @@
       "type": "chrome",
       "request": "launch",
       "runtimeExecutable": "/usr/bin/google-chrome-stable",
-      "url": "http://localhost:4200",
+      "url": "http://localhost:4214",
       "webRoot": "${workspaceFolder}"
       // "preLaunchTask": "npm start"
     },
