@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import {
-  MatSnackBar,
-  MatSnackBarRef,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarConfig,
-} from '@angular/material/snack-bar';
+  MatLegacySnackBar as MatSnackBar,
+  MatLegacySnackBarRef as MatSnackBarRef,
+  MatLegacySnackBarHorizontalPosition as MatSnackBarHorizontalPosition,
+  MatLegacySnackBarConfig as MatSnackBarConfig,
+} from '@angular/material/legacy-snack-bar';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { IPopupModel, PopupType } from '../models/snackbar.model';

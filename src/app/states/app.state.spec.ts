@@ -26,7 +26,7 @@ import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app
 
 import dataJSON from '../../assets/owm-fallback-data.json';
 import { AppModule } from '../app.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 
 describe('State store', () => {
   let mockSnackbarService: any;

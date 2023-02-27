@@ -21,7 +21,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { Select, Store } from '@ngxs/store';
 import { IOwmDataModel } from '../../models/owm-data.model';
 import { AppCitiesState, AppStatusState } from '../../states/app.state';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DialogSettingsComponent } from '../dialog-settings/dialog-settings.component';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 import { WindowRefService } from 'src/app/services/window.service';
