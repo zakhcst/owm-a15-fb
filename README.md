@@ -1,6 +1,6 @@
 ## Open Weather Maps(OWM) 5 Day Forecast
 
-### Angular 14, Angular Material and Firebase based sample project.
+### Angular 15, Angular Material and Firebase based sample project.
 
 Libraries
 
@@ -35,7 +35,7 @@ Features
 
 ### Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4214/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4215/`. The app will automatically reload if you change any of the source files.
 
 ### Running firebase emulator
 
@@ -47,7 +47,7 @@ Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.gi
 
 ### Live instance
 
-Development build is depolyed at: https://owm-a14-fb.web.app
+Development build is depolyed at: https://owm-a15-fb.web.app
 
 ### Preview
 

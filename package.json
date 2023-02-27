@@ -1,9 +1,9 @@
 {
-  "name": "owm-a14-fb",
-  "version": "0.14.1",
+  "name": "owm-a15-fb",
+  "version": "0.15.1",
   "scripts": {
     "ng": "n4",
-    "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4214",
+    "start": "./set-emu-env.sh && ng serve --host 0.0.0.0 --port 4215",
     "build": "./utils/generate-build-info.js && ng build",
     "build-prod": "./utils/generate-build-info.js && ng build --configuration production && git checkout HEAD -- ngsw-config.json",
     "test": "ng test",
