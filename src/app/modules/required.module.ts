@@ -13,6 +13,7 @@ import { NgxsModule } from '@ngxs/store';
     BrowserAnimationsModule,
     HttpClientModule,
     AngularFireDatabaseModule,
+    NgxsModule,
   ],
   exports: [
     BrowserModule,

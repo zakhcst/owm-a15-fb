@@ -11,7 +11,7 @@
 // along with in 'firebase/firebase.json' the 'emulators' section.
 
 
-const emulator = false;
+const emulator = true;
 const container = false;
 
 const firebaseConfigDevEnv = {
@@ -27,16 +27,17 @@ const firebaseFunctionsUrl = 'https://us-central1-owm-a7-fb.cloudfunctions.net';
 
 
 const firebaseEmulator = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a15-fb',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a12-fb',
+  apiKey: 'AIzaSyCT-Uab-tDlXLBKzWdv7rq4exZchMDRyR8',
   ssl: false,
 };
 const firebaseEmulatorContainer = {
-  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a15-fb',
+  databaseURL: 'http://192.168.1.15:9000/?ns=owm-a12-fb',
   ssl: false,
 };
 
-const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a15-fb/us-central1';
-const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a15-fb/us-central1';
+const localEmulatorFunctionsUrl = 'http://192.168.1.15:5001/owm-a12-fb/us-central1';
+const localEmulatorFunctionsUrlContainer = 'http://192.168.1.15:5001/owm-a12-fb/us-central1';
 
 export const environment = {
   production: false,

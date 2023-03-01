@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import {
-  MatLegacySnackBar as MatSnackBar,
-  MatLegacySnackBarRef as MatSnackBarRef,
-  MatLegacySnackBarHorizontalPosition as MatSnackBarHorizontalPosition,
-  MatLegacySnackBarConfig as MatSnackBarConfig,
-} from '@angular/material/legacy-snack-bar';
+  MatSnackBar,
+  MatSnackBarRef,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarConfig,
+} from '@angular/material/snack-bar';
 import { AppSnackBarInnerComponent } from '../components/app-snack-bar-inner/app-snack-bar-inner.component';
 import { ConstantsService } from './constants.service';
 import { IPopupModel, PopupType } from '../models/snackbar.model';
@@ -14,7 +14,7 @@ import { AppPopupMessages, AppStatusState } from '../states/app.state';
 import { filter } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
-})
+}) 
 export class SnackbarService {
   @Select(AppPopupMessages.selectPopupMessages) popupMessage$: Observable<IPopupModel>;
   public q = [];

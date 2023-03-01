@@ -41,33 +41,35 @@
         <mat-form-field
           *ngIf="action['type'] === 'selectCities'"
           class="header-action"
-          style="width: 120px"
-        >
+          style="width: 145px;"
+          >
           <mat-select
             fxFlex
             panelClass="header-toolbar-mat-select"
-            placeholder="City"
             [(value)]="selectedCityId"
             (selectionChange)="selectedCityChange()"
-          >
+            [placeholder]="City"
+            hideSingleSelectionIndicator
+            >
             <mat-option
               fxFlex
               *ngFor="let city of cities$ | async | keyvalue | sortCities"
               [value]="city.key"
             >
               <span fxFlex fxFill fxLayoutAlign="space-between" fxLayout="row">
-                <span>{{ city.value.name }}&nbsp;</span>
-                <span fxFlex fxLayoutAlign="end center">{{
-                  city.value.iso2
-                }}</span>
+                <span>
+                  {{ city.value.name }}
+                &nbsp;</span>
+                <span fxFlex fxLayoutAlign="end center">
+                  {{city.value.iso2}}
+                </span>
               </span>
             </mat-option>
           </mat-select>
         </mat-form-field>
         <a
-          *ngIf="xs500w === false && action['type'] === 'button'"
-          mat-button
-          mat-mini-fab
+        *ngIf="xs500w === false && action['type'] === 'button'"
+          mat-mini-fab 
           class="button-action"
           [routerLink]="action['path']"
           [class.disabled]="!connected && action['disableOnDisconnected']"
@@ -93,7 +95,6 @@
     *ngIf="showActionButtonsXS === true && xs500w === true"
   >
     <a
-      mat-button
       mat-mini-fab
       class="button-action-xs"
       [ngStyle]="{ 'background-color': 'black' }"
@@ -104,7 +105,6 @@
     <ng-container *ngFor="let action of toolbarActions">
       <a
         *ngIf="action['type'] === 'button'"
-        mat-button
         mat-mini-fab
         class="button-action-xs"
         [routerLink]="action['path']"

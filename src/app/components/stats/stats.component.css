@@ -5,6 +5,9 @@
   background-color: transparent;
   color: white;
 }
+.mdc-switch--selected .mdc-switch__icon--on, .mdc-switch--unselected .mdc-switch__icon--off {
+  display: none;
+}
 
 .odd {
   background-color: #ccccff30;

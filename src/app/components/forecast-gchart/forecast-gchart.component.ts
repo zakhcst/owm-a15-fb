@@ -16,7 +16,7 @@ import { PopulateGchartDataService } from 'src/app/services/populate-gchart-data
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ChartReadyEvent } from 'angular-google-charts';
 import { DataCellExpandedComponent } from '../data-cell-expanded/data-cell-expanded.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';
 import { WindowRefService } from 'src/app/services/window.service';
 

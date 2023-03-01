@@ -124,22 +124,26 @@
   align-items: flex-end;
 }
 
-.disabled {
-  background-color: grey;
-}
-.active {
-  background-color: green;
-}
-
 .button-action {
   margin-left: 10px !important;
   font-size: 60%;
+  color: white;
+  background-color: green;
 }
 
 .button-action-xs {
   margin-top: 10px !important;
   margin-left: 15px !important;
   font-size: 60%;
+  color: white;
+  background-color: green;
+}
+
+.disabled {
+  background-color: grey;
+}
+.active {
+  background-color: #dd3557;
 }
 
 .button-action:hover:not(.active):not(.disabled),

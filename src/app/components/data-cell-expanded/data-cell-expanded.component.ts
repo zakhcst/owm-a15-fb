@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { IOwmDataModelTimeSlotUnit } from 'src/app/models/owm-data.model';
 import { ConstantsService } from '../../services/constants.service';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
 import { AppStatusState } from 'src/app/states/app.state';
 import { OwmDataUtilsService } from 'src/app/services/owm-data-utils.service';

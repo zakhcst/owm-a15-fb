@@ -3,6 +3,9 @@
   height: 80vh;
   width: 40vw;
   padding: 10px;
+  --mdc-dialog-subhead-color: white;
+  --mdc-dialog-with-divider-divider-color: white;
+  --mdc-dialog-supporting-text-color: white;
 }
 
 .grid-col-23 {

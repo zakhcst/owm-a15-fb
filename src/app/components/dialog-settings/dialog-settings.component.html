@@ -3,7 +3,6 @@
     <ng-container *ngIf="settingsOptions['liveDataUpdate']">
       Live Data Update
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="liveDataUpdate"
         (toggleChange)="toggleLiveDataUpdate()"
@@ -15,7 +14,6 @@
     <ng-container *ngIf="settingsOptions['popupType']">
       Toast/Snackbar
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="!!popupType"
         (toggleChange)="togglePopupType()"
@@ -28,21 +26,24 @@
       Days forecast
       <mat-slider
         thumbLabel
+        showTickMarks
+        discrete
         [color]="'primary'"
+        [min]="1"
+        [max]="5"
+        [step]="1"
+        >
+        <input matSliderThumb
         [(ngModel)]="daysForecast"
         (change)="updateDaysForecast()"
         (click)="$event.stopPropagation()"
-        tickInterval="1"
-        min="1"
-        max="5"
-      >
+        >
       </mat-slider>
     </ng-container>
-
+    
     <ng-container *ngIf="settingsOptions['slotsBackground']">
       Slots background
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showDetailTimeSlotBgPicture"
         (toggleChange)="toggleShowTimeSlotBgPicture()"
@@ -54,7 +55,6 @@
     <ng-container *ngIf="settingsOptions['detail-pressure']">
       Pressure
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showDetailPressure"
         (toggleChange)="toggleShowDetailPressure()"
@@ -66,7 +66,6 @@
     <ng-container *ngIf="settingsOptions['detail-wind']">
       Wind
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showDetailWind"
         (toggleChange)="toggleShowDetailWind()"
@@ -78,7 +77,6 @@
     <ng-container *ngIf="settingsOptions['detail-humidity']">
       Humidity
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showDetailHumidity"
         (toggleChange)="toggleShowDetailHumidity()"
@@ -90,7 +88,6 @@
     <ng-container *ngIf="settingsOptions['gchart-wind']">
       Wind
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showGChartWind"
         (toggleChange)="toggleShowGChartWind()"
@@ -102,7 +99,6 @@
     <ng-container *ngIf="settingsOptions['gchart-humidity']">
       Humidity
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showGChartHumidity"
         (toggleChange)="toggleShowGChartHumidity()"
@@ -114,7 +110,6 @@
     <ng-container *ngIf="settingsOptions['gchart-icons']">
       Charts Icons
       <mat-slide-toggle
-        style="transform: rotate(180deg)"
         [color]="'primary'"
         [checked]="showGChartIcons"
         (toggleChange)="toggleShowGChartIcons()"

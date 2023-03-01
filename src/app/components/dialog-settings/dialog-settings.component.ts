@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   SetStatusShowTimeSlotBgPicture,
   SetStatusLiveDataUpdate,
@@ -55,7 +55,6 @@ export class DialogSettingsComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    // public dialogRef: MatDialogRef<DialogSettingsComponent>,
     public dialogRef: MatDialogRef<any>,
     private _store: Store,
   ) { }
