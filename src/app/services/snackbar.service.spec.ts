@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 import { IPopupModel, PopupType } from '../models/snackbar.model';
 import { InitModules } from '../modules/init.module';
 import { Store } from '@ngxs/store';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('SnackbarService', () => {
   let service: SnackbarService;

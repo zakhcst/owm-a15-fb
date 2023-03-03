@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 
 import { HeaderToolbarComponent } from './header-toolbar.component';
 import { AppRoutingModule } from '../../modules/routing.module';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { HeaderToolbarModule } from './header-toolbar.module';
 import { InitModules } from '../../modules/init.module';
 import { ResolverRegisterIconsService } from '../../modules/routing-resolvers/resolver-register-icons.service';
