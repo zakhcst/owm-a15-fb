@@ -50,7 +50,7 @@ body {
 } */
 /* Overriding the global styles and local scoping (.mat-mdc-select-panel) the selectors, according the Angular Material Docs */
 .mat-mdc-select-panel.header-toolbar-mat-select {
-  background: #5981b2;
+  background: transparent;
   background-size: cover;
   background-image: url("assets/backgrounds/default.jpg");
   border-radius: 0;

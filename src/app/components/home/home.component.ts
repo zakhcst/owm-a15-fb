@@ -18,24 +18,17 @@ export class HomeComponent implements OnInit {
       sourceLink: 'https://github.com/zakhcst/owm-a15-fb'
     },
     {
-      version: 13,
-      db: 'Firebase RTDB',
-      hosted: 'Firebase',
-      routedLink: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path,
-      sourceLink: 'https://github.com/zakhcst/owm-a13-fb'
-    },
-    {
       version: 12,
       db: 'Firebase RTDB',
       hosted: 'Firebase',
-      routedLink: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path,
+      hostedLink: 'https://owm-a12-fb.firebaseapp.com/v1/forecast-detail',
       sourceLink: 'https://github.com/zakhcst/owm-a12-fb'
     },
     {
       version: 11,
       db: 'Firebase RTDB',
       hosted: 'Firebase',
-      routedLink: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path,
+      hostedLink: 'https://owm-a11-fb.firebaseapp.com/v1/forecast-detail',
       sourceLink: 'https://github.com/zakhcst/owm-a11-fb'
     },
     {
