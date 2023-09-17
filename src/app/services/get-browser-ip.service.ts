@@ -18,37 +18,47 @@ export class GetBrowserIpService {
     this.refreshIpOnConnect();
   }
 
-  getIPv4() {
-    return this.requestIPv4().pipe(
-      switchMap(this.validateIPv4.bind(this)),
+  getIPv64() {
+    return this.requestIPv64().pipe(
+      switchMap(this.validateIP.bind(this)),
       catchError((errIp) => {
         return of('255.255.255.255');
       })
     );
   }
 
-  requestIPv4(): Observable<string> {
-    return this._http.get(ConstantsService.getIpUrl, { responseType: 'text' }).pipe(
+  requestIPv64(): Observable<string> {
+    return this._http.get(ConstantsService.getIPv64Url, { responseType: 'text' }).pipe(
       take(1),
       catchError((err) => {
-        this.setIPv4Error(err.message || err);
-        return throwError('--ip-error-connection');
+        this.setIPConnectionError(err.message || err);
+        return of('--ip-error-connection');
       })
     );
   }
 
-  validateIPv4(ipString: string): Observable<string> {
+  validateIP(ipString: string): Observable<string> {
     if (ConstantsService.ipv4RE.test(ipString)) {
       return of(ipString);
     }
-    this.setIPv4Error('IPv4 validation error');
-    return throwError('--ip-error-validation');
+    if (ConstantsService.ipv6RE.test(ipString)) {
+      return of(ipString);
+    }
+    this.setIPValidationError('IP validation error');
+    return of('--ip-error-validation');
   }
 
-  setIPv4Error(error?: string) {
+  setIPConnectionError(error?: string) {
     this._errors.add({
       userMessage: 'Connection or service problem',
-      logMessage: 'GetBrowserIpService: getIPv4: ' + error,
+      logMessage: 'GetBrowserIpService: Connection or service: getIPv64: ' + error,
+    });
+  }
+
+  setIPValidationError(error?: string) {
+    this._errors.add({
+      userMessage: 'Validation or service problem',
+      logMessage: 'GetBrowserIpService: getIPv64: ' + error,
     });
   }
 
@@ -63,7 +73,7 @@ export class GetBrowserIpService {
   }
 
   refreshIp() {
-    this.getIPv4().subscribe((ip: string) => {
+    this.getIPv64().subscribe((ip: string) => {
       this._store.dispatch([new SetStatusIp(ip)]);
     });
   }

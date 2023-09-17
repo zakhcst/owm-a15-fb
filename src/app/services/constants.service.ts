@@ -92,9 +92,16 @@ export class ConstantsService {
 
   public static readonly owmFallbackData = 'assets/owm-fallback-data.json';
   public static readonly getIpUrl = environment['functions'] + '/getip';
+  public static readonly getIPv4Url = 'https://api.ipify.org';
+  public static readonly getIPv64Url = 'https://api64.ipify.org';
+
   public static readonly ipv4RE = new RegExp(
     '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
   );
+  public static readonly ipv6RE = new RegExp(
+    '^([[:xdigit:]]{1,4}(?::[[:xdigit:]]{1,4}){7}|::|:(?::[[:xdigit:]]{1,4}){1,6}|[[:xdigit:]]{1,4}:(?::[[:xdigit:]]{1,4}){1,5}|(?:[[:xdigit:]]{1,4}:){2}(?::[[:xdigit:]]{1,4}){1,4}|(?:[[:xdigit:]]{1,4}:){3}(?::[[:xdigit:]]{1,4}){1,3}|(?:[[:xdigit:]]{1,4}:){4}(?::[[:xdigit:]]{1,4}){1,2}|(?:[[:xdigit:]]{1,4}:){5}:[[:xdigit:]]{1,4}|(?:[[:xdigit:]]{1,4}:){1,6}:)$'
+  );
+
   public static readonly owmIconsUrl = 'https://openweathermap.org/img/w/';
   public static readonly iconsOwm = 'assets/icons-list/';
   public static readonly iconGithub = 'assets/icons-logo/icon32-github.svg';
