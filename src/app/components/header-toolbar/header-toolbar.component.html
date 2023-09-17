@@ -41,14 +41,14 @@
         <mat-form-field
           *ngIf="action['type'] === 'selectCities'"
           class="header-action"
-          style="width: 145px;"
+          style="width: 145px;margin-top: 20px"
           >
+          <mat-label style="color: white">City</mat-label>
           <mat-select
             fxFlex
             panelClass="header-toolbar-mat-select"
             [(value)]="selectedCityId"
             (selectionChange)="selectedCityChange()"
-            [placeholder]="City"
             hideSingleSelectionIndicator
             >
             <mat-option

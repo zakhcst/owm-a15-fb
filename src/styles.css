@@ -44,10 +44,9 @@ body {
 .flex-justify-center {
   justify-self: center;
 }
-
-/* .mat-mdc-form-field.header-action.mdc-text-field {
-  background-color: none;
-} */
+.mat-mdc-select-arrow-wrapper {
+  transform: translateY(0px) !important;
+}
 /* Overriding the global styles and local scoping (.mat-mdc-select-panel) the selectors, according the Angular Material Docs */
 .mat-mdc-select-panel.header-toolbar-mat-select {
   background: transparent;
@@ -57,6 +56,9 @@ body {
   color: white;
 }
 
+.mdc-text-field {
+  
+}
 .mdc-text-field--filled {
   background-color: transparent !important;
 }
