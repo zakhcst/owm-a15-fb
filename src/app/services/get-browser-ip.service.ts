@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConstantsService } from './constants.service';
-import { of, Observable, Subscription } from 'rxjs';
+import { of, Observable, Subscription, throwError } from 'rxjs';
 import { switchMap, catchError, take } from 'rxjs/operators';
 import { ErrorsService } from './errors.service';
 import { Select, Store } from '@ngxs/store';
@@ -21,7 +21,7 @@ export class GetBrowserIpService {
   getIPv64() {
     return this.requestIPv64().pipe(
       switchMap(this.validateIP.bind(this)),
-      catchError((errIp) => {
+      catchError((errIp: any) => {
         return of('255.255.255.255');
       })
     );
@@ -32,7 +32,8 @@ export class GetBrowserIpService {
       take(1),
       catchError((err) => {
         this.setIPConnectionError(err.message || err);
-        return of('--ip-error-connection');
+        // return of('--ip-error-connection');
+        return throwError(() => new Error('--ip-error-connection'))
       })
     );
   }
@@ -45,7 +46,7 @@ export class GetBrowserIpService {
       return of(ipString);
     }
     this.setIPValidationError('IP validation error');
-    return of('--ip-error-validation');
+    return throwError(() => new Error('--ip-error-validation'));
   }
 
   setIPConnectionError(error?: string) {
