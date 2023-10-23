@@ -18,7 +18,7 @@ export class OwmFallbackDataService {
         this._errors.add({
           userMessage: 'Connection or service problem', logMessage: 'OwmFallbackDataService: getData: ' + error.message
         });
-        return throwError(error);
+        return throwError(() => new Error(error));
       }));
   }
 }

@@ -43,8 +43,7 @@ export class OwmService {
             logMessage: 'OwmService: API error' + error,
           });
         }
-
-        return throwError(error);
+        return throwError(() => new Error(error));
       })
     );
   }

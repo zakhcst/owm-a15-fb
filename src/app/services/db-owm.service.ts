@@ -38,7 +38,7 @@ export class DbOwmService {
         filter((data) => !!data),
         distinctUntilChanged((prev, curr) => prev.city.id === curr.city.id && prev.updated === curr.updated),
         debounce(() => timer(ConstantsService.loadingDataDebounceTime_ms)),
-        switchMap(data => this.updateCache(data))
+        switchMap((data) => this.updateCache(data))
       )
       .subscribe();
   }
@@ -56,5 +56,11 @@ export class DbOwmService {
 
   updateCache(owmData) {
     return this._utils.setOwmDataCache(owmData, true);
+  }
+
+  shudown() {
+    if (this.getDataSubscription.closed === false) {
+      this.getDataSubscription.unsubscribe();
+    }
   }
 }

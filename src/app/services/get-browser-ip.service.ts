@@ -32,7 +32,6 @@ export class GetBrowserIpService {
       take(1),
       catchError((err) => {
         this.setIPConnectionError(err.message || err);
-        // return of('--ip-error-connection');
         return throwError(() => new Error('--ip-error-connection'))
       })
     );
@@ -74,9 +73,15 @@ export class GetBrowserIpService {
   }
 
   refreshIp() {
-    this.getIPv64().subscribe((ip: string) => {
+    this.connectedSubscription = this.getIPv64().subscribe((ip: string) => {
       this._store.dispatch([new SetStatusIp(ip)]);
     });
+  }
+
+  shudown() {
+    if (this.connectedSubscription.closed === false) {
+      this.connectedSubscription.unsubscribe();
+    }
   }
   
 }

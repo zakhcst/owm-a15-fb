@@ -67,4 +67,10 @@ export class CitiesService {
   dispatch(cities) {
     this._store.dispatch(new SetCitiesState(cities));
   }
+
+  shudown() {
+    if (this.getDataSubscription.closed === false) {
+      this.getDataSubscription.unsubscribe();
+    }
+  }
 }

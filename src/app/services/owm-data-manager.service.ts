@@ -141,4 +141,10 @@ export class OwmDataManagerService {
     });
   }
 
+  shudown() {
+    if (this.combineLatestStatusSubscription.closed === false) {
+      this.combineLatestStatusSubscription.unsubscribe();
+    }
+  }
+
 }

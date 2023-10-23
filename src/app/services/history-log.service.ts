@@ -61,4 +61,10 @@ export class HistoryLogService {
   dispatch(logs) {
     this._store.dispatch(new SetHistoryLogState(logs));
   }
+  
+  shudown() {
+    if (this.getDataSubscription.closed === false) {
+      this.getDataSubscription.unsubscribe();
+    }
+  }
 }

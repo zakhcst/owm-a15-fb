@@ -53,4 +53,13 @@ export class StatsService {
     this._store.dispatch(new SetStatsState(stats));
   }
 
+  shudown() {
+    if (this.getDataSubscription.closed === false) {
+      this.getDataSubscription.unsubscribe();
+    }
+    if (this.liveDataUpdateSubscription.closed === false) {
+      this.liveDataUpdateSubscription.unsubscribe();
+    }
+  }
+
 }
