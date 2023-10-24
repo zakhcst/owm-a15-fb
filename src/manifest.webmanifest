@@ -1,60 +1,73 @@
 {
   "name": "owm-a15-fb",
+  "id": "/",
   "short_name": "owm-a15-fb",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
+  "display_override": ["fullscreen", "minimal-ui"],
+  "orientation":"any",
   "scope": "./",
+  "purpose": "Angular Firebase Sample App using Open Weather Maps",
+  "lang": "en",
   "start_url": "https://owm-a15-fb.web.app",
   "prefer_related_applications": false,
+  "screenshots":[
+  {"src":"assets/screenshots/wide/Screenshot_20231024_013005.jpg","type":"image/jpeg","sizes":"1250x1040","form_factor":"wide"}, 
+  {"src":"assets/screenshots/wide/Screenshot_20231024_023545.jpg","type":"image/jpeg","sizes":"1250x1040","form_factor":"wide"},
+  {"src":"assets/screenshots/wide/Screenshot_20231024_013209.jpg","type":"image/jpeg","sizes":"1250x1040","form_factor":"wide"},
+  {"src":"assets/screenshots/narrow/Screenshot_20231024_013837.jpg","type":"image/jpeg","sizes":"930x1270","form_factor":"narrow"},
+  {"src":"assets/screenshots/narrow/Screenshot_20231024_014030.jpg","type":"image/jpeg","sizes":"930x1270","form_factor":"narrow"},
+  {"src":"assets/screenshots/narrow/Screenshot_20231024_014156.jpg","type":"image/jpeg","sizes":"930x1270","form_factor":"narrow"}
+  ],
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     }
   ]
 }
