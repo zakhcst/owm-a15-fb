@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { SwUpdate } from '@angular/service-worker';
+import { SwUpdate, VersionInstallationFailedEvent, VersionReadyEvent } from '@angular/service-worker';
 import { Store } from '@ngxs/store';
 import { Subscription } from 'rxjs';
 import {
   SetStatusAway,
   SetStatusBuildInfo,
   SetStatusConnected,
-  SetStatusShowLoading,
   SetStatusUpdatesAvailable,
 } from '../states/app.actions';
 import { AppStatusState } from '../states/app.state';
@@ -21,6 +20,7 @@ import { CitiesService } from './cities.service';
 import { GetBrowserIpService } from './get-browser-ip.service';
 import { HistoryLogService } from './history-log.service';
 import { StatsService } from './stats.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +39,7 @@ export class AppInitService {
     private _getBrowserIpService: GetBrowserIpService,
     private _historyLogService: HistoryLogService,
     private _statsService: StatsService,
+    private _router: Router,
     @Inject(DOCUMENT) private _document: Document
   ) {
     this.initCss();
@@ -62,15 +63,22 @@ export class AppInitService {
 
   setSubscribeOnUpdates() {
     this.subscriptions.add(
-      this._updates.available.subscribe((event) => {
-        console.log('Current version:', event.current);
-        console.log('New available version:', event.available);
-        this._store.dispatch(new SetStatusUpdatesAvailable(true));
-        const buildInfo = {
-          current: (event.current?.appData as any)?.buildInfo,
-          available: (event.available?.appData as any)?.buildInfo,
-        };
-        this._store.dispatch(new SetStatusBuildInfo(buildInfo));
+      this._updates.versionUpdates.subscribe((event: VersionReadyEvent|VersionInstallationFailedEvent) => {
+        if (event.type === 'VERSION_READY') {
+          console.log('Current version:', event.currentVersion.hash);
+          console.log('New available version:', event.latestVersion.hash);
+          this._store.dispatch(new SetStatusUpdatesAvailable(true));
+          
+          const buildInfo = {
+            current: (event.currentVersion.appData as any)?.buildInfo,
+            available: (event.latestVersion?.appData as any)?.buildInfo,
+          };
+          this._store.dispatch(new SetStatusBuildInfo(buildInfo));
+        }
+        if (event.type === 'VERSION_INSTALLATION_FAILED') {
+          this._router.navigate(['error', {errorMessage: 'VERSION INSTALLATION FAILED, PLEASE RELOAD APP.', redirectPage: ''}]);
+        }
+
       })
     );
   }

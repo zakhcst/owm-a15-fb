@@ -23,22 +23,22 @@ export const appRoutes: Routes = [
     },
     children: [
       {
-        path: ConstantsService.toolbarElements.stats.path,
-        loadChildren: () => import('src/app/components/stats/stats.module').then((m) => m.StatsModule),
-        pathMatch: 'full',
-      },
-      {
         path: ConstantsService.toolbarElements.forecastFlex.path,
         loadChildren: () =>
           import('src/app/components/forecast-flex/forecast-flex.module').then((m) => m.ForecastFlexModule),
-        pathMatch: 'full',
+        // pathMatch: 'full',
       },
       {
         path: ConstantsService.toolbarElements.forecastGChart.path,
         canActivate: [CanActivateGchart],
         canLoad: [CanLoadGchart],
         loadChildren: () =>
-          import('src/app/components/forecast-gchart/forecast-gchart.module').then((m) => m.ForecastGChartModule),
+        import('src/app/components/forecast-gchart/forecast-gchart.module').then((m) => m.ForecastGChartModule),
+        pathMatch: 'full',
+      },
+      {
+        path: ConstantsService.toolbarElements.stats.path,
+        loadChildren: () => import('src/app/components/stats/stats.module').then((m) => m.StatsModule),
         pathMatch: 'full',
       },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -51,7 +51,7 @@ export const appRoutes: Routes = [
   {
     path: 'error',
     component: ErrorPageComponent,
-    data: { errorMessage: ' Error Page', redirectPage: '' },
+    data: { errorMessage: ' Error Page ', redirectPage: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path },
   },
   { path: '', redirectTo: '/v1/' + ConstantsService.toolbarElements.forecastFlex.path, pathMatch: 'full' },
   {

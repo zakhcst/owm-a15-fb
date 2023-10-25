@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { timer } from 'rxjs';
-import { take, switchMap, map, last } from 'rxjs/operators';
+import { Subject, timer } from 'rxjs';
+import { take, switchMap, map, last, takeUntil } from 'rxjs/operators';
 import { ConstantsService } from 'src/app/services/constants.service';
 
 @Component({
@@ -10,32 +10,37 @@ import { ConstantsService } from 'src/app/services/constants.service';
   styleUrls: ['./error-page.component.css'],
 })
 export class ErrorPageComponent implements OnInit {
-  redirectPage: string;
   errorMessage: string;
   viewCount: number;
-  activatedRouteParams = this._activatedRoute.params.pipe(
+  cancelCoundown$ = new Subject<number>();
+
+  activatedRouteData$ = this._activatedRoute.data.pipe(
     take(1),
-    switchMap((activatedRouteParams) => {
-      this.errorMessage = activatedRouteParams.errorMessage || 'ERROR';
-      this.redirectPage = activatedRouteParams.redirectPage || '';
+    switchMap((activatedRouteData) => {
+      this.errorMessage = activatedRouteData.errorMessage || 'ERROR';
       return timer(0, 1000);
     }),
     take(ConstantsService.redirectDelay + 1),
     map((timerCount: number) => {
       this.viewCount = ConstantsService.redirectDelay - timerCount;
+      return this.viewCount;
     }),
+    takeUntil(this.cancelCoundown$),
     last()
   );
 
   constructor(public _router: Router, public _activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.subscribeToActivatedRouteParams();
+    this.subscribeToActivatedRouteData();
   }
-  
-  subscribeToActivatedRouteParams() {
-    this.activatedRouteParams.subscribe(() => {
-      this._router.navigate([this.redirectPage || '']);
+
+  subscribeToActivatedRouteData() {
+    this.activatedRouteData$.subscribe((count) => {
+      location.replace(location.origin);
     });
+  }
+  cancelCountdown() {
+    this.cancelCoundown$.next(ConstantsService.redirectDelay + 1);
   }
 }
